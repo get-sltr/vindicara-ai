@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+@theme {
+  --color-obsidian: #0a0a0f;
+  --color-obsidian-light: #12121a;
+  --color-obsidian-lighter: #1a1a2e;
+  --color-brand-red: #dc2626;
+  --color-brand-red-dark: #991b1b;
+  --color-brand-cyan: #06b6d4;
+  --color-brand-purple: #8b5cf6;
+  --color-brand-pink: #ec4899;
+  --color-glass: rgba(255, 255, 255, 0.05);
+  --color-glass-border: rgba(255, 255, 255, 0.1);
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+@layer base {
+  ::selection {
+    background-color: var(--color-brand-red);
+    color: white;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-obsidian);
+    color: white;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    background: var(--color-glass);
+    border: 1px solid var(--color-glass-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .glow-red {
+    box-shadow: 0 0 40px rgba(220, 38, 38, 0.15), 0 0 80px rgba(220, 38, 38, 0.05);
+  }
+
+  .glow-cyan {
+    box-shadow: 0 0 40px rgba(6, 182, 212, 0.15), 0 0 80px rgba(6, 182, 212, 0.05);
+  }
+
+  .text-gradient-brand {
+    background: linear-gradient(135deg, #dc2626, #ec4899, #8b5cf6, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-subtle {
+    background: linear-gradient(135deg, #ffffff, #a1a1aa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-sm
+           bg-brand-red hover:bg-brand-red-dark text-white transition-all duration-200
+           shadow-lg shadow-brand-red/20 hover:shadow-brand-red/40;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-sm
+           border border-white/20 text-white hover:bg-white/5 transition-all duration-200;
+  }
+
+  .code-block {
+    @apply font-mono text-sm bg-obsidian-lighter rounded-lg p-4 border border-white/10 overflow-x-auto;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.8s ease-out forwards;
+}

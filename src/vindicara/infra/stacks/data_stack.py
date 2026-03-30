@@ -11,7 +11,8 @@ class DataStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         self.policies_table = dynamodb.Table(
-            self, "PoliciesTable",
+            self,
+            "PoliciesTable",
             table_name="vindicara-policies",
             partition_key=dynamodb.Attribute(name="pk", type=dynamodb.AttributeType.STRING),
             sort_key=dynamodb.Attribute(name="sk", type=dynamodb.AttributeType.STRING),
@@ -21,7 +22,8 @@ class DataStack(Stack):
         )
 
         self.evaluations_table = dynamodb.Table(
-            self, "EvaluationsTable",
+            self,
+            "EvaluationsTable",
             table_name="vindicara-evaluations",
             partition_key=dynamodb.Attribute(name="pk", type=dynamodb.AttributeType.STRING),
             sort_key=dynamodb.Attribute(name="sk", type=dynamodb.AttributeType.STRING),
@@ -31,7 +33,8 @@ class DataStack(Stack):
         )
 
         self.api_keys_table = dynamodb.Table(
-            self, "APIKeysTable",
+            self,
+            "APIKeysTable",
             table_name="vindicara-api-keys",
             partition_key=dynamodb.Attribute(name="pk", type=dynamodb.AttributeType.STRING),
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
@@ -39,7 +42,8 @@ class DataStack(Stack):
         )
 
         self.audit_bucket = s3.Bucket(
-            self, "AuditBucket",
+            self,
+            "AuditBucket",
             bucket_name="vindicara-audit-335741630084",
             versioned=True,
             encryption=s3.BucketEncryption.S3_MANAGED,

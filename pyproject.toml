@@ -71,7 +71,12 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "S", "B", "A", "C4", "PT", "SIM", "TCH", "RUF"]
-ignore = ["S101"]
+ignore = [
+    "S101",   # assert in tests
+    "B008",   # Depends() in function defaults is standard FastAPI pattern
+    "A002",   # shadowing 'input' builtin is intentional SDK API design
+    "N818",   # exception names without Error suffix are intentional public API
+]
 
 [tool.ruff.lint.isort]
 known-first-party = ["vindicara"]

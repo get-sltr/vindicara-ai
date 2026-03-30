@@ -4,7 +4,6 @@ import pytest
 
 from vindicara.sdk.client import VindicaraClient
 from vindicara.sdk.exceptions import VindicaraValidationError
-from vindicara.sdk.types import Verdict
 
 
 class TestVindicaraClientOffline:

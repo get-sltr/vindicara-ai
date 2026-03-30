@@ -13,7 +13,10 @@ from vindicara.sdk.types import Severity
 class TestRegexRule:
     def test_matches_pattern(self) -> None:
         rule = RegexRule(
-            rule_id="no-urls", pattern=r"https?://\S+", severity=Severity.MEDIUM, message="URL detected",
+            rule_id="no-urls",
+            pattern=r"https?://\S+",
+            severity=Severity.MEDIUM,
+            message="URL detected",
         )
         result = rule.evaluate("Visit https://evil.com for details")
         assert result.triggered
@@ -21,14 +24,20 @@ class TestRegexRule:
 
     def test_no_match(self) -> None:
         rule = RegexRule(
-            rule_id="no-urls", pattern=r"https?://\S+", severity=Severity.MEDIUM, message="URL detected",
+            rule_id="no-urls",
+            pattern=r"https?://\S+",
+            severity=Severity.MEDIUM,
+            message="URL detected",
         )
         result = rule.evaluate("No URLs here")
         assert not result.triggered
 
     def test_case_insensitive(self) -> None:
         rule = RegexRule(
-            rule_id="no-secret", pattern=r"(?i)secret\s*key", severity=Severity.HIGH, message="Secret key reference detected",
+            rule_id="no-secret",
+            pattern=r"(?i)secret\s*key",
+            severity=Severity.HIGH,
+            message="Secret key reference detected",
         )
         result = rule.evaluate("My SECRET KEY is abc123")
         assert result.triggered
@@ -37,21 +46,30 @@ class TestRegexRule:
 class TestKeywordBlocklistRule:
     def test_blocks_keyword(self) -> None:
         rule = KeywordBlocklistRule(
-            rule_id="toxicity", keywords=["hack", "exploit", "attack"], severity=Severity.HIGH, message="Blocked keyword detected",
+            rule_id="toxicity",
+            keywords=["hack", "exploit", "attack"],
+            severity=Severity.HIGH,
+            message="Blocked keyword detected",
         )
         result = rule.evaluate("How to hack a server")
         assert result.triggered
 
     def test_case_insensitive(self) -> None:
         rule = KeywordBlocklistRule(
-            rule_id="toxicity", keywords=["hack"], severity=Severity.HIGH, message="Blocked keyword detected",
+            rule_id="toxicity",
+            keywords=["hack"],
+            severity=Severity.HIGH,
+            message="Blocked keyword detected",
         )
         result = rule.evaluate("HACKING is bad")
         assert result.triggered
 
     def test_clean_input(self) -> None:
         rule = KeywordBlocklistRule(
-            rule_id="toxicity", keywords=["hack", "exploit"], severity=Severity.HIGH, message="Blocked keyword detected",
+            rule_id="toxicity",
+            keywords=["hack", "exploit"],
+            severity=Severity.HIGH,
+            message="Blocked keyword detected",
         )
         result = rule.evaluate("How to build a secure server")
         assert not result.triggered

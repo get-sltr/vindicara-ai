@@ -32,18 +32,12 @@ class Evaluator:
         policy_id: str,
     ) -> GuardResult:
         if not input_text and not output_text:
-            raise VindicaraValidationError(
-                "At least one of input or output must be provided"
-            )
+            raise VindicaraValidationError("At least one of input or output must be provided")
         results: list[GuardResult] = []
         if input_text:
-            results.append(
-                self.evaluate(input_text, policy_id, max_length=MAX_INPUT_LENGTH)
-            )
+            results.append(self.evaluate(input_text, policy_id, max_length=MAX_INPUT_LENGTH))
         if output_text:
-            results.append(
-                self.evaluate(output_text, policy_id, max_length=MAX_OUTPUT_LENGTH)
-            )
+            results.append(self.evaluate(output_text, policy_id, max_length=MAX_OUTPUT_LENGTH))
         blocked = [r for r in results if r.is_blocked]
         if blocked:
             return blocked[0]

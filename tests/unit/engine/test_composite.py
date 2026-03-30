@@ -10,8 +10,12 @@ class TestAnyOfRule:
         rule = AnyOfRule(
             rule_id="any-danger",
             rules=[
-                KeywordBlocklistRule(rule_id="kw", keywords=["hack"], severity=Severity.HIGH, message="kw"),
-                RegexRule(rule_id="url", pattern=r"https?://", severity=Severity.MEDIUM, message="url"),
+                KeywordBlocklistRule(
+                    rule_id="kw", keywords=["hack"], severity=Severity.HIGH, message="kw"
+                ),
+                RegexRule(
+                    rule_id="url", pattern=r"https?://", severity=Severity.MEDIUM, message="url"
+                ),
             ],
             severity=Severity.HIGH,
         )
@@ -22,7 +26,9 @@ class TestAnyOfRule:
         rule = AnyOfRule(
             rule_id="any-danger",
             rules=[
-                KeywordBlocklistRule(rule_id="kw", keywords=["hack"], severity=Severity.HIGH, message="kw"),
+                KeywordBlocklistRule(
+                    rule_id="kw", keywords=["hack"], severity=Severity.HIGH, message="kw"
+                ),
             ],
             severity=Severity.HIGH,
         )
@@ -35,8 +41,12 @@ class TestAllOfRule:
         rule = AllOfRule(
             rule_id="all-danger",
             rules=[
-                KeywordBlocklistRule(rule_id="kw", keywords=["hack"], severity=Severity.HIGH, message="kw"),
-                RegexRule(rule_id="url", pattern=r"https?://", severity=Severity.MEDIUM, message="url"),
+                KeywordBlocklistRule(
+                    rule_id="kw", keywords=["hack"], severity=Severity.HIGH, message="kw"
+                ),
+                RegexRule(
+                    rule_id="url", pattern=r"https?://", severity=Severity.MEDIUM, message="url"
+                ),
             ],
             severity=Severity.CRITICAL,
         )
@@ -47,8 +57,12 @@ class TestAllOfRule:
         rule = AllOfRule(
             rule_id="all-danger",
             rules=[
-                KeywordBlocklistRule(rule_id="kw", keywords=["hack"], severity=Severity.HIGH, message="kw"),
-                RegexRule(rule_id="url", pattern=r"https?://", severity=Severity.MEDIUM, message="url"),
+                KeywordBlocklistRule(
+                    rule_id="kw", keywords=["hack"], severity=Severity.HIGH, message="kw"
+                ),
+                RegexRule(
+                    rule_id="url", pattern=r"https?://", severity=Severity.MEDIUM, message="url"
+                ),
             ],
             severity=Severity.CRITICAL,
         )
@@ -58,13 +72,17 @@ class TestAllOfRule:
 
 class TestNotRule:
     def test_inverts_trigger(self) -> None:
-        inner = KeywordBlocklistRule(rule_id="kw", keywords=["safe"], severity=Severity.LOW, message="safe word")
+        inner = KeywordBlocklistRule(
+            rule_id="kw", keywords=["safe"], severity=Severity.LOW, message="safe word"
+        )
         rule = NotRule(rule_id="not-safe", inner=inner, severity=Severity.MEDIUM)
         result = rule.evaluate("This is dangerous content")
         assert result.triggered
 
     def test_inverts_no_trigger(self) -> None:
-        inner = KeywordBlocklistRule(rule_id="kw", keywords=["safe"], severity=Severity.LOW, message="safe word")
+        inner = KeywordBlocklistRule(
+            rule_id="kw", keywords=["safe"], severity=Severity.LOW, message="safe word"
+        )
         rule = NotRule(rule_id="not-safe", inner=inner, severity=Severity.MEDIUM)
         result = rule.evaluate("This is safe content")
         assert not result.triggered

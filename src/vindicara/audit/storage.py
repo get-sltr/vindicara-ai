@@ -24,6 +24,7 @@ class LocalAuditStorage:
 
     def query(self, policy_id: str, start_time: float, end_time: float) -> list[AuditEvent]:
         return [
-            e for e in self._events
+            e
+            for e in self._events
             if e.policy_id == policy_id and start_time <= e.timestamp <= end_time
         ]

@@ -1,11 +1,11 @@
 """Public response types for the Vindicara SDK."""
 
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
 
-class Verdict(str, Enum):
+class Verdict(StrEnum):
     """Result of a policy evaluation."""
 
     ALLOWED = "allowed"
@@ -13,7 +13,7 @@ class Verdict(str, Enum):
     FLAGGED = "flagged"
 
 
-class Severity(str, Enum):
+class Severity(StrEnum):
     """Severity level for a rule trigger."""
 
     LOW = "low"

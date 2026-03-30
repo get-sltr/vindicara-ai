@@ -17,7 +17,8 @@ data = DataStack(app, "VindicaraData", env=env)
 events_stack = EventsStack(app, "VindicaraEvents", env=env)
 
 APIStack(
-    app, "VindicaraAPI",
+    app,
+    "VindicaraAPI",
     policies_table=data.policies_table,
     evaluations_table=data.evaluations_table,
     api_keys_table=data.api_keys_table,

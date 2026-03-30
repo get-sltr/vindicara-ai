@@ -26,13 +26,24 @@ class APIStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         self.api_function = lambda_.Function(
-            self, "APIFunction",
+            self,
+            "APIFunction",
             function_name="vindicara-api",
             runtime=lambda_.Runtime.PYTHON_3_13,
             handler="vindicara.lambda_handler.handler",
             code=lambda_.Code.from_asset(
                 ".",
-                exclude=["tests", "scripts", "site", "docs", "*.md", ".venv", ".git", "node_modules", "cdk.out"],
+                exclude=[
+                    "tests",
+                    "scripts",
+                    "site",
+                    "docs",
+                    "*.md",
+                    ".venv",
+                    ".git",
+                    "node_modules",
+                    "cdk.out",
+                ],
             ),
             memory_size=256,
             timeout=Duration.seconds(30),
@@ -56,7 +67,8 @@ class APIStack(Stack):
         event_bus.grant_put_events_to(self.api_function)
 
         self.http_api = apigw.HttpApi(
-            self, "VindicaraAPI",
+            self,
+            "VindicaraAPI",
             api_name="vindicara-api",
             default_integration=integrations.HttpLambdaIntegration(
                 "LambdaIntegration",

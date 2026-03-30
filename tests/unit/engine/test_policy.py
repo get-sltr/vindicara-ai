@@ -10,15 +10,21 @@ from vindicara.sdk.types import Severity, Verdict
 class TestPolicy:
     def test_evaluate_allowed(self) -> None:
         policy = Policy(
-            policy_id="test", name="Test Policy",
-            rules=[KeywordBlocklistRule(rule_id="kw", keywords=["hack"], severity=Severity.HIGH, message="blocked")],
+            policy_id="test",
+            name="Test Policy",
+            rules=[
+                KeywordBlocklistRule(
+                    rule_id="kw", keywords=["hack"], severity=Severity.HIGH, message="blocked"
+                )
+            ],
         )
         result = policy.evaluate("This is clean text")
         assert result.verdict == Verdict.ALLOWED
 
     def test_evaluate_blocked(self) -> None:
         policy = Policy(
-            policy_id="test", name="Test Policy",
+            policy_id="test",
+            name="Test Policy",
             rules=[PIIDetectionRule(rule_id="pii", severity=Severity.CRITICAL)],
         )
         result = policy.evaluate("My SSN is 123-45-6789")

@@ -1,7 +1,7 @@
 """Policy model, registry, and built-in policy definitions."""
 
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from vindicara.engine.rules.base import Rule
 from vindicara.engine.rules.deterministic import (
@@ -28,12 +28,8 @@ class Policy:
         results = [rule.evaluate(text) for rule in self.rules]
         elapsed_ms = (time.perf_counter() - start) * 1000
 
-        has_critical = any(
-            r.triggered and r.severity == Severity.CRITICAL for r in results
-        )
-        has_high = any(
-            r.triggered and r.severity == Severity.HIGH for r in results
-        )
+        has_critical = any(r.triggered and r.severity == Severity.CRITICAL for r in results)
+        has_high = any(r.triggered and r.severity == Severity.HIGH for r in results)
         has_triggered = any(r.triggered for r in results)
 
         if has_critical or has_high:

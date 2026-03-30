@@ -18,7 +18,9 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
         if not api_key or not api_key.startswith(API_KEY_PREFIX):
             return JSONResponse(
                 status_code=401,
-                content={"detail": f"Missing or invalid API key. Provide via {API_KEY_HEADER} header."},
+                content={
+                    "detail": f"Missing or invalid API key. Provide via {API_KEY_HEADER} header."
+                },
             )
 
         request.state.api_key = api_key

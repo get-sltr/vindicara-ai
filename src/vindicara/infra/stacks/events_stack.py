@@ -10,12 +10,14 @@ class EventsStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         self.event_bus = events.EventBus(
-            self, "VindicaraEventBus",
+            self,
+            "VindicaraEventBus",
             event_bus_name="vindicara-events",
         )
 
         events.Rule(
-            self, "LogAllEvaluations",
+            self,
+            "LogAllEvaluations",
             event_bus=self.event_bus,
             event_pattern=events.EventPattern(source=["vindicara.engine"]),
             rule_name="vindicara-log-evaluations",

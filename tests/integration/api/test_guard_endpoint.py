@@ -16,7 +16,11 @@ async def test_guard_allowed(app) -> None:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post(
             "/v1/guard",
-            json={"input": "What is the weather?", "output": "It is sunny today.", "policy": "content-safety"},
+            json={
+                "input": "What is the weather?",
+                "output": "It is sunny today.",
+                "policy": "content-safety",
+            },
             headers={"X-Vindicara-Key": "vnd_test"},
         )
     assert response.status_code == 200
