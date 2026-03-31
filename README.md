@@ -221,7 +221,7 @@ vindicara/
 
 ```bash
 # Clone and setup
-git clone https://github.com/vindicara/vindicara.git
+git clone https://github.com/get-sltr/vindicara-ai.git
 cd vindicara
 python3.13 -m venv .venv
 source .venv/bin/activate
@@ -295,6 +295,6 @@ Apache License 2.0. See [LICENSE](LICENSE) for details.
 <p align="center">
   <strong>Vindicara</strong> | Runtime security for autonomous AI<br/>
   <a href="https://vindicara.io">vindicara.io</a> |
-  <a href="https://github.com/vindicara">GitHub</a> |
+  <a href="https://github.com/get-sltr/vindicara-ai">GitHub</a> |
   <a href="https://x.com/vindicara">Twitter / X</a>
 </p>

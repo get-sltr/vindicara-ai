@@ -52,7 +52,7 @@ dev = [
 
 [project.urls]
 Homepage = "https://vindicara.io"
-Repository = "https://github.com/vindicara/vindicara"
+Repository = "https://github.com/get-sltr/vindicara-ai"
 Documentation = "https://docs.vindicara.io"
 
 [tool.hatch.build.targets.wheel]
