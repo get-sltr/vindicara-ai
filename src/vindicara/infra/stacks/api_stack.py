@@ -1,6 +1,6 @@
 """Lambda function and API Gateway for Vindicara API."""
 
-from aws_cdk import BundlingOptions, Duration, Stack
+from aws_cdk import Duration, Stack
 from aws_cdk import aws_apigatewayv2 as apigw
 from aws_cdk import aws_apigatewayv2_integrations as integrations
 from aws_cdk import aws_dynamodb as dynamodb

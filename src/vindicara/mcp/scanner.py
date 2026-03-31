@@ -2,7 +2,7 @@
 
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import structlog
 
@@ -46,7 +46,7 @@ class MCPScanner:
                 findings=[],
                 remediation=[],
                 scan_duration_ms=0.0,
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
             )
 
         findings: list[Finding] = []
@@ -89,7 +89,7 @@ class MCPScanner:
             remediation=remediation,
             tools_discovered=tools_discovered,
             scan_duration_ms=round(elapsed_ms, 2),
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
         )
 
 
@@ -101,20 +101,20 @@ def _generate_remediation(findings: list[Finding]) -> list[Remediation]:
         Severity.LOW: 4,
     }
 
-    sorted_findings = sorted(
-        findings, key=lambda f: severity_priority.get(f.severity, 5)
-    )
+    sorted_findings = sorted(findings, key=lambda f: severity_priority.get(f.severity, 5))
 
     remediation: list[Remediation] = []
     for i, f in enumerate(sorted_findings):
         action = _remediation_action(f)
         if action:
-            remediation.append(Remediation(
-                finding_id=f.finding_id,
-                priority=i + 1,
-                action=action,
-                reference=f"CWE: {f.cwe_id}" if f.cwe_id else "",
-            ))
+            remediation.append(
+                Remediation(
+                    finding_id=f.finding_id,
+                    priority=i + 1,
+                    action=action,
+                    reference=f"CWE: {f.cwe_id}" if f.cwe_id else "",
+                )
+            )
     return remediation
 
 

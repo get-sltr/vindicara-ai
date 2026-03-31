@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from vindicara.mcp.findings import RiskLevel, ScanMode
+from vindicara.mcp.findings import ScanMode
 from vindicara.mcp.scanner import MCPScanner
 
 
@@ -28,9 +28,7 @@ class TestMCPScanner:
     async def test_static_scan_clean_config(self) -> None:
         scanner = MCPScanner()
         config = {
-            "tools": [
-                {"name": "get_weather", "description": "Get weather", "inputSchema": {}}
-            ],
+            "tools": [{"name": "get_weather", "description": "Get weather", "inputSchema": {}}],
             "auth": {"type": "oauth2", "pkce": True},
             "rateLimit": {"maxRequestsPerMinute": 100},
         }
@@ -52,7 +50,9 @@ class TestMCPScanner:
         config = {"tools": [], "auth": {"type": "oauth2", "pkce": True}, "rateLimit": {"max": 100}}
         with patch("vindicara.mcp.scanner.probe_server", new_callable=AsyncMock) as mock_probe:
             mock_probe.return_value = []
-            report = await scanner.scan(server_url="https://mcp.test", config=config, mode=ScanMode.AUTO)
+            report = await scanner.scan(
+                server_url="https://mcp.test", config=config, mode=ScanMode.AUTO
+            )
             assert report.mode == ScanMode.AUTO
             mock_probe.assert_called_once()
 

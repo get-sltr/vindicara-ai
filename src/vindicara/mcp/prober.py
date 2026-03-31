@@ -73,15 +73,17 @@ async def _probe_unauth_enumeration(
                 tools = raw_tools
 
         if tools:
-            findings.append(Finding(
-                finding_id="LIVE-UNAUTH-ENUM",
-                category=FindingCategory.AUTH,
-                severity=Severity.CRITICAL,
-                title="Unauthenticated tool enumeration",
-                description=f"Server returned {len(tools)} tools without authentication.",
-                evidence=f"tools/list returned {len(tools)} tools with no auth header",
-                cwe_id="CWE-306",
-            ))
+            findings.append(
+                Finding(
+                    finding_id="LIVE-UNAUTH-ENUM",
+                    category=FindingCategory.AUTH,
+                    severity=Severity.CRITICAL,
+                    title="Unauthenticated tool enumeration",
+                    description=f"Server returned {len(tools)} tools without authentication.",
+                    evidence=f"tools/list returned {len(tools)} tools with no auth header",
+                    cwe_id="CWE-306",
+                )
+            )
     return tools
 
 
@@ -93,15 +95,17 @@ async def _probe_auth_bypass(
         bypass_client = _create_client(client._server_url, client._timeout, auth_header=token)
         resp = await bypass_client.send("tools/list")
         if resp.is_success and resp.has_result:
-            findings.append(Finding(
-                finding_id=f"LIVE-AUTH-BYPASS-{label}",
-                category=FindingCategory.AUTH,
-                severity=Severity.CRITICAL,
-                title=f"Auth bypass: {label} token accepted",
-                description=f"Server accepted a '{label}' authorization token and returned tool data.",
-                evidence=f"Authorization: {token} returned 200 with result",
-                cwe_id="CWE-287",
-            ))
+            findings.append(
+                Finding(
+                    finding_id=f"LIVE-AUTH-BYPASS-{label}",
+                    category=FindingCategory.AUTH,
+                    severity=Severity.CRITICAL,
+                    title=f"Auth bypass: {label} token accepted",
+                    description=f"Server accepted a '{label}' authorization token and returned tool data.",
+                    evidence=f"Authorization: {token} returned 200 with result",
+                    cwe_id="CWE-287",
+                )
+            )
 
 
 async def _probe_rate_limiting(
@@ -115,15 +119,17 @@ async def _probe_rate_limiting(
     throttled = [r for r in valid_responses if r.status_code == 429]
 
     if len(throttled) == 0 and len(valid_responses) == _RATE_LIMIT_BURST:
-        findings.append(Finding(
-            finding_id="LIVE-NO-RATELIMIT",
-            category=FindingCategory.RATE_LIMIT,
-            severity=Severity.MEDIUM,
-            title="No rate limiting detected",
-            description=f"Sent {_RATE_LIMIT_BURST} requests in rapid succession. All succeeded with no 429 responses.",
-            evidence=f"{_RATE_LIMIT_BURST}/{_RATE_LIMIT_BURST} requests succeeded, 0 throttled",
-            cwe_id="CWE-770",
-        ))
+        findings.append(
+            Finding(
+                finding_id="LIVE-NO-RATELIMIT",
+                category=FindingCategory.RATE_LIMIT,
+                severity=Severity.MEDIUM,
+                title="No rate limiting detected",
+                description=f"Sent {_RATE_LIMIT_BURST} requests in rapid succession. All succeeded with no 429 responses.",
+                evidence=f"{_RATE_LIMIT_BURST}/{_RATE_LIMIT_BURST} requests succeeded, 0 throttled",
+                cwe_id="CWE-770",
+            )
+        )
 
 
 async def _probe_input_injection(
@@ -150,27 +156,31 @@ async def _probe_input_injection(
             result_str = str(resp.result).lower()
             for indicator in _INJECTION_SUCCESS_INDICATORS:
                 if indicator.lower() in result_str:
-                    findings.append(Finding(
-                        finding_id=f"LIVE-INJECTION-{payload_type}-{tool_name}",
-                        category=FindingCategory.INJECTION,
-                        severity=Severity.CRITICAL,
-                        title=f"Input injection succeeded: {payload_type} on {tool_name}",
-                        description=f"Tool '{tool_name}' processed a {payload_type} payload and returned suspicious output.",
-                        evidence=f"Payload: {payload}, Response contained: {indicator}",
-                        cwe_id="CWE-74",
-                    ))
+                    findings.append(
+                        Finding(
+                            finding_id=f"LIVE-INJECTION-{payload_type}-{tool_name}",
+                            category=FindingCategory.INJECTION,
+                            severity=Severity.CRITICAL,
+                            title=f"Input injection succeeded: {payload_type} on {tool_name}",
+                            description=f"Tool '{tool_name}' processed a {payload_type} payload and returned suspicious output.",
+                            evidence=f"Payload: {payload}, Response contained: {indicator}",
+                            cwe_id="CWE-74",
+                        )
+                    )
                     break
 
         if resp.reveals_internals:
-            findings.append(Finding(
-                finding_id=f"LIVE-INFO-LEAK-{payload_type}-{tool_name}",
-                category=FindingCategory.DATA_LEAK,
-                severity=Severity.HIGH,
-                title=f"Server internals leaked via {payload_type} on {tool_name}",
-                description=f"Adversarial input to '{tool_name}' caused an error response that reveals server internals.",
-                evidence=f"Response body (truncated): {resp.body[:300]}",
-                cwe_id="CWE-209",
-            ))
+            findings.append(
+                Finding(
+                    finding_id=f"LIVE-INFO-LEAK-{payload_type}-{tool_name}",
+                    category=FindingCategory.DATA_LEAK,
+                    severity=Severity.HIGH,
+                    title=f"Server internals leaked via {payload_type} on {tool_name}",
+                    description=f"Adversarial input to '{tool_name}' caused an error response that reveals server internals.",
+                    evidence=f"Response body (truncated): {resp.body[:300]}",
+                    cwe_id="CWE-209",
+                )
+            )
 
 
 async def _probe_oversized_input(
@@ -194,22 +204,26 @@ async def _probe_oversized_input(
     )
 
     if resp.timed_out:
-        findings.append(Finding(
-            finding_id=f"LIVE-OVERSIZE-DOS-{tool_name}",
-            category=FindingCategory.RATE_LIMIT,
-            severity=Severity.HIGH,
-            title=f"Potential DoS via oversized input: {tool_name}",
-            description=f"Sending a 1MB payload to '{tool_name}' caused a timeout.",
-            evidence="Request timed out with 1MB payload",
-            cwe_id="CWE-400",
-        ))
+        findings.append(
+            Finding(
+                finding_id=f"LIVE-OVERSIZE-DOS-{tool_name}",
+                category=FindingCategory.RATE_LIMIT,
+                severity=Severity.HIGH,
+                title=f"Potential DoS via oversized input: {tool_name}",
+                description=f"Sending a 1MB payload to '{tool_name}' caused a timeout.",
+                evidence="Request timed out with 1MB payload",
+                cwe_id="CWE-400",
+            )
+        )
     elif resp.is_success:
-        findings.append(Finding(
-            finding_id=f"LIVE-OVERSIZE-ACCEPTED-{tool_name}",
-            category=FindingCategory.CONFIG,
-            severity=Severity.MEDIUM,
-            title=f"No input size validation: {tool_name}",
-            description=f"Tool '{tool_name}' accepted a 1MB input payload without rejection.",
-            evidence="1MB payload accepted and processed",
-            cwe_id="CWE-770",
-        ))
+        findings.append(
+            Finding(
+                finding_id=f"LIVE-OVERSIZE-ACCEPTED-{tool_name}",
+                category=FindingCategory.CONFIG,
+                severity=Severity.MEDIUM,
+                title=f"No input size validation: {tool_name}",
+                description=f"Tool '{tool_name}' accepted a 1MB input payload without rejection.",
+                evidence="1MB payload accepted and processed",
+                cwe_id="CWE-770",
+            )
+        )

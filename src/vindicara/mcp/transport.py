@@ -41,7 +41,9 @@ class MCPClient:
             headers["Authorization"] = self._auth_header
         return headers
 
-    def _build_request(self, method: str, params: dict[str, object] | None = None) -> dict[str, object]:
+    def _build_request(
+        self, method: str, params: dict[str, object] | None = None
+    ) -> dict[str, object]:
         req: dict[str, object] = {
             "jsonrpc": "2.0",
             "id": self._next_id(),
@@ -79,9 +81,7 @@ class MCPClient:
             return MCPResponse(status_code=0, body="", headers={}, timed_out=True)
         except httpx.ConnectError as exc:
             log.warning("mcp.transport.connect_error", error=str(exc))
-            return MCPResponse(
-                status_code=0, body=str(exc), headers={}, connection_failed=True
-            )
+            return MCPResponse(status_code=0, body=str(exc), headers={}, connection_failed=True)
 
 
 class MCPResponse:
@@ -136,8 +136,15 @@ class MCPResponse:
     def reveals_internals(self) -> bool:
         body_lower = self.body.lower()
         leak_patterns = [
-            "traceback", "stack trace", "at line", 'file "/',
-            "exception in", "/usr/", "/home/", "/var/",
-            "node_modules", "site-packages",
+            "traceback",
+            "stack trace",
+            "at line",
+            'file "/',
+            "exception in",
+            "/usr/",
+            "/home/",
+            "/var/",
+            "node_modules",
+            "site-packages",
         ]
         return any(p in body_lower for p in leak_patterns)

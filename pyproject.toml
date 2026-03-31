@@ -66,7 +66,7 @@ markers = ["adversarial: tests for adversarial/bypass inputs"]
 
 [tool.ruff]
 target-version = "py311"
-line-length = 100
+line-length = 120
 src = ["src", "tests"]
 
 [tool.ruff.lint]
@@ -76,6 +76,7 @@ ignore = [
     "B008",   # Depends() in function defaults is standard FastAPI pattern
     "A002",   # shadowing 'input' builtin is intentional SDK API design
     "N818",   # exception names without Error suffix are intentional public API
+    "E501",   # line length handled by ruff format; long strings in security descriptions are intentional
 ]
 
 [tool.ruff.lint.isort]

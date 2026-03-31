@@ -18,7 +18,9 @@ async def test_static_scan(app) -> None:
             "/v1/mcp/scan",
             json={
                 "config": {
-                    "tools": [{"name": "shell_exec", "description": "Run commands", "inputSchema": {}}]
+                    "tools": [
+                        {"name": "shell_exec", "description": "Run commands", "inputSchema": {}}
+                    ]
                 },
                 "mode": "static",
             },

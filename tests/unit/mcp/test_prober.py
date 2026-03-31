@@ -28,9 +28,8 @@ def _tools_list_response(tools: list[dict[str, str]] | None = None) -> MCPRespon
     if tools is None:
         tools = [{"name": "get_data", "description": "Get data"}]
     import json
-    return _make_response(
-        body=json.dumps({"jsonrpc": "2.0", "id": 1, "result": {"tools": tools}})
-    )
+
+    return _make_response(body=json.dumps({"jsonrpc": "2.0", "id": 1, "result": {"tools": tools}}))
 
 
 class TestUnauthEnumeration:
@@ -49,7 +48,9 @@ class TestUnauthEnumeration:
     @pytest.mark.asyncio
     async def test_no_finding_when_auth_required(self) -> None:
         mock_client = AsyncMock()
-        mock_client.send = AsyncMock(return_value=_make_response(status_code=401, body="Unauthorized"))
+        mock_client.send = AsyncMock(
+            return_value=_make_response(status_code=401, body="Unauthorized")
+        )
 
         with patch("vindicara.mcp.prober._create_client", return_value=mock_client):
             findings = await probe_server("https://mcp.test", timeout=5.0)
@@ -63,7 +64,9 @@ class TestAuthBypass:
     async def test_detects_empty_token_bypass(self) -> None:
         call_count = 0
 
-        async def mock_send(method: str, params: object = None, include_auth: bool = True) -> MCPResponse:
+        async def mock_send(
+            method: str, params: object = None, include_auth: bool = True
+        ) -> MCPResponse:
             nonlocal call_count
             call_count += 1
             if not include_auth:
@@ -97,7 +100,9 @@ class TestRateLimiting:
     async def test_no_finding_when_throttled(self) -> None:
         call_count = 0
 
-        async def rate_limited_send(method: str, params: object = None, include_auth: bool = True) -> MCPResponse:
+        async def rate_limited_send(
+            method: str, params: object = None, include_auth: bool = True
+        ) -> MCPResponse:
             nonlocal call_count
             call_count += 1
             if call_count > 10:
@@ -117,11 +122,15 @@ class TestRateLimiting:
 class TestInputInjection:
     @pytest.mark.asyncio
     async def test_detects_path_traversal_success(self) -> None:
-        async def injection_send(method: str, params: object = None, include_auth: bool = True) -> MCPResponse:
+        async def injection_send(
+            method: str, params: object = None, include_auth: bool = True
+        ) -> MCPResponse:
             if method == "tools/list":
                 return _tools_list_response([{"name": "read_file", "description": "Read a file"}])
             if method == "tools/call":
-                return _make_response(body='{"jsonrpc":"2.0","id":1,"result":{"content":"root:x:0:0"}}')
+                return _make_response(
+                    body='{"jsonrpc":"2.0","id":1,"result":{"content":"root:x:0:0"}}'
+                )
             return _make_response()
 
         mock_client = AsyncMock()
@@ -130,14 +139,20 @@ class TestInputInjection:
         with patch("vindicara.mcp.prober._create_client", return_value=mock_client):
             findings = await probe_server("https://mcp.test", timeout=5.0)
 
-        inj = [f for f in findings if f.category == FindingCategory.INJECTION and "LIVE" in f.finding_id]
+        inj = [
+            f
+            for f in findings
+            if f.category == FindingCategory.INJECTION and "LIVE" in f.finding_id
+        ]
         assert len(inj) >= 1
 
 
 class TestOversizedInput:
     @pytest.mark.asyncio
     async def test_detects_no_size_validation(self) -> None:
-        async def oversize_send(method: str, params: object = None, include_auth: bool = True) -> MCPResponse:
+        async def oversize_send(
+            method: str, params: object = None, include_auth: bool = True
+        ) -> MCPResponse:
             if method == "tools/list":
                 return _tools_list_response([{"name": "echo", "description": "Echo input"}])
             return _make_response()

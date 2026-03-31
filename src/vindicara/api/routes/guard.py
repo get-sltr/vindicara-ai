@@ -44,9 +44,7 @@ async def guard(
             policy_id=request.policy,
         )
     except KeyError as err:
-        raise HTTPException(
-            status_code=404, detail=f"Policy '{request.policy}' not found"
-        ) from err
+        raise HTTPException(status_code=404, detail=f"Policy '{request.policy}' not found") from err
     except VindicaraValidationError as exc:
         raise HTTPException(status_code=422, detail=exc.message) from exc
 
