@@ -4,6 +4,9 @@ import structlog
 
 from vindicara.config.settings import VindicaraSettings
 from vindicara.engine.evaluator import Evaluator
+from vindicara.identity.authz import AuthzEngine
+from vindicara.identity.models import AgentIdentity, CheckResult
+from vindicara.identity.registry import AgentRegistry
 from vindicara.mcp.findings import ScanMode, ScanReport
 from vindicara.mcp.scanner import MCPScanner
 from vindicara.sdk.types import GuardResult
@@ -37,6 +40,35 @@ class MCPNamespace:
         return await self._scanner.scan(config=config, mode=ScanMode.STATIC)
 
 
+class AgentsNamespace:
+    """Agent identity and access management methods."""
+
+    def __init__(self, registry: AgentRegistry, authz: AuthzEngine) -> None:
+        self._registry = registry
+        self._authz = authz
+
+    def register(
+        self,
+        name: str,
+        permitted_tools: list[str] | None = None,
+        data_scope: list[str] | None = None,
+        limits: dict[str, int] | None = None,
+    ) -> AgentIdentity:
+        return self._registry.register(name=name, permitted_tools=permitted_tools, data_scope=data_scope, limits=limits)
+
+    def get(self, agent_id: str) -> AgentIdentity:
+        return self._registry.get(agent_id)
+
+    def list(self) -> list[AgentIdentity]:
+        return self._registry.list_agents()
+
+    def check(self, agent_id: str, tool: str) -> CheckResult:
+        return self._authz.check_tool(agent_id, tool)
+
+    def suspend(self, agent_id: str, reason: str = "Manual suspension") -> AgentIdentity:
+        return self._registry.suspend(agent_id, reason=reason)
+
+
 class VindicaraClient:
     """Main client for interacting with Vindicara.
 
@@ -56,6 +88,9 @@ class VindicaraClient:
         self._evaluator = Evaluator.with_builtins()
         self._scanner = MCPScanner()
         self.mcp = MCPNamespace(self._scanner)
+        self._agent_registry = AgentRegistry()
+        self._authz_engine = AuthzEngine(self._agent_registry)
+        self.agents = AgentsNamespace(self._agent_registry, self._authz_engine)
         self._http_client: object | None = None
 
         logger.info(
