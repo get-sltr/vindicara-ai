@@ -260,9 +260,10 @@
         Now in Developer Preview
       </div>
 
-      <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] max-w-5xl mx-auto">
-        <span class="text-gradient-brand">Runtime security</span><br />
-        <span class="text-white">for autonomous AI</span>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] max-w-5xl mx-auto">
+        <span class="text-white">Vindicara is the</span><br />
+        <span class="text-gradient-brand">runtime security layer</span><br />
+        <span class="text-white">for AI agents and MCP-connected systems.</span>
       </h1>
 
       <p class="mt-6 text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
