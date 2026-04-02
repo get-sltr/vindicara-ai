@@ -11,7 +11,7 @@ class VindicaraSettings(BaseSettings):
 
     api_key: str = Field(default="", description="Vindicara API key")
     api_base_url: str = Field(
-        default="https://api.vindicara.io",
+        default="https://d1xzz26fz4.execute-api.us-east-1.amazonaws.com",
         description="Base URL for Vindicara API",
     )
     offline_mode: bool = Field(
