@@ -201,6 +201,7 @@
       <button onclick={() => scrollTo('mcp-security')} class="hover:text-white transition-colors cursor-pointer">MCP Security</button>
       <button onclick={() => scrollTo('how-it-works')} class="hover:text-white transition-colors cursor-pointer">How It Works</button>
       <button onclick={() => scrollTo('pricing')} class="hover:text-white transition-colors cursor-pointer">Pricing</button>
+      <a href="/blog" class="hover:text-white transition-colors">Blog</a>
       <button onclick={() => scrollTo('demo')} class="hover:text-white transition-colors cursor-pointer text-brand-red">Live Demo</button>
     </div>
 
@@ -232,6 +233,7 @@
       <button onclick={() => scrollTo('mcp-security')} class="block text-sm text-zinc-400 hover:text-white w-full text-left">MCP Security</button>
       <button onclick={() => scrollTo('how-it-works')} class="block text-sm text-zinc-400 hover:text-white w-full text-left">How It Works</button>
       <button onclick={() => scrollTo('pricing')} class="block text-sm text-zinc-400 hover:text-white w-full text-left">Pricing</button>
+      <a href="/blog" class="block text-sm text-zinc-400 hover:text-white w-full text-left">Blog</a>
       <button onclick={() => scrollTo('demo')} class="block text-sm text-brand-red hover:text-white w-full text-left">Live Demo</button>
       <div class="flex gap-3 pt-2">
         <a href="https://github.com/get-sltr/vindicara-ai" class="btn-secondary text-xs px-4 py-2">GitHub</a>
