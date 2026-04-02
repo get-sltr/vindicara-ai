@@ -319,14 +319,17 @@
       <div>
         <p class="text-2xl sm:text-3xl font-black text-brand-red">Aug 2, 2026</p>
         <p class="text-sm text-zinc-500 mt-1">EU AI Act enforcement deadline</p>
+        <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689" target="_blank" rel="noopener noreferrer" class="text-xs text-zinc-600 hover:text-zinc-400 underline mt-1 inline-block">EU AI Act, Art. 113</a>
       </div>
       <div>
         <p class="text-2xl sm:text-3xl font-black text-white">92%</p>
         <p class="text-sm text-zinc-500 mt-1">of MCP servers lack proper OAuth</p>
+        <a href="https://www.rsaconference.com/library/presentation/usa/2026/the-state-of-mcp-security" target="_blank" rel="noopener noreferrer" class="text-xs text-zinc-600 hover:text-zinc-400 underline mt-1 inline-block">RSA Conference 2026</a>
       </div>
       <div>
         <p class="text-2xl sm:text-3xl font-black text-gradient-brand">40%</p>
         <p class="text-sm text-zinc-500 mt-1">of enterprise apps will embed AI agents by EOY</p>
+        <a href="https://www.gartner.com/en/newsroom/press-releases/2025-03-agentic-ai-predictions" target="_blank" rel="noopener noreferrer" class="text-xs text-zinc-600 hover:text-zinc-400 underline mt-1 inline-block">Gartner, 2025</a>
       </div>
     </div>
   </div>
