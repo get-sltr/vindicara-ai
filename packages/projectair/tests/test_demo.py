@@ -11,7 +11,6 @@ from airsdk.detections import run_detectors
 from airsdk.types import VerificationStatus
 from projectair.cli import app
 
-
 runner = CliRunner()
 
 
@@ -32,13 +31,14 @@ def test_sample_chain_carries_user_intent_on_every_step(tmp_path: Path) -> None:
     assert all(r.payload.user_intent == SAMPLE_USER_INTENT for r in records)
 
 
-def test_sample_chain_triggers_asi01_and_asi02(tmp_path: Path) -> None:
+def test_sample_chain_triggers_asi01_asi02_asi03(tmp_path: Path) -> None:
     sample = tmp_path / "demo.log"
     write_sample_log(sample)
     findings = run_detectors(load_chain(sample))
     asi_ids = {f.asi_id for f in findings}
     assert "ASI01" in asi_ids
     assert "ASI02" in asi_ids
+    assert "ASI03" in asi_ids
 
 
 def test_air_demo_runs_end_to_end(tmp_path: Path) -> None:
@@ -53,6 +53,7 @@ def test_air_demo_runs_end_to_end(tmp_path: Path) -> None:
     assert "[Chain verified]" in result.stdout
     assert "ASI01" in result.stdout
     assert "ASI02" in result.stdout
+    assert "ASI03" in result.stdout
 
 
 def test_air_trace_on_demo_sample(tmp_path: Path) -> None:

@@ -80,11 +80,11 @@ class Signer:
         self._signer_key_hex = self._pub.public_bytes(Encoding.Raw, PublicFormat.Raw).hex()
 
     @classmethod
-    def generate(cls) -> "Signer":
+    def generate(cls) -> Signer:
         return cls(Ed25519PrivateKey.generate())
 
     @classmethod
-    def from_env(cls, env_var: str = "AIRSDK_SIGNING_KEY") -> "Signer":
+    def from_env(cls, env_var: str = "AIRSDK_SIGNING_KEY") -> Signer:
         """Load an Ed25519 private key from a PEM or raw-hex env var.
 
         Falls back to ``generate()`` when the env var is unset. This lets local
@@ -208,7 +208,7 @@ def load_chain(path: str | Path) -> list[AgDRRecord]:
 
 def export_private_key_pem(signer: Signer) -> bytes:
     """PEM bytes of the signer's private key. Useful when persisting generated keys."""
-    return signer._priv.private_bytes(  # noqa: SLF001
+    return signer._priv.private_bytes(
         encoding=Encoding.PEM,
         format=PrivateFormat.PKCS8,
         encryption_algorithm=NoEncryption(),

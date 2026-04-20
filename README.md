@@ -91,9 +91,11 @@ For the legacy five-pillar README that used to live here, see [`docs/legacy-vind
 | LangChain `AIRCallbackHandler`          | implemented               |
 | ASI01 Agent Goal Hijack detector        | implemented (heuristic)   |
 | ASI02 Tool Misuse detector              | implemented (regex)       |
-| ASI03 through ASI10 detectors           | not yet implemented       |
+| ASI03 Prompt Injection detector         | implemented (heuristic)   |
+| ASI04 through ASI10 detectors           | not yet implemented       |
 | JSON forensic export                    | implemented               |
-| PDF and SIEM forensic exports           | not yet implemented       |
+| PDF forensic export                     | implemented (fpdf2)       |
+| SIEM forensic export (ArcSight CEF v0)  | implemented               |
 | AIR Cloud (hosted dashboards, SIEM)     | not yet implemented       |
 
 Pre-1.0. The detector heuristics will produce false positives and false negatives. The signed chain itself is production-grade cryptography. See the [pricing page](https://vindicara.io/pricing) for what's planned next.

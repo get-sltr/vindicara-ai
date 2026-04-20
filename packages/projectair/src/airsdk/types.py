@@ -29,7 +29,6 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-
 # 64 hex chars = 256 bits. BLAKE3 default output size and Ed25519 public key size.
 GENESIS_PREV_HASH = "0" * 64
 

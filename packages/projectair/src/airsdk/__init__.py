@@ -9,6 +9,7 @@ from airsdk.callback import AIRCallbackHandler
 from airsdk.detections import (
     UNIMPLEMENTED_DETECTORS,
     detect_goal_hijack,
+    detect_prompt_injection,
     detect_tool_misuse,
     run_detectors,
 )
@@ -24,10 +25,11 @@ from airsdk.types import (
     VerificationStatus,
 )
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 __all__ = [
     "AGDR_VERSION",
+    "UNIMPLEMENTED_DETECTORS",
     "AIRCallbackHandler",
     "AgDRPayload",
     "AgDRRecord",
@@ -35,11 +37,11 @@ __all__ = [
     "ForensicReport",
     "Signer",
     "StepKind",
-    "UNIMPLEMENTED_DETECTORS",
     "VerificationResult",
     "VerificationStatus",
     "__version__",
     "detect_goal_hijack",
+    "detect_prompt_injection",
     "detect_tool_misuse",
     "export_json",
     "export_pdf",

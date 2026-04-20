@@ -19,7 +19,6 @@ from airsdk.types import (
     VerificationStatus,
 )
 
-
 app = typer.Typer(
     name="air",
     help="Project AIR: forensic reconstruction and incident response for AI agents.",
@@ -45,6 +44,7 @@ def _print_detector_coverage() -> None:
     typer.secho("Detector coverage:", fg=typer.colors.BRIGHT_BLACK)
     typer.secho("  ASI01 Agent Goal Hijack          implemented", fg=typer.colors.BRIGHT_BLACK)
     typer.secho("  ASI02 Tool Misuse                implemented", fg=typer.colors.BRIGHT_BLACK)
+    typer.secho("  ASI03 Prompt Injection           implemented", fg=typer.colors.BRIGHT_BLACK)
     for code, name in UNIMPLEMENTED_DETECTORS:
         typer.secho(f"  {code} {name:<31} not yet implemented", fg=typer.colors.BRIGHT_BLACK)
 

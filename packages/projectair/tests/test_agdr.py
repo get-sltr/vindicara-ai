@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from airsdk.agdr import Signer, load_chain, verify_chain, verify_record
-from airsdk.types import AgDRPayload, AgDRRecord, StepKind, VerificationStatus
+from airsdk.types import AgDRPayload, StepKind, VerificationStatus
 
 
 @pytest.fixture

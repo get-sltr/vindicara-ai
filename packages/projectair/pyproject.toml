@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "projectair"
-version = "0.1.2"
+version = "0.1.3"
 description = "Project AIR: forensic reconstruction and incident response for AI agents. Turn agent traces into signed forensic records with BLAKE3 + Ed25519."
 readme = "README.md"
 license = "MIT"
@@ -32,6 +32,8 @@ dependencies = [
     # langchain-core: floor 1.2.22 patches CVE-2026-34070 (load_prompt path traversal, HIGH)
     # and CVE-2026-26013 (image_url SSRF, LOW).
     "langchain-core>=1.2.22,<2.0",
+    # fpdf2: pure-Python PDF rendering for `air trace --format pdf`. No system deps.
+    "fpdf2>=2.8.0,<3.0",
 ]
 
 [project.optional-dependencies]
@@ -64,7 +66,15 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "S", "B", "A", "C4", "PT", "SIM", "TCH", "RUF"]
-ignore = ["S101", "A002", "N818", "E501"]
+ignore = [
+    "S101",   # assert in tests is fine
+    "A002",   # shadowing 'input' builtin is intentional SDK API design
+    "N818",   # exception names without Error suffix are intentional public API
+    "E501",   # long strings in security descriptions are intentional
+    "B008",   # typer.Option()/Argument() in defaults is standard idiom, like FastAPI's Depends
+    "TC003",  # keep runtime imports for pathlib.Path et al. Typer / pydantic resolve types at runtime.
+    "TC002",  # same reasoning for third-party imports used in signatures
+]
 
 [tool.mypy]
 python_version = "3.12"

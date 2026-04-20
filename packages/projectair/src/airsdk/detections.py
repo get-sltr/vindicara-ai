@@ -1,15 +1,15 @@
-"""OWASP Top 10 for Agentic Applications detectors (session 1 coverage).
+"""OWASP Top 10 for Agentic Applications detectors.
 
-Only ASI01 and ASI02 are implemented in session 1. The rest are declared in
-``UNIMPLEMENTED_DETECTORS`` so the CLI can surface honest coverage state instead
-of silently pretending we checked them.
+ASI01 Agent Goal Hijack, ASI02 Tool Misuse, and ASI03 Prompt Injection are
+implemented as honest first-pass heuristics. The rest are declared in
+``UNIMPLEMENTED_DETECTORS`` so the CLI can surface honest coverage state
+instead of silently pretending we checked them.
 """
 from __future__ import annotations
 
 import re
 
 from airsdk.types import AgDRRecord, Finding, StepKind
-
 
 STOPWORDS = frozenset({
     "a", "an", "and", "are", "as", "at", "be", "by", "do", "for", "from", "have",
@@ -36,8 +36,20 @@ DANGEROUS_ARG_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("credential leak", re.compile(r"(?:aws_secret|api[_-]?key|password|bearer\s+[a-z0-9]{20,})", re.IGNORECASE)),
 )
 
+# ASI03 Prompt Injection patterns. Heuristic, not exhaustive.
+# Aim: catch the patterns every pentester tries in the first 60 seconds.
+INJECTION_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
+    ("ignore-previous-instructions", re.compile(r"\b(?:ignore|disregard|forget)\s+(?:all\s+|the\s+)?(?:previous|prior|above|earlier|preceding)\s+(?:instructions?|rules?|prompts?|messages?|directives?)\b", re.IGNORECASE)),
+    ("role-reset", re.compile(r"\b(?:you\s+are\s+now|from\s+now\s+on\s+you\s+are|act\s+as|pretend\s+(?:to\s+be|you\s+are)|new\s+role|switch\s+roles?)\b", re.IGNORECASE)),
+    ("fake system marker", re.compile(r"(?:^|\n)\s*\[?(?:system|assistant|user)\s*\]?\s*[:>]\s", re.IGNORECASE | re.MULTILINE)),
+    ("jailbreak prefix (DAN/developer mode)", re.compile(r"\b(?:DAN|do anything now|developer\s+mode|jailbreak|unfiltered|no restrictions?)\b", re.IGNORECASE)),
+    ("rule override", re.compile(r"\b(?:override|bypass|skip)\s+(?:safety|guard\w*|filter|policy|rules?|restrictions?)\b", re.IGNORECASE)),
+    ("base64 instruction payload", re.compile(r"\b(?:decode\s+(?:this|the following)|base64[:\s]+)\s*[A-Za-z0-9+/]{32,}={0,2}\b", re.IGNORECASE)),
+    ("unicode bidi override", re.compile(r"[\u202a-\u202e\u2066-\u2069]")),
+    ("inline credential exfil request", re.compile(r"\b(?:reveal|print|output|show|list)\s+(?:your|the)\s+(?:system\s+prompt|instructions?|api[_\s-]?key|secret|token)\b", re.IGNORECASE)),
+)
+
 UNIMPLEMENTED_DETECTORS: tuple[tuple[str, str], ...] = (
-    ("ASI03", "Prompt Injection"),
     ("ASI04", "Memory Poisoning"),
     ("ASI05", "Sensitive Data Exposure"),
     ("ASI06", "Excessive Agency"),
@@ -144,9 +156,45 @@ def detect_tool_misuse(records: list[AgDRRecord]) -> list[Finding]:
     return findings
 
 
+def detect_prompt_injection(records: list[AgDRRecord]) -> list[Finding]:
+    """ASI03: llm_start payload carries known prompt-injection shapes.
+
+    Heuristic only. Keyword-based matching against the prompts the agent
+    consumed. This surfaces obvious injection attempts (ignore-previous,
+    role-reset, fake system markers, jailbreak prefixes, base64 payloads,
+    bidi obfuscation, credential-exfil requests). It will miss novel or
+    multi-turn social-engineering attacks; for that, use a dedicated
+    classifier in the prevention layer.
+    """
+    findings: list[Finding] = []
+    for index, record in enumerate(records):
+        if record.kind != StepKind.LLM_START or not record.payload.prompt:
+            continue
+        prompt = record.payload.prompt
+        for label, pattern in INJECTION_PATTERNS:
+            match = pattern.search(prompt)
+            if match:
+                findings.append(
+                    Finding(
+                        asi_id="ASI03",
+                        title="Prompt Injection",
+                        severity="high",
+                        step_id=record.step_id,
+                        step_index=index,
+                        description=(
+                            f"Prompt at step {index} matches the `{label}` pattern "
+                            f"(matched: {match.group(0)[:80]!r})."
+                        ),
+                    )
+                )
+                break
+    return findings
+
+
 def run_detectors(records: list[AgDRRecord]) -> list[Finding]:
     """Run every implemented detector and return a flat list of findings."""
     return [
         *detect_goal_hijack(records),
         *detect_tool_misuse(records),
+        *detect_prompt_injection(records),
     ]

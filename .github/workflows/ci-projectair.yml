@@ -1,0 +1,41 @@
+name: ci-projectair
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/projectair/**'
+      - '.github/workflows/ci-projectair.yml'
+  pull_request:
+    paths:
+      - 'packages/projectair/**'
+      - '.github/workflows/ci-projectair.yml'
+
+jobs:
+  test:
+    name: python-${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13']
+    defaults:
+      run:
+        working-directory: packages/projectair
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: packages/projectair/pyproject.toml
+
+      - name: install
+        run: pip install -e '.[dev]'
+
+      - name: ruff
+        run: ruff check .
+
+      - name: pytest
+        run: pytest -v

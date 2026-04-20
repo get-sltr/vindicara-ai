@@ -61,7 +61,7 @@ air trace my-agent.log
 You get console output like this:
 
 ```
-[AIR v0.1.2] Loaded 247 agent steps across 3 conversations.
+[AIR v0.1.3] Loaded 247 agent steps across 3 conversations.
 [Chain verified] 247 signatures valid.
 
   ASI01 Agent Goal Hijack detected at step 47
@@ -70,32 +70,38 @@ You get console output like this:
   ASI02 Tool Misuse detected at step 51
     Tool `shell_exec` invoked with arguments matching pattern: shell metacharacters.
 
+  ASI03 Prompt Injection detected at step 53
+    Prompt matches the `ignore-previous-instructions` pattern.
+
 Detector coverage:
   ASI01 Agent Goal Hijack          implemented
   ASI02 Tool Misuse                implemented
-  ASI03 Prompt Injection           not yet implemented
+  ASI03 Prompt Injection           implemented
   ASI04 Memory Poisoning           not yet implemented
   ...
 
 [Export] forensic-report.json
 ```
 
+Export formats: `air trace --format pdf` emits a human-readable PDF for legal and insurance stakeholders; `--format siem` emits ArcSight CEF v0 events for SIEM ingestion (Splunk, Sumo, QRadar, Datadog).
+
 ## Session 1 scope
 
 This release covers the minimum forensic surface end-to-end:
 
-| Capability                              | Status           |
-|-----------------------------------------|------------------|
-| BLAKE3 + Ed25519 signed AgDR chain      | implemented      |
-| Chain verification (tamper detection)   | implemented      |
-| LangChain callback handler              | implemented      |
-| ASI01 Agent Goal Hijack detector        | implemented (heuristic) |
-| ASI02 Tool Misuse detector              | implemented (regex) |
-| ASI03 through ASI10 detectors           | not yet implemented |
-| JSON forensic export                    | implemented      |
-| PDF forensic export                     | not yet implemented |
-| SIEM forensic export                    | not yet implemented |
-| Framework integrations beyond LangChain | not yet implemented |
+| Capability                              | Status                    |
+|-----------------------------------------|---------------------------|
+| BLAKE3 + Ed25519 signed AgDR chain      | implemented               |
+| Chain verification (tamper detection)   | implemented               |
+| LangChain callback handler              | implemented               |
+| ASI01 Agent Goal Hijack detector        | implemented (heuristic)   |
+| ASI02 Tool Misuse detector              | implemented (regex)       |
+| ASI03 Prompt Injection detector         | implemented (heuristic)   |
+| ASI04 through ASI10 detectors           | not yet implemented       |
+| JSON forensic export                    | implemented               |
+| PDF forensic export                     | implemented               |
+| SIEM forensic export (ArcSight CEF v0)  | implemented               |
+| Framework integrations beyond LangChain | not yet implemented       |
 
 The detectors are honest first-pass heuristics. They will produce false positives and false negatives. The signed chain itself is production-grade cryptography.
 
