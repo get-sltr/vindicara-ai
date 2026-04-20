@@ -1,4 +1,4 @@
-"""`air` CLI. Session 1 surfaces a single `trace` subcommand."""
+"""`air` CLI. Surfaces `trace`, `demo`, and `version` subcommands."""
 from __future__ import annotations
 
 from datetime import UTC, datetime
@@ -8,10 +8,12 @@ from uuid import uuid4
 import typer
 
 from airsdk import __version__ as airsdk_version
+from airsdk._demo import write_sample_log
 from airsdk.agdr import load_chain, verify_chain
 from airsdk.detections import UNIMPLEMENTED_DETECTORS, run_detectors
 from airsdk.exports import export_json, export_pdf, export_siem
 from airsdk.types import (
+    AgDRRecord,
     ForensicReport,
     StepKind,
     VerificationStatus,
@@ -26,7 +28,7 @@ app = typer.Typer(
 )
 
 
-def _count_conversations(records: list) -> int:  # type: ignore[type-arg]
+def _count_conversations(records: list[AgDRRecord]) -> int:
     finishes = sum(1 for r in records if r.kind == StepKind.AGENT_FINISH)
     return max(finishes, 1)
 
@@ -39,21 +41,16 @@ def _severity_color(severity: str) -> str:
     }.get(severity, typer.colors.WHITE)
 
 
-@app.command()
-def trace(
-    log: Path = typer.Argument(..., exists=True, readable=True, help="Path to a JSON-lines AgDR log."),
-    output: Path = typer.Option(
-        Path("forensic-report.json"),
-        "--output", "-o",
-        help="Where to write the forensic report.",
-    ),
-    output_format: str = typer.Option(
-        "json",
-        "--format", "-f",
-        help="Output format. Session 1 ships json; pdf and siem are reserved.",
-    ),
-) -> None:
-    """Ingest an AgDR log, verify its signatures, and output a forensic timeline."""
+def _print_detector_coverage() -> None:
+    typer.secho("Detector coverage:", fg=typer.colors.BRIGHT_BLACK)
+    typer.secho("  ASI01 Agent Goal Hijack          implemented", fg=typer.colors.BRIGHT_BLACK)
+    typer.secho("  ASI02 Tool Misuse                implemented", fg=typer.colors.BRIGHT_BLACK)
+    for code, name in UNIMPLEMENTED_DETECTORS:
+        typer.secho(f"  {code} {name:<31} not yet implemented", fg=typer.colors.BRIGHT_BLACK)
+
+
+def _run_trace_pipeline(log: Path, output: Path, output_format: str) -> None:
+    """Shared body for ``air trace`` and ``air demo``. Raises ``typer.Exit`` on failure."""
     typer.secho(f"[AIR v{airsdk_version}] Analyzing {log}...", fg=typer.colors.WHITE, bold=True)
 
     records = load_chain(log)
@@ -84,8 +81,8 @@ def trace(
     )
 
     findings = run_detectors(records)
+    typer.echo()
     if findings:
-        typer.echo()
         for finding in findings:
             typer.secho(
                 f"  {finding.asi_id} {finding.title} detected at step {finding.step_index}",
@@ -93,15 +90,10 @@ def trace(
             )
             typer.secho(f"    {finding.description}", fg=typer.colors.BRIGHT_BLACK)
     else:
-        typer.echo()
         typer.secho("  No ASI01 or ASI02 findings on this trace.", fg=typer.colors.GREEN)
 
     typer.echo()
-    typer.secho("Detector coverage:", fg=typer.colors.BRIGHT_BLACK)
-    typer.secho("  ASI01 Agent Goal Hijack          implemented", fg=typer.colors.BRIGHT_BLACK)
-    typer.secho("  ASI02 Tool Misuse                implemented", fg=typer.colors.BRIGHT_BLACK)
-    for code, name in UNIMPLEMENTED_DETECTORS:
-        typer.secho(f"  {code} {name:<31} not yet implemented", fg=typer.colors.BRIGHT_BLACK)
+    _print_detector_coverage()
 
     report = ForensicReport(
         air_version=airsdk_version,
@@ -135,6 +127,51 @@ def trace(
 
     typer.echo()
     typer.secho(f"[Export] {written.resolve()}", fg=typer.colors.CYAN)
+
+
+@app.command()
+def trace(
+    log: Path = typer.Argument(..., exists=True, readable=True, help="Path to a JSON-lines AgDR log."),
+    output: Path = typer.Option(
+        Path("forensic-report.json"),
+        "--output", "-o",
+        help="Where to write the forensic report.",
+    ),
+    output_format: str = typer.Option(
+        "json",
+        "--format", "-f",
+        help="Output format. json today; pdf and siem are reserved.",
+    ),
+) -> None:
+    """Ingest an AgDR log, verify its signatures, and output a forensic timeline."""
+    _run_trace_pipeline(log, output, output_format)
+
+
+@app.command()
+def demo(
+    sample_path: Path = typer.Option(
+        Path("air-demo.log"),
+        "--sample-path", "-s",
+        help="Where to write the generated sample AgDR log.",
+    ),
+    output: Path = typer.Option(
+        Path("forensic-report.json"),
+        "--output", "-o",
+        help="Where to write the forensic report.",
+    ),
+) -> None:
+    """Generate a signed sample trace and run trace against it. Zero setup required."""
+    typer.secho(
+        "[demo] Generating a fresh signed AgDR chain (13 steps, includes baked-in ASI01 + ASI02 violations)...",
+        fg=typer.colors.WHITE, bold=True,
+    )
+    signer = write_sample_log(sample_path)
+    typer.secho(
+        f"[demo] Wrote sample to {sample_path.resolve()} (signer pubkey: {signer.public_key_hex[:16]}...)",
+        fg=typer.colors.BRIGHT_BLACK,
+    )
+    typer.echo()
+    _run_trace_pipeline(sample_path, output, "json")
 
 
 @app.command()
