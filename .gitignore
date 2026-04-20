@@ -10,8 +10,15 @@ build/
 
 # Virtual environments
 .venv/
+.venv-*/
 venv/
 ENV/
+
+# AIR generated artifacts
+forensic-report.json
+forensic-report.pdf
+forensic-report.siem
+air-trace-*.log
 
 # Testing / Coverage
 .pytest_cache/
