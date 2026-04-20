@@ -3,4 +3,4 @@
 The forensic primitives live in ``airsdk``. This package glues them to the
 ``air`` terminal entry point.
 """
-__version__ = "0.1.4"
+__version__ = "0.1.5"

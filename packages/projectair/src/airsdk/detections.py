@@ -5,10 +5,14 @@ Implemented as honest first-pass heuristics:
     - ASI02 Tool Misuse
     - ASI03 Prompt Injection
     - ASI05 Sensitive Data Exposure
+    - ASI07 Unrestricted Resource Consumption
     - ASI09 Supply Chain and MCP Risk
+    - ASI10 Untraceable Action
 
-The rest are declared in ``UNIMPLEMENTED_DETECTORS`` so the CLI can surface
-honest coverage state instead of silently pretending we checked them.
+The rest (ASI04 Memory Poisoning, ASI06 Excessive Agency, ASI08 Plan
+Corruption) are declared in ``UNIMPLEMENTED_DETECTORS`` so the CLI can
+surface honest coverage state instead of silently pretending we checked
+them.
 """
 from __future__ import annotations
 
@@ -74,12 +78,19 @@ SENSITIVE_DATA_PATTERNS: tuple[tuple[str, str, re.Pattern[str]], ...] = (
 # ASI09 Supply Chain / MCP patterns.
 MCP_TOOL_PATTERN = re.compile(r"(?:^mcp[_\-\.]|[_\-]mcp[_\-]|^mcp\.)", re.IGNORECASE)
 
+# ASI07 Resource Consumption thresholds.
+BURST_WINDOW_SECONDS = 60
+BURST_THRESHOLD = 20           # >20 tool_start events inside a 60s window
+SESSION_TOTAL_THRESHOLD = 50   # >50 tool calls total in a session
+TOOL_REPEAT_THRESHOLD = 10     # same tool_name invoked >=10 times
+
+# ASI10 Untraceable Action thresholds.
+TIME_GAP_THRESHOLD_SECONDS = 300  # >5 min silence between consecutive records
+
 UNIMPLEMENTED_DETECTORS: tuple[tuple[str, str], ...] = (
     ("ASI04", "Memory Poisoning"),
     ("ASI06", "Excessive Agency"),
-    ("ASI07", "Unrestricted Resource Consumption"),
     ("ASI08", "Plan Corruption"),
-    ("ASI10", "Untraceable Action"),
 )
 
 
@@ -294,6 +305,180 @@ def detect_mcp_supply_chain_risk(records: list[AgDRRecord]) -> list[Finding]:
     return findings
 
 
+def _parse_timestamp(ts: str) -> float | None:
+    """Best-effort ISO8601 -> unix seconds. Returns ``None`` on malformed input."""
+    from datetime import datetime
+    try:
+        normalized = ts.replace("Z", "+00:00") if ts.endswith("Z") else ts
+        return datetime.fromisoformat(normalized).timestamp()
+    except (ValueError, TypeError):
+        return None
+
+
+def detect_resource_consumption(records: list[AgDRRecord]) -> list[Finding]:
+    """ASI07: tool-call frequency, session total, or single-tool repetition exceeds thresholds.
+
+    Three sub-heuristics:
+      1. Burst: more than ``BURST_THRESHOLD`` tool_start events within any
+         rolling ``BURST_WINDOW_SECONDS``-wide window.
+      2. Session total: more than ``SESSION_TOTAL_THRESHOLD`` tool calls
+         across the entire trace.
+      3. Single-tool loop: the same ``tool_name`` invoked at least
+         ``TOOL_REPEAT_THRESHOLD`` times.
+
+    Each triggered check emits one finding. Heuristic only; the thresholds
+    are configurable constants at the top of this module.
+    """
+    findings: list[Finding] = []
+    tool_starts = [(i, r) for i, r in enumerate(records) if r.kind == StepKind.TOOL_START]
+
+    # (2) Session total
+    if len(tool_starts) > SESSION_TOTAL_THRESHOLD:
+        last_idx, last_rec = tool_starts[-1]
+        findings.append(
+            Finding(
+                asi_id="ASI07",
+                title="Unrestricted Resource Consumption",
+                severity="high",
+                step_id=last_rec.step_id,
+                step_index=last_idx,
+                description=(
+                    f"Session total of {len(tool_starts)} tool calls exceeds "
+                    f"threshold of {SESSION_TOTAL_THRESHOLD}. Review for runaway "
+                    f"agent behavior."
+                ),
+            )
+        )
+
+    # (3) Single-tool repetition
+    name_counts: dict[str, tuple[int, int, str]] = {}  # tool_name -> (count, last_index, last_step_id)
+    for index, record in tool_starts:
+        name = record.payload.tool_name or "<unknown>"
+        count, _, _ = name_counts.get(name, (0, index, record.step_id))
+        name_counts[name] = (count + 1, index, record.step_id)
+    for name, (count, last_index, last_step_id) in name_counts.items():
+        if count >= TOOL_REPEAT_THRESHOLD:
+            findings.append(
+                Finding(
+                    asi_id="ASI07",
+                    title="Unrestricted Resource Consumption",
+                    severity="medium",
+                    step_id=last_step_id,
+                    step_index=last_index,
+                    description=(
+                        f"Tool `{name}` invoked {count} times in a single session "
+                        f"(threshold {TOOL_REPEAT_THRESHOLD}). Possible loop or runaway retry."
+                    ),
+                )
+            )
+
+    # (1) Burst: rolling window over tool_start timestamps.
+    timestamps = [(i, r, _parse_timestamp(r.timestamp)) for i, r in tool_starts]
+    timestamps = [(i, r, t) for i, r, t in timestamps if t is not None]
+    for left in range(len(timestamps)):
+        window_end = timestamps[left][2] + BURST_WINDOW_SECONDS
+        right = left
+        while right < len(timestamps) and timestamps[right][2] <= window_end:
+            right += 1
+        count = right - left
+        if count > BURST_THRESHOLD:
+            last_index, last_rec, _ = timestamps[right - 1]
+            findings.append(
+                Finding(
+                    asi_id="ASI07",
+                    title="Unrestricted Resource Consumption",
+                    severity="high",
+                    step_id=last_rec.step_id,
+                    step_index=last_index,
+                    description=(
+                        f"{count} tool calls inside a {BURST_WINDOW_SECONDS}s window "
+                        f"(threshold {BURST_THRESHOLD}). Possible denial-of-service "
+                        f"or runaway plan."
+                    ),
+                )
+            )
+            break  # one burst finding per trace; don't over-flag overlapping windows
+    return findings
+
+
+def detect_untraceable_action(records: list[AgDRRecord]) -> list[Finding]:
+    """ASI10: the chain has structural gaps that obscure what the agent did.
+
+    Three sub-heuristics:
+      1. ``tool_start`` with no matching ``tool_end`` before the next
+         higher-level step (the tool executed but the result was not
+         recorded).
+      2. ``llm_start`` with no matching ``llm_end`` before the next
+         higher-level step (the LLM call's response was not recorded,
+         which is exactly the shape a crashed or suppressed call leaves).
+      3. Time gap between consecutive records exceeds
+         ``TIME_GAP_THRESHOLD_SECONDS`` (session went silent, evidence of
+         the interval is missing).
+    """
+    findings: list[Finding] = []
+
+    # (1) + (2): find unpaired starts. A start is paired if the next record
+    # of a "closing" kind matches it before any higher-level boundary.
+    for index, record in enumerate(records):
+        if record.kind == StepKind.TOOL_START:
+            # Next record must be tool_end; if it's anything else, flag.
+            if index + 1 >= len(records) or records[index + 1].kind != StepKind.TOOL_END:
+                findings.append(
+                    Finding(
+                        asi_id="ASI10",
+                        title="Untraceable Action",
+                        severity="high",
+                        step_id=record.step_id,
+                        step_index=index,
+                        description=(
+                            f"tool_start for `{record.payload.tool_name}` at step "
+                            f"{index} is not followed by a matching tool_end. "
+                            f"Tool outcome is not in the forensic chain."
+                        ),
+                    )
+                )
+        elif record.kind == StepKind.LLM_START and (
+            index + 1 >= len(records) or records[index + 1].kind != StepKind.LLM_END
+        ):
+            findings.append(
+                Finding(
+                    asi_id="ASI10",
+                    title="Untraceable Action",
+                    severity="high",
+                    step_id=record.step_id,
+                    step_index=index,
+                    description=(
+                        f"llm_start at step {index} is not followed by a "
+                        f"matching llm_end. LLM response is not in the "
+                        f"forensic chain."
+                    ),
+                )
+            )
+
+    # (3): time gaps between consecutive records
+    for index in range(1, len(records)):
+        t_prev = _parse_timestamp(records[index - 1].timestamp)
+        t_cur = _parse_timestamp(records[index].timestamp)
+        if t_prev is not None and t_cur is not None and (t_cur - t_prev) > TIME_GAP_THRESHOLD_SECONDS:
+            gap = int(t_cur - t_prev)
+            findings.append(
+                Finding(
+                    asi_id="ASI10",
+                    title="Untraceable Action",
+                    severity="medium",
+                    step_id=records[index].step_id,
+                    step_index=index,
+                    description=(
+                        f"Silent interval of {gap}s between step {index - 1} and "
+                        f"step {index} (threshold {TIME_GAP_THRESHOLD_SECONDS}s). "
+                        f"Agent activity during this window is not in the chain."
+                    ),
+                )
+            )
+
+    return findings
+
+
 def run_detectors(records: list[AgDRRecord]) -> list[Finding]:
     """Run every implemented detector and return a flat list of findings."""
     return [
@@ -302,4 +487,6 @@ def run_detectors(records: list[AgDRRecord]) -> list[Finding]:
         *detect_prompt_injection(records),
         *detect_sensitive_data_exposure(records),
         *detect_mcp_supply_chain_risk(records),
+        *detect_resource_consumption(records),
+        *detect_untraceable_action(records),
     ]

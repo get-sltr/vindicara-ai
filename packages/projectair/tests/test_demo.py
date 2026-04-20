@@ -36,11 +36,8 @@ def test_sample_chain_triggers_all_implemented_detectors(tmp_path: Path) -> None
     write_sample_log(sample)
     findings = run_detectors(load_chain(sample))
     asi_ids = {f.asi_id for f in findings}
-    assert "ASI01" in asi_ids
-    assert "ASI02" in asi_ids
-    assert "ASI03" in asi_ids
-    assert "ASI05" in asi_ids
-    assert "ASI09" in asi_ids
+    for expected in ("ASI01", "ASI02", "ASI03", "ASI05", "ASI07", "ASI09", "ASI10"):
+        assert expected in asi_ids, f"{expected} missing from demo findings: {asi_ids}"
 
 
 def test_air_demo_runs_end_to_end(tmp_path: Path) -> None:
@@ -53,11 +50,8 @@ def test_air_demo_runs_end_to_end(tmp_path: Path) -> None:
     assert sample.exists()
     assert report.exists()
     assert "[Chain verified]" in result.stdout
-    assert "ASI01" in result.stdout
-    assert "ASI02" in result.stdout
-    assert "ASI03" in result.stdout
-    assert "ASI05" in result.stdout
-    assert "ASI09" in result.stdout
+    for asi in ("ASI01", "ASI02", "ASI03", "ASI05", "ASI07", "ASI09", "ASI10"):
+        assert asi in result.stdout, f"{asi} not surfaced by `air demo`"
 
 
 def test_air_trace_on_demo_sample(tmp_path: Path) -> None:

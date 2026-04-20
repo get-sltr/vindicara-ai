@@ -26,7 +26,7 @@
 
 ## What AIR is
 
-AIR writes a **signed forensic record** of every agent decision (llm, tool, finish) as an AgDR (AI Decision Record). Each record is content-hashed with BLAKE3, signed with Ed25519, and chained to the previous step. The `air` CLI replays the chain, verifies every signature, and reports OWASP Top 10 for Agentic Applications violations (5 of 10 detectors shipped today: ASI01, ASI02, ASI03, ASI05, ASI09. ASI04, ASI06, ASI07, ASI08, ASI10 on roadmap).
+AIR writes a **signed forensic record** of every agent decision (llm, tool, finish) as an AgDR (AI Decision Record). Each record is content-hashed with BLAKE3, signed with Ed25519, and chained to the previous step. The `air` CLI replays the chain, verifies every signature, and reports OWASP Top 10 for Agentic Applications violations (7 of 10 detectors shipped today: ASI01, ASI02, ASI03, ASI05, ASI07, ASI09, ASI10. ASI04, ASI06, ASI08 on roadmap).
 
 It is the layer that runs **behind** your guardrails. Prevention tools (Lakera, NeMo Guardrails, Bedrock Guardrails) try to stop bad things from happening. AIR produces the evidence of what actually happened, in a form security, legal, and insurance can act on.
 
@@ -93,14 +93,17 @@ For the legacy five-pillar README that used to live here, see [`docs/legacy-vind
 | ASI02 Tool Misuse detector              | implemented (regex)       |
 | ASI03 Prompt Injection detector         | implemented (heuristic)   |
 | ASI05 Sensitive Data Exposure detector  | implemented (pattern set) |
+| ASI07 Resource Consumption detector     | implemented (thresholds)  |
 | ASI09 Supply Chain / MCP Risk detector  | implemented (heuristic)   |
-| ASI04, ASI06, ASI07, ASI08, ASI10       | not yet implemented       |
+| ASI10 Untraceable Action detector       | implemented (chain gaps)  |
+| ASI04, ASI06, ASI08                     | not yet implemented       |
 | JSON forensic export                    | implemented               |
 | PDF forensic export                     | implemented (fpdf2)       |
 | SIEM forensic export (ArcSight CEF v0)  | implemented               |
 | LangChain callback integration          | implemented               |
 | OpenAI SDK integration                  | implemented               |
-| Anthropic, LlamaIndex, CrewAI, AutoGen  | not yet implemented       |
+| Anthropic SDK integration               | implemented               |
+| LlamaIndex / CrewAI / AutoGen           | not yet implemented       |
 | AIR Cloud (hosted dashboards, SIEM)     | not yet implemented       |
 
 Pre-1.0. The detector heuristics will produce false positives and false negatives. The signed chain itself is production-grade cryptography. See the [pricing page](https://vindicara.io/pricing) for what's planned next.

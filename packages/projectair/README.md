@@ -13,7 +13,7 @@
 
 ## What this is
 
-When an AI agent goes off-script, AIR tells you what happened and proves it. Every agent decision is written as a signed AgDR (AI Decision Record) with a BLAKE3 content hash and an Ed25519 signature, chained to the previous step. The `air` CLI replays that chain, verifies every signature, and reports OWASP Top 10 for Agentic Applications violations (5 of 10 detectors shipped: ASI01, ASI02, ASI03, ASI05, ASI09 today; ASI04, ASI06, ASI07, ASI08, ASI10 on roadmap).
+When an AI agent goes off-script, AIR tells you what happened and proves it. Every agent decision is written as a signed AgDR (AI Decision Record) with a BLAKE3 content hash and an Ed25519 signature, chained to the previous step. The `air` CLI replays that chain, verifies every signature, and reports OWASP Top 10 for Agentic Applications violations (7 of 10 detectors shipped: ASI01, ASI02, ASI03, ASI05, ASI07, ASI09, ASI10 today; ASI04, ASI06, ASI08 on roadmap).
 
 One `pip install`. One callback. A signed forensic record of every agent run.
 
@@ -69,6 +69,24 @@ response = client.chat.completions.create(
 )
 ```
 
+### Anthropic SDK
+
+```python
+from anthropic import Anthropic
+from airsdk import AIRRecorder
+from airsdk.integrations.anthropic import instrument_anthropic
+
+recorder = AIRRecorder(log_path="my-agent.log", user_intent="Draft a Q3 sales report")
+client = instrument_anthropic(Anthropic(), recorder)
+
+# From now on messages.create writes llm_start + llm_end AgDR records automatically.
+response = client.messages.create(
+    model="claude-sonnet-4-6",
+    max_tokens=1024,
+    messages=[{"role": "user", "content": "..."}],
+)
+```
+
 For tool calls your code executes, wrap them with `recorder.tool_start(...)` / `recorder.tool_end(...)` so the forensic chain captures them too.
 
 ### Custom code (any framework)
@@ -97,7 +115,7 @@ air trace my-agent.log
 You get console output like this:
 
 ```
-[AIR v0.1.4] Loaded 247 agent steps across 3 conversations.
+[AIR v0.1.5] Loaded 247 agent steps across 3 conversations.
 [Chain verified] 247 signatures valid.
 
   ASI01 Agent Goal Hijack detected at step 47
@@ -134,14 +152,17 @@ This release covers the minimum forensic surface end-to-end:
 | ASI02 Tool Misuse detector              | implemented (regex)       |
 | ASI03 Prompt Injection detector         | implemented (heuristic)   |
 | ASI05 Sensitive Data Exposure detector  | implemented (pattern set) |
+| ASI07 Resource Consumption detector     | implemented (thresholds)  |
 | ASI09 Supply Chain / MCP Risk detector  | implemented (heuristic)   |
-| ASI04, ASI06, ASI07, ASI08, ASI10       | not yet implemented       |
+| ASI10 Untraceable Action detector       | implemented (chain gaps)  |
+| ASI04, ASI06, ASI08                     | not yet implemented       |
 | JSON forensic export                    | implemented               |
 | PDF forensic export                     | implemented               |
 | SIEM forensic export (ArcSight CEF v0)  | implemented               |
 | LangChain callback integration          | implemented               |
 | OpenAI SDK integration                  | implemented               |
-| Anthropic / LlamaIndex / CrewAI / AutoGen | not yet implemented     |
+| Anthropic SDK integration               | implemented               |
+| LlamaIndex / CrewAI / AutoGen           | not yet implemented       |
 
 The detectors are honest first-pass heuristics. They will produce false positives and false negatives. The signed chain itself is production-grade cryptography.
 

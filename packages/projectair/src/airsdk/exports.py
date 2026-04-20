@@ -128,10 +128,10 @@ def export_pdf(report: ForensicReport, path: str | Path) -> Path:
         "ASI04 Memory Poisoning     not yet implemented",
         "ASI05 Sensitive Data       implemented",
         "ASI06 Excessive Agency     not yet implemented",
-        "ASI07 Resource Exhaustion  not yet implemented",
+        "ASI07 Resource Exhaustion  implemented",
         "ASI08 Plan Corruption      not yet implemented",
         "ASI09 Supply Chain / MCP   implemented",
-        "ASI10 Untraceable Action   not yet implemented",
+        "ASI10 Untraceable Action   implemented",
     ):
         pdf.cell(0, 4.5, _ascii_safe(line), new_x="LMARGIN", new_y="NEXT")
 

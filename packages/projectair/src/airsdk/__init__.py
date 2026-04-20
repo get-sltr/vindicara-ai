@@ -11,8 +11,10 @@ from airsdk.detections import (
     detect_goal_hijack,
     detect_mcp_supply_chain_risk,
     detect_prompt_injection,
+    detect_resource_consumption,
     detect_sensitive_data_exposure,
     detect_tool_misuse,
+    detect_untraceable_action,
     run_detectors,
 )
 from airsdk.exports import export_json, export_pdf, export_siem
@@ -28,7 +30,7 @@ from airsdk.types import (
     VerificationStatus,
 )
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 __all__ = [
     "AGDR_VERSION",
@@ -47,8 +49,10 @@ __all__ = [
     "detect_goal_hijack",
     "detect_mcp_supply_chain_risk",
     "detect_prompt_injection",
+    "detect_resource_consumption",
     "detect_sensitive_data_exposure",
     "detect_tool_misuse",
+    "detect_untraceable_action",
     "export_json",
     "export_pdf",
     "export_siem",

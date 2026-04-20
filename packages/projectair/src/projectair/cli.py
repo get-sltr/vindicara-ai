@@ -42,13 +42,15 @@ def _severity_color(severity: str) -> str:
 
 def _print_detector_coverage() -> None:
     typer.secho("Detector coverage:", fg=typer.colors.BRIGHT_BLACK)
-    typer.secho("  ASI01 Agent Goal Hijack          implemented", fg=typer.colors.BRIGHT_BLACK)
-    typer.secho("  ASI02 Tool Misuse                implemented", fg=typer.colors.BRIGHT_BLACK)
-    typer.secho("  ASI03 Prompt Injection           implemented", fg=typer.colors.BRIGHT_BLACK)
-    typer.secho("  ASI05 Sensitive Data Exposure    implemented", fg=typer.colors.BRIGHT_BLACK)
-    typer.secho("  ASI09 Supply Chain and MCP Risk  implemented", fg=typer.colors.BRIGHT_BLACK)
+    typer.secho("  ASI01 Agent Goal Hijack              implemented", fg=typer.colors.BRIGHT_BLACK)
+    typer.secho("  ASI02 Tool Misuse                    implemented", fg=typer.colors.BRIGHT_BLACK)
+    typer.secho("  ASI03 Prompt Injection               implemented", fg=typer.colors.BRIGHT_BLACK)
+    typer.secho("  ASI05 Sensitive Data Exposure        implemented", fg=typer.colors.BRIGHT_BLACK)
+    typer.secho("  ASI07 Unrestricted Resource Consumption  implemented", fg=typer.colors.BRIGHT_BLACK)
+    typer.secho("  ASI09 Supply Chain and MCP Risk      implemented", fg=typer.colors.BRIGHT_BLACK)
+    typer.secho("  ASI10 Untraceable Action             implemented", fg=typer.colors.BRIGHT_BLACK)
     for code, name in UNIMPLEMENTED_DETECTORS:
-        typer.secho(f"  {code} {name:<31} not yet implemented", fg=typer.colors.BRIGHT_BLACK)
+        typer.secho(f"  {code} {name:<35} not yet implemented", fg=typer.colors.BRIGHT_BLACK)
 
 
 def _run_trace_pipeline(log: Path, output: Path, output_format: str) -> None:

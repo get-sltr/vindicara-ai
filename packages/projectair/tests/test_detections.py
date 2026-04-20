@@ -7,8 +7,10 @@ from airsdk.detections import (
     detect_goal_hijack,
     detect_mcp_supply_chain_risk,
     detect_prompt_injection,
+    detect_resource_consumption,
     detect_sensitive_data_exposure,
     detect_tool_misuse,
+    detect_untraceable_action,
     run_detectors,
 )
 from airsdk.types import AgDRPayload, StepKind
@@ -86,7 +88,7 @@ def test_run_detectors_aggregates() -> None:
 
 def test_unimplemented_detectors_declared() -> None:
     codes = {code for code, _ in UNIMPLEMENTED_DETECTORS}
-    assert codes == {"ASI04", "ASI06", "ASI07", "ASI08", "ASI10"}
+    assert codes == {"ASI04", "ASI06", "ASI08"}
 
 
 # ------- ASI03 Prompt Injection -------
@@ -274,3 +276,100 @@ def test_run_detectors_aggregates_asi05_and_asi09() -> None:
     asi_ids = {f.asi_id for f in run_detectors(records)}
     assert "ASI05" in asi_ids
     assert "ASI09" in asi_ids
+
+
+# ------- ASI07 Unrestricted Resource Consumption -------
+
+def _repeat_tool_chain(name: str, count: int) -> list:  # type: ignore[type-arg]
+    steps: list[tuple[StepKind, dict[str, object]]] = []
+    for attempt in range(count):
+        steps.append((StepKind.TOOL_START, {"tool_name": name, "tool_args": {"attempt": attempt}}))
+        steps.append((StepKind.TOOL_END, {"tool_output": "ok"}))
+    return _build_chain(steps)
+
+
+def test_asi07_catches_tool_repetition_loop() -> None:
+    records = _repeat_tool_chain("retry_api", 10)
+    findings = detect_resource_consumption(records)
+    assert any(f.asi_id == "ASI07" and "invoked 10 times" in f.description for f in findings)
+
+
+def test_asi07_silent_below_repetition_threshold() -> None:
+    records = _repeat_tool_chain("retry_api", 5)
+    findings = detect_resource_consumption(records)
+    assert not any(f.asi_id == "ASI07" and "invoked 5 times" in f.description for f in findings)
+
+
+def test_asi07_catches_session_total_overrun() -> None:
+    # 51 distinct tool names, each invoked once. Session total exceeds threshold (50).
+    steps: list[tuple[StepKind, dict[str, object]]] = []
+    for i in range(51):
+        steps.append((StepKind.TOOL_START, {"tool_name": f"tool_{i}", "tool_args": {}}))
+        steps.append((StepKind.TOOL_END, {"tool_output": "ok"}))
+    records = _build_chain(steps)
+    findings = detect_resource_consumption(records)
+    assert any("Session total" in f.description for f in findings)
+
+
+def test_asi07_silent_on_healthy_trace() -> None:
+    records = _build_chain([
+        (StepKind.TOOL_START, {"tool_name": "crm_read", "tool_args": {}}),
+        (StepKind.TOOL_END, {"tool_output": "ok"}),
+        (StepKind.TOOL_START, {"tool_name": "email_send", "tool_args": {}}),
+        (StepKind.TOOL_END, {"tool_output": "ok"}),
+    ])
+    assert detect_resource_consumption(records) == []
+
+
+# ------- ASI10 Untraceable Action -------
+
+def test_asi10_catches_unpaired_tool_start() -> None:
+    records = _build_chain([
+        (StepKind.TOOL_START, {"tool_name": "shell_exec", "tool_args": {"cmd": "ls"}}),
+        (StepKind.AGENT_FINISH, {"final_output": "done"}),
+    ])
+    findings = detect_untraceable_action(records)
+    assert any(f.asi_id == "ASI10" and "tool_start" in f.description for f in findings)
+
+
+def test_asi10_catches_unpaired_llm_start() -> None:
+    records = _build_chain([
+        (StepKind.LLM_START, {"prompt": "hi"}),
+        (StepKind.AGENT_FINISH, {"final_output": "done"}),
+    ])
+    findings = detect_untraceable_action(records)
+    assert any(f.asi_id == "ASI10" and "llm_start" in f.description for f in findings)
+
+
+def test_asi10_catches_trailing_tool_start() -> None:
+    # tool_start is the last record in the trace; nothing follows it at all.
+    records = _build_chain([
+        (StepKind.TOOL_START, {"tool_name": "shell_exec", "tool_args": {}}),
+    ])
+    findings = detect_untraceable_action(records)
+    assert any(f.asi_id == "ASI10" for f in findings)
+
+
+def test_asi10_silent_on_paired_chain() -> None:
+    records = _build_chain([
+        (StepKind.LLM_START, {"prompt": "x"}),
+        (StepKind.LLM_END, {"response": "y"}),
+        (StepKind.TOOL_START, {"tool_name": "t", "tool_args": {}}),
+        (StepKind.TOOL_END, {"tool_output": "z"}),
+        (StepKind.AGENT_FINISH, {"final_output": "done"}),
+    ])
+    assert detect_untraceable_action(records) == []
+
+
+def test_run_detectors_aggregates_asi07_and_asi10() -> None:
+    steps: list[tuple[StepKind, dict[str, object]]] = []
+    for attempt in range(10):
+        steps.append((StepKind.TOOL_START, {"tool_name": "retry_api", "tool_args": {"attempt": attempt}}))
+        steps.append((StepKind.TOOL_END, {"tool_output": "ok"}))
+    # Trailing unpaired tool_start trips ASI10.
+    steps.append((StepKind.TOOL_START, {"tool_name": "shell_exec", "tool_args": {"cmd": "ls"}}))
+    steps.append((StepKind.AGENT_FINISH, {"final_output": "done"}))
+    records = _build_chain(steps)
+    asi_ids = {f.asi_id for f in run_detectors(records)}
+    assert "ASI07" in asi_ids
+    assert "ASI10" in asi_ids
