@@ -25,6 +25,16 @@ pip install projectair
 
 This installs the `air` terminal command and the `airsdk` Python library.
 
+## Try it with zero setup
+
+Don't have an agent instrumented yet? Run:
+
+```bash
+air demo
+```
+
+That generates a fresh signed AgDR chain (13 steps, two baked-in OWASP ASI violations), verifies every signature, runs the detectors, and writes a `forensic-report.json` next to you. Full cold-start experience in one command, no LangChain wiring required.
+
 ## Instrument your agent
 
 ```python
@@ -51,7 +61,7 @@ air trace my-agent.log
 You get console output like this:
 
 ```
-[AIR v0.1.0] Loaded 247 agent steps across 3 conversations.
+[AIR v0.1.1] Loaded 247 agent steps across 3 conversations.
 [Chain verified] 247 signatures valid.
 
   ASI01 Agent Goal Hijack detected at step 47

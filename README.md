@@ -38,6 +38,14 @@ pip install projectair
 
 This installs both the `air` terminal command and the `airsdk` Python library.
 
+## 10-second sanity check
+
+```bash
+air demo
+```
+
+Generates a fresh signed AgDR chain (13 steps, two baked-in ASI violations), verifies every signature, runs the detectors, and writes `forensic-report.json` next to you. No agent, no log file, no wiring required.
+
 ## 30-second usage
 
 Instrument your LangChain agent:
