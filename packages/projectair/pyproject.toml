@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "projectair"
-version = "0.1.0"
+version = "0.1.1"
 description = "Project AIR: forensic reconstruction and incident response for AI agents. Turn agent traces into signed forensic records with BLAKE3 + Ed25519."
 readme = "README.md"
 license = "MIT"
@@ -24,10 +24,14 @@ classifiers = [
 ]
 dependencies = [
     "blake3>=1.0.0,<2.0",
-    "cryptography>=43.0.0,<46.0",
+    # cryptography: floor 46.0.6 patches CVE-2026-26007 (subgroup attack on SECT curves, HIGH)
+    # and CVE-2026-34073 (incomplete DNS name constraint, LOW).
+    "cryptography>=46.0.6,<47.0",
     "pydantic>=2.7.0,<3.0",
     "typer>=0.12.0,<1.0",
-    "langchain-core>=0.3.0,<1.0",
+    # langchain-core: floor 1.2.22 patches CVE-2026-34070 (load_prompt path traversal, HIGH)
+    # and CVE-2026-26013 (image_url SSRF, LOW).
+    "langchain-core>=1.2.22,<2.0",
 ]
 
 [project.optional-dependencies]
