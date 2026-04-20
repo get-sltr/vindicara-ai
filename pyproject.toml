@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "vindicara"
-version = "0.1.0"
-description = "Runtime security for autonomous AI. The control plane for AI agents in production."
+version = "0.2.0"
+description = "Server-side engine behind Vindicara AIR Cloud. Not intended for direct pip install. The open-source developer SDK is `projectair` (https://pypi.org/project/projectair/)."
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.12"

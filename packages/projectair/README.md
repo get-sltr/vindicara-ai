@@ -13,7 +13,7 @@
 
 ## What this is
 
-When an AI agent goes off-script, AIR tells you what happened and proves it. Every agent decision is written as a signed AgDR (AI Decision Record) with a BLAKE3 content hash and an Ed25519 signature, chained to the previous step. The `air` CLI replays that chain, verifies every signature, and reports OWASP Top 10 for Agentic Applications (ASI01 to ASI10) violations.
+When an AI agent goes off-script, AIR tells you what happened and proves it. Every agent decision is written as a signed AgDR (AI Decision Record) with a BLAKE3 content hash and an Ed25519 signature, chained to the previous step. The `air` CLI replays that chain, verifies every signature, and reports OWASP Top 10 for Agentic Applications violations (5 of 10 detectors shipped: ASI01, ASI02, ASI03, ASI05, ASI09 today; ASI04, ASI06, ASI07, ASI08, ASI10 on roadmap).
 
 One `pip install`. One callback. A signed forensic record of every agent run.
 
@@ -149,7 +149,7 @@ The detectors are honest first-pass heuristics. They will produce false positive
 
 The prevention layer is crowded. Lakera, NeMo Guardrails, Bedrock Guardrails, and a dozen other tools sit in front of your agent and try to stop bad things from happening. None of them tell you what actually happened when an agent ran, and none of them produce evidence an auditor, a regulator, or an insurance carrier can use.
 
-AIR is the forensic and incident response layer that runs behind those tools. It does not replace them. It gives you a signed record of every agent decision, mapped to a public taxonomy (OWASP ASI01 to ASI10), exportable to formats your SIEM, your compliance team, and your carrier already understand.
+AIR is the forensic and incident response layer that runs behind those tools. It does not replace them. It gives you a signed record of every agent decision, findings mapped to the OWASP Top 10 for Agentic Applications public taxonomy, exportable to formats your SIEM, your compliance team, and your carrier already understand.
 
 ## License
 

@@ -239,7 +239,7 @@
               <td class="p-4 text-center text-green-400">✓</td>
             </tr>
             <tr class="border-b border-white/5">
-              <td class="p-4">OWASP ASI01 to ASI10 detection</td>
+              <td class="p-4">OWASP ASI detection (5 of 10 shipped)</td>
               <td class="p-4 text-center text-green-400">✓</td>
               <td class="p-4 text-center text-green-400 bg-white/[0.015]">✓</td>
               <td class="p-4 text-center text-green-400">✓</td>
@@ -310,7 +310,7 @@
         <div>
           <h3 class="text-lg font-semibold text-white mb-2">What stays free forever?</h3>
           <p class="text-sm text-zinc-400 leading-relaxed">
-            The <code class="font-mono text-zinc-200">air</code> CLI, the <code class="font-mono text-zinc-200">airsdk</code> Python SDK, the signed AgDR evidence chain, OWASP ASI01 to ASI10 detection, and the JSON, PDF, and SIEM export formats. All of it MIT-licensed and self-hosted. No seat limits, no trace limits, no feature gates that flip when a timer runs out.
+            The <code class="font-mono text-zinc-200">air</code> CLI, the <code class="font-mono text-zinc-200">airsdk</code> Python SDK, the signed AgDR evidence chain, OWASP Top 10 for Agentic Applications detection (5 of 10 shipped today: ASI01, ASI02, ASI03, ASI05, ASI09; the rest on roadmap), and the JSON, PDF, and SIEM export formats. All of it MIT-licensed and self-hosted. No seat limits, no trace limits, no feature gates that flip when a timer runs out.
           </p>
         </div>
 

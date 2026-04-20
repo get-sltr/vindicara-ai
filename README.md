@@ -26,7 +26,7 @@
 
 ## What AIR is
 
-AIR writes a **signed forensic record** of every agent decision (llm, tool, finish) as an AgDR (AI Decision Record). Each record is content-hashed with BLAKE3, signed with Ed25519, and chained to the previous step. The `air` CLI replays the chain, verifies every signature, and reports OWASP Top 10 for Agentic Applications (ASI01 to ASI10) violations.
+AIR writes a **signed forensic record** of every agent decision (llm, tool, finish) as an AgDR (AI Decision Record). Each record is content-hashed with BLAKE3, signed with Ed25519, and chained to the previous step. The `air` CLI replays the chain, verifies every signature, and reports OWASP Top 10 for Agentic Applications violations (5 of 10 detectors shipped today: ASI01, ASI02, ASI03, ASI05, ASI09. ASI04, ASI06, ASI07, ASI08, ASI10 on roadmap).
 
 It is the layer that runs **behind** your guardrails. Prevention tools (Lakera, NeMo Guardrails, Bedrock Guardrails) try to stop bad things from happening. AIR produces the evidence of what actually happened, in a form security, legal, and insurance can act on.
 

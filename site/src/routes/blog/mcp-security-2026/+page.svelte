@@ -232,7 +232,7 @@ for finding in report.findings:
   </p>
 
   <p class="text-zinc-300 leading-relaxed mt-4">
-    That reconstruction is what <a href="https://vindicara.io/" class="text-brand-cyan hover:text-brand-cyan/80 underline">Project AIR</a> is built for. AIR ingests agent traces, detects OWASP Top 10 for Agentic Applications violations (ASI01 through ASI10), and outputs a signed forensic timeline that security, legal, and insurance can all act on. The MCP scanner is one surface of the engine underneath AIR, the others being runtime policy enforcement, agent IAM, and compliance export. Scan output feeds the baseline. Trace replay proves what actually happened.
+    That reconstruction is what <a href="https://vindicara.io/" class="text-brand-cyan hover:text-brand-cyan/80 underline">Project AIR</a> is built for. AIR ingests agent traces, detects OWASP Top 10 for Agentic Applications violations (5 of 10 detectors shipped today, including ASI09 Supply Chain and MCP Risk; the rest on roadmap), and outputs a signed forensic timeline that security, legal, and insurance can all act on. The MCP scanner is one surface of the engine underneath AIR, the others being runtime policy enforcement, agent IAM, and compliance export. Scan output feeds the baseline. Trace replay proves what actually happened.
   </p>
 
   <p class="text-zinc-300 leading-relaxed mt-4">

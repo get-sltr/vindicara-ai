@@ -451,7 +451,7 @@
         Real breaches. Real patterns. What AIR would have caught.
       </h2>
       <p class="mt-4 text-zinc-400 text-base max-w-2xl mx-auto">
-        Every incident below has a public post-mortem. Every one maps to an OWASP Top 10 for Agentic Applications (ASI01 to ASI10) signature AIR detects on trace replay.
+        Every incident below has a public post-mortem. Every one maps to an OWASP Top 10 for Agentic Applications signature. AIR ships five of ten detectors today (ASI01, ASI02, ASI03, ASI05, ASI09); the rest are on the roadmap.
       </p>
     </div>
 
@@ -523,7 +523,7 @@
         </div>
         <h3 class="text-xl font-bold mb-2 font-mono">air</h3>
         <p class="text-sm text-zinc-400 mb-5 leading-relaxed flex-1">
-          The CLI. Ingest any agent trace. Detect OWASP ASI01 to ASI10 violations. Output forensic timelines with signed evidence hashes.
+          The CLI. Ingest any agent trace. Detects OWASP Top 10 for Agentic Applications violations (5 of 10 shipped). Outputs forensic timelines with signed evidence hashes.
         </p>
         <div class="bg-obsidian-lighter border border-white/10 p-4 font-mono text-xs text-zinc-300">
           <div class="text-zinc-600 mb-1">$ pip install projectair</div>
@@ -842,7 +842,7 @@
       <div class="p-6 border-b lg:border-b-0 md:border-r border-white/10">
         <p class="font-mono text-xs text-brand-red tracking-wider uppercase mb-2">OWASP</p>
         <p class="text-sm text-white font-semibold">Top 10 for Agentic Applications 2026</p>
-        <p class="text-xs text-zinc-500 mt-2 leading-relaxed">ASI01 to ASI10 detection signatures. Every AIR finding maps to an ASI identifier.</p>
+        <p class="text-xs text-zinc-500 mt-2 leading-relaxed">ASI01, ASI02, ASI03, ASI05, ASI09 shipped today. ASI04, ASI06, ASI07, ASI08, ASI10 on roadmap. Every AIR finding maps to an ASI identifier.</p>
       </div>
       <div class="p-6 border-b lg:border-b-0 lg:border-r border-white/10">
         <p class="font-mono text-xs text-brand-red tracking-wider uppercase mb-2">AgDR</p>
