@@ -1,0 +1,69 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "projectair"
+version = "0.1.0"
+description = "Project AIR: forensic reconstruction and incident response for AI agents. Turn agent traces into signed, court-admissible evidence."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+authors = [{ name = "Vindicara", email = "eng@vindicara.io" }]
+keywords = ["ai", "security", "incident-response", "forensics", "langchain", "agent", "agdr", "owasp"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = [
+    "blake3>=1.0.0,<2.0",
+    "cryptography>=43.0.0,<46.0",
+    "pydantic>=2.7.0,<3.0",
+    "typer>=0.12.0,<1.0",
+    "langchain-core>=0.3.0,<1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0,<9.0",
+    "pytest-cov>=5.0.0,<6.0",
+    "ruff>=0.6.0,<1.0",
+    "mypy>=1.11.0,<2.0",
+]
+
+[project.scripts]
+air = "projectair.cli:main"
+
+[project.urls]
+Homepage = "https://vindicara.io"
+Repository = "https://github.com/get-sltr/vindicara-ai"
+"Bug Tracker" = "https://github.com/get-sltr/vindicara-ai/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/airsdk", "src/projectair"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "S", "B", "A", "C4", "PT", "SIM", "TCH", "RUF"]
+ignore = ["S101", "A002", "N818", "E501"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+plugins = ["pydantic.mypy"]
