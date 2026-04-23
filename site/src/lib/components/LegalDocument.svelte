@@ -10,11 +10,11 @@
 
   let mobileMenuOpen = $state(false);
 
-  // Strip YAML frontmatter delimited by --- ... --- at the top of the file.
-  const withoutFrontmatter = raw.replace(/^---\n[\s\S]*?\n---\n/, '');
-
   marked.setOptions({ gfm: true, breaks: false });
-  const html = marked.parse(withoutFrontmatter) as string;
+
+  // Strip YAML frontmatter delimited by --- ... --- at the top of the file.
+  const withoutFrontmatter = $derived(raw.replace(/^---\n[\s\S]*?\n---\n/, ''));
+  const html = $derived(marked.parse(withoutFrontmatter) as string);
 </script>
 
 <!-- NAV -->
