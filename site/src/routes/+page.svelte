@@ -1,5 +1,6 @@
 <script lang="ts">
   import vindicaraLogo from '$lib/assets/vindicara-logo.png';
+  import AsciinemaEmbed from '$lib/components/AsciinemaEmbed.svelte';
 
   let mobileMenuOpen = $state(false);
 
@@ -391,6 +392,41 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- LIVE DEMO -->
+<section id="demo" class="relative py-24 border-y border-white/5 bg-obsidian-light/30">
+  <div class="max-w-screen-xl mx-auto px-6">
+    <div class="text-center mb-10">
+      <p class="text-brand-red text-sm font-semibold uppercase tracking-wider mb-3 font-mono">See it run</p>
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight max-w-3xl mx-auto">
+        Recorded from the real CLI. Press play.
+      </h2>
+      <p class="mt-4 text-zinc-400 text-base max-w-2xl mx-auto leading-relaxed">
+        <code class="font-mono text-zinc-200">pip install projectair</code> then <code class="font-mono text-zinc-200">air demo</code>. Signed chain generated, verified, 10 of 10 OWASP Agentic detectors firing, EU AI Act Article 72 report emitted. No cloud. No account. Offline.
+      </p>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+      <AsciinemaEmbed src="/demo-assets/air-demo.cast" autoPlay={false} loop={true} speed={1.6} />
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10">
+      <a href="https://pypi.org/project/projectair/" class="btn-primary text-sm px-6 py-3">
+        pip install projectair
+      </a>
+      <a href="/admissibility/" class="btn-secondary text-sm px-6 py-3">
+        Admissibility architecture
+      </a>
+      <a href="https://github.com/get-sltr/vindicara-ai" class="btn-secondary text-sm px-6 py-3">
+        View source (MIT)
+      </a>
+    </div>
+
+    <p class="text-center text-xs text-zinc-600 mt-6 font-mono">
+      captured from projectair 0.3.0 · 47 records · chain verified · 33 findings
+    </p>
   </div>
 </section>
 
