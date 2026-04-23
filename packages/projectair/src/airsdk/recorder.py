@@ -12,7 +12,7 @@ from typing import Any
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 
-from airsdk.agdr import Signer
+from airsdk.agdr import Signer, _uuid7
 from airsdk.types import AgDRPayload, AgDRRecord, StepKind
 
 
@@ -113,6 +113,38 @@ class AIRRecorder:
     def agent_finish(self, *, final_output: str, **extra: Any) -> AgDRRecord:
         """Agent run completed with ``final_output``."""
         return self._emit(StepKind.AGENT_FINISH, {"final_output": final_output, **extra})
+
+    def agent_message(
+        self,
+        *,
+        source_agent_id: str,
+        target_agent_id: str,
+        message_content: str,
+        message_id: str | None = None,
+        **extra: Any,
+    ) -> AgDRRecord:
+        """Inter-agent message from ``source_agent_id`` to ``target_agent_id``.
+
+        Emits an ``agent_message`` record that the ASI07 detector (OWASP Top 10
+        for Agentic Applications, Insecure Inter-Agent Communication) walks to
+        check for missing identity, missing nonces, sender/key mismatch, replay,
+        and protocol downgrade across inter-agent exchanges.
+
+        ``message_id`` is a per-message nonce. When omitted, a UUIDv7 is
+        generated so replay defense is on by default; callers that carry their
+        own protocol's message id should pass it through.
+        """
+        resolved_id = message_id if message_id is not None else _uuid7()
+        return self._emit(
+            StepKind.AGENT_MESSAGE,
+            {
+                "source_agent_id": source_agent_id,
+                "target_agent_id": target_agent_id,
+                "message_content": message_content,
+                "message_id": resolved_id,
+                **extra,
+            },
+        )
 
     # -- Internal ---------------------------------------------------------
 

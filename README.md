@@ -2,7 +2,7 @@
   <img src="https://vindicara.io/hero-mesh.png" alt="" width="100%">
 </p>
 
-<h1 align="center">Project AIR</h1>
+<h1 align="center">Project AIR™</h1>
 
 <p align="center">
   <strong>Forensic reconstruction and incident response for AI agents.</strong><br>
@@ -26,9 +26,9 @@
 
 ## What AIR is
 
-AIR writes a **signed forensic record** of every agent decision (llm, tool, finish) as an AgDR (AI Decision Record). Each record is content-hashed with BLAKE3, signed with Ed25519, and chained to the previous step. The `air` CLI replays the chain, verifies every signature, and reports findings across two public OWASP taxonomies plus one AIR-native check:
+AIR writes a **Signed Intent Capsule** for every agent decision (llm, tool, finish). The Intent Capsule pattern is named in the [OWASP Top 10 for Agentic Applications v12.6](https://owasp.org/www-project-top-10-for-large-language-model-applications/) as mitigation #5 for ASI01: an emerging pattern that binds the declared goal, constraints, and context to each execution cycle in a signed envelope. AIR's on-disk format is AgDR-compatible (AI Decision Record schema as published at accountability.ai), so capsules interoperate with the wider ecosystem. Each capsule is content-hashed with BLAKE3, signed with Ed25519, and chained to the previous step. The `air` CLI replays the chain, verifies every signature, and reports findings across two public OWASP taxonomies plus one AIR-native check:
 
-- **OWASP Top 10 for Agentic Applications** (3 of 10): ASI01 Agent Goal Hijack, ASI02 Tool Misuse & Exploitation, ASI04 Agentic Supply Chain Vulnerabilities (partial, MCP supply-chain risk only). ASI03, ASI05-ASI10 on roadmap.
+- **OWASP Top 10 for Agentic Applications** (8 of 10): ASI01 Agent Goal Hijack, ASI02 Tool Misuse & Exploitation, ASI04 Agentic Supply Chain Vulnerabilities (partial, MCP supply-chain risk only), ASI05 Unexpected Code Execution (RCE), ASI06 Memory & Context Poisoning, ASI07 Insecure Inter-Agent Communication, ASI08 Cascading Failures, ASI09 Human-Agent Trust Exploitation. ASI03, ASI10 on roadmap.
 - **OWASP Top 10 for LLM Applications** (3 categories): LLM01 Prompt Injection, LLM04 Model Denial of Service, LLM06 Sensitive Information Disclosure.
 - **AIR-native**: forensic-chain-integrity check for untraceable actions.
 
@@ -48,7 +48,7 @@ This installs both the `air` terminal command and the `airsdk` Python library.
 air demo
 ```
 
-Generates a fresh signed AgDR chain (13 steps, two baked-in ASI violations), verifies every signature, runs the detectors, and writes `forensic-report.json` next to you. No agent, no log file, no wiring required.
+Generates a fresh signed capsule chain (13 steps, two baked-in ASI violations), verifies every signature, runs the detectors, and writes `forensic-report.json` next to you. No agent, no log file, no wiring required.
 
 ## 30-second usage
 
@@ -66,7 +66,7 @@ handler = AIRCallbackHandler(
 agent = AgentExecutor(callbacks=[handler], ...)
 ```
 
-Every step the agent takes is appended to `my-agent.log` as a signed AgDR record.
+Every step the agent takes is appended to `my-agent.log` as a Signed Intent Capsule.
 
 Replay the trace:
 
@@ -90,13 +90,18 @@ For the legacy five-pillar README that used to live here, see [`docs/legacy-vind
 
 | Surface                                 | Status                    |
 |-----------------------------------------|---------------------------|
-| BLAKE3 + Ed25519 signed AgDR chain      | implemented, tested       |
+| BLAKE3 + Ed25519 Signed Intent Capsule chain (AgDR-format) | implemented, tested |
 | Tamper detection on chain replay        | implemented, tested       |
 | LangChain `AIRCallbackHandler`          | implemented               |
 | ASI01 Agent Goal Hijack                    | implemented (heuristic)                           |
 | ASI02 Tool Misuse & Exploitation           | implemented (regex)                               |
 | ASI04 Agentic Supply Chain Vulnerabilities | implemented (partial: MCP supply-chain risk only) |
-| ASI03, ASI05-ASI10                         | not yet implemented                               |
+| ASI05 Unexpected Code Execution (RCE)      | implemented (execution-semantics tool-name patterns) |
+| ASI06 Memory & Context Poisoning           | implemented (heuristic: retrieval-output + memory-write scans) |
+| ASI07 Insecure Inter-Agent Communication   | implemented (identity, nonce, replay, downgrade, descriptor-forgery checks) |
+| ASI08 Cascading Failures                   | implemented (oscillating-pair + fan-out burst checks over inter-agent messages) |
+| ASI09 Human-Agent Trust Exploitation       | implemented (fabricated-rationale + manipulation-language scan preceding sensitive actions) |
+| ASI03, ASI10                               | not yet implemented                               |
 | AIR-01 Prompt Injection                    | implemented, maps to OWASP LLM01                  |
 | AIR-02 Sensitive Data Exposure             | implemented, maps to OWASP LLM06                  |
 | AIR-03 Unrestricted Resource Consumption   | implemented, maps to OWASP LLM04                  |

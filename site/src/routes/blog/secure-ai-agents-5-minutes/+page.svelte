@@ -54,7 +54,7 @@
   </p>
 
   <p class="text-zinc-300 leading-relaxed mt-4">
-    Project AIR is the forensic reconstruction layer for AI agents. The <code class="text-brand-purple bg-brand-purple/10 px-1.5 py-0.5 rounded text-sm">air</code> CLI ingests an agent trace, runs detectors across two public OWASP taxonomies (three OWASP Top 10 for Agentic Applications categories: ASI01, ASI02, ASI04 partial; plus three OWASP Top 10 for LLM Applications categories: LLM01, LLM04, LLM06), plus one AIR-native forensic-chain-integrity check, and outputs a timeline you can hand to security, legal, or insurance. The <code class="text-brand-purple bg-brand-purple/10 px-1.5 py-0.5 rounded text-sm">airsdk</code> Python package is what writes the trace in the first place, as a chain of AgDR (AI Decision Record) entries, each with a BLAKE3 content hash and an Ed25519 signature.
+    Project AIR™ is the forensic reconstruction layer for AI agents. The <code class="text-brand-purple bg-brand-purple/10 px-1.5 py-0.5 rounded text-sm">air</code> CLI ingests an agent trace, runs detectors across two public OWASP taxonomies (three OWASP Top 10 for Agentic Applications categories: ASI01, ASI02, ASI04 partial; plus three OWASP Top 10 for LLM Applications categories: LLM01, LLM04, LLM06), plus one AIR-native forensic-chain-integrity check, and outputs a timeline you can hand to security, legal, or insurance. The <code class="text-brand-purple bg-brand-purple/10 px-1.5 py-0.5 rounded text-sm">airsdk</code> Python package is what writes the trace in the first place, as a chain of AgDR (AI Decision Record) entries, each with a BLAKE3 content hash and an Ed25519 signature.
   </p>
 
   <p class="text-zinc-300 leading-relaxed mt-4">

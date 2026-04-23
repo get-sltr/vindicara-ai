@@ -1,4 +1,6 @@
 <script lang="ts">
+  import vindicaraLogo from '$lib/assets/vindicara-logo.png';
+
   let mobileMenuOpen = $state(false);
 
   function scrollTo(id: string) {
@@ -274,14 +276,9 @@
 <!-- NAV -->
 <nav class="fixed top-0 w-full z-50 bg-obsidian/60 backdrop-blur-2xl border-b border-white/5">
   <div class="max-w-screen-2xl mx-auto px-6 flex items-center justify-between h-16">
-    <a href="/" class="flex items-center gap-2.5">
-      <div class="w-8 h-8 rounded-lg bg-brand-red flex items-center justify-center">
-        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-        </svg>
-      </div>
-      <span class="text-lg font-bold tracking-tight">Vindicara</span>
-      <span class="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-400 border border-white/15 px-1.5 py-0.5">AIR</span>
+    <a href="/" class="flex items-center gap-1">
+      <img src={vindicaraLogo} alt="Vindicara" class="h-10 w-auto mix-blend-screen" />
+      <span class="font-mono text-[10px] tracking-[0.18em] uppercase text-white border border-white/30 px-1.5 py-0.5 shadow-[0_0_10px_rgba(255,255,255,0.25)]">Project AIR™</span>
     </a>
 
     <div class="hidden md:flex items-center gap-8 text-sm text-zinc-400">
@@ -346,7 +343,7 @@
     <div class="text-center">
       <div class="inline-flex items-center gap-2 px-3 py-1.5 glass-panel text-xs text-zinc-300 mb-8 font-mono">
         <span class="w-2 h-2 rounded-full bg-brand-red animate-pulse"></span>
-        PROJECT AIR · AI INCIDENT RESPONSE
+        PROJECT AIR™ · AI INCIDENT RESPONSE
       </div>
 
       <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] max-w-5xl mx-auto">
@@ -576,10 +573,10 @@
     <div class="text-center mb-14">
       <p class="text-zinc-500 text-sm font-semibold uppercase tracking-wider mb-3 font-mono">Complementary, Not Competitive</p>
       <h2 class="text-3xl sm:text-4xl font-bold tracking-tight max-w-3xl mx-auto">
-        What AIR is not.
+        What Project AIR is not.
       </h2>
       <p class="mt-4 text-zinc-400 text-base max-w-2xl mx-auto">
-        AIR is the forensic and incident response layer. It does not replace the tools below. It feeds them.
+        Project AIR is the forensic and incident response layer. It does not replace the tools below. It feeds them.
       </p>
     </div>
 
@@ -947,7 +944,7 @@
         <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
         View on GitHub
       </a>
-      <a href="mailto:kevin@vindicara.io" class="btn-secondary text-base px-8 py-4">Talk to us</a>
+      <a href="mailto:Kevin.Minn@vindicara.io" class="btn-secondary text-base px-8 py-4">Talk to us</a>
     </div>
     <div class="mt-8">
       <div class="inline-block bg-obsidian-lighter border border-white/10 px-4 py-2 font-mono text-sm text-zinc-300">
@@ -962,14 +959,9 @@
   <div class="max-w-screen-xl mx-auto px-6 py-14">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
       <div class="col-span-2 md:col-span-1">
-        <div class="flex items-center gap-2.5 mb-4">
-          <div class="w-7 h-7 rounded-md bg-brand-red flex items-center justify-center">
-            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-            </svg>
-          </div>
-          <span class="font-bold">Vindicara</span>
-          <span class="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-400 border border-white/15 px-1.5 py-0.5">AIR</span>
+        <div class="flex items-center gap-1 mb-4">
+          <img src={vindicaraLogo} alt="Vindicara" class="h-8 w-auto mix-blend-screen" />
+          <span class="font-mono text-[10px] tracking-[0.18em] uppercase text-white border border-white/30 px-1.5 py-0.5 shadow-[0_0_10px_rgba(255,255,255,0.25)]">Project AIR™</span>
         </div>
         <p class="text-sm text-zinc-500 leading-relaxed">
           AI Incident Response. Forensic reconstruction, signed evidence, and containment for autonomous agents.
@@ -989,7 +981,7 @@
       <div>
         <h4 class="text-sm font-semibold mb-4">Company</h4>
         <ul class="space-y-2 text-sm text-zinc-500">
-          <li><a href="mailto:kevin@vindicara.io" class="hover:text-white transition-colors">kevin@vindicara.io</a></li>
+          <li><a href="mailto:Kevin.Minn@vindicara.io" class="hover:text-white transition-colors">Kevin.Minn@vindicara.io</a></li>
           <li><a href="/blog" class="hover:text-white transition-colors">Blog</a></li>
           <li><a href="https://github.com/get-sltr/vindicara-ai" class="hover:text-white transition-colors">GitHub</a></li>
         </ul>

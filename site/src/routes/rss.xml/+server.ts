@@ -71,7 +71,7 @@ export const GET: RequestHandler = () => {
     <title>Vindicara AIR Blog</title>
     <link>${SITE}/blog</link>
     <atom:link href="${SITE}/rss.xml" rel="self" type="application/rss+xml" />
-    <description>Forensic reconstruction and incident response for AI agents. Research, compliance guides, and engineering deep-dives from the team behind Project AIR.</description>
+    <description>Forensic reconstruction and incident response for AI agents. Research, compliance guides, and engineering deep-dives from the team behind Project AIR™.</description>
     <language>en-us</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
 ${items}

@@ -1,17 +1,21 @@
 """AgDR record types.
 
-AgDR (AI Decision Record) is the canonical unit of forensic evidence Project AIR
-writes for every agent step. Each record is content-hashed with BLAKE3 and signed
-with Ed25519. The signature covers both the record's content_hash AND the previous
-record's content_hash, producing a tamper-evident hash chain.
+AgDR (AI Decision Record) is the on-disk format Project AIR writes for every agent
+step; the public product term is "Signed Intent Capsule" (OWASP Top 10 for Agentic
+Applications v12.6, ASI01 mitigation #5). Each record is content-hashed with
+BLAKE3 and signed with Ed25519. The signature covers both the record's
+content_hash AND the previous record's content_hash, producing a tamper-evident
+hash chain.
 
-Session 1 shape (stable within session, may evolve with version field bump):
+Session 2 shape (v0.2, adds AGENT_MESSAGE for inter-agent communication):
 
     {
+      "version":      "0.2"
       "step_id":      UUIDv7        one per step, monotonic timestamp prefix
       "timestamp":    ISO 8601 UTC  when the step happened
-      "kind":         enum          llm_start | llm_end | tool_start | tool_end | agent_finish
-      "payload":      object        kind-specific contents (prompt, response, tool name, args)
+      "kind":         enum          llm_start | llm_end | tool_start | tool_end
+                                    | agent_finish | agent_message
+      "payload":      object        kind-specific contents
       "prev_hash":    hex string    content_hash of previous record, or "0"*64 for first
       "content_hash": hex string    BLAKE3 of canonical(payload) - computed by signer
       "signature":    hex string    Ed25519(prev_hash || content_hash) - computed by signer
@@ -32,7 +36,7 @@ from pydantic import BaseModel, ConfigDict, Field
 # 64 hex chars = 256 bits. BLAKE3 default output size and Ed25519 public key size.
 GENESIS_PREV_HASH = "0" * 64
 
-AGDR_VERSION = "0.1"
+AGDR_VERSION = "0.2"
 
 
 class StepKind(StrEnum):
@@ -41,6 +45,7 @@ class StepKind(StrEnum):
     TOOL_START = "tool_start"
     TOOL_END = "tool_end"
     AGENT_FINISH = "agent_finish"
+    AGENT_MESSAGE = "agent_message"
 
 
 class AgDRPayload(BaseModel):
@@ -55,6 +60,11 @@ class AgDRPayload(BaseModel):
     tool_output: str | None = None
     user_intent: str | None = None
     final_output: str | None = None
+    # Inter-agent communication fields (ASI07). Used when kind == AGENT_MESSAGE.
+    source_agent_id: str | None = None
+    target_agent_id: str | None = None
+    message_content: str | None = None
+    message_id: str | None = None
 
 
 class AgDRRecord(BaseModel):

@@ -14,14 +14,24 @@ from projectair.cli import app
 runner = CliRunner()
 
 
+DEMO_ASI07_EXTRA_RECORDS = 6  # legit + forged agent_message + 4-target fan-out appended by write_sample_log
+
+
 def test_sample_chain_round_trips_and_verifies(tmp_path: Path) -> None:
     sample = tmp_path / "demo.log"
     signer = write_sample_log(sample)
 
     records = load_chain(sample)
-    assert len(records) == len(SAMPLE_STEPS)
+    assert len(records) == len(SAMPLE_STEPS) + DEMO_ASI07_EXTRA_RECORDS
+    # Chain still verifies end-to-end: the forged signer was initialized with the
+    # primary signer's head hash, so prev_hash linkage holds and each record
+    # verifies against its own signer_key.
     assert verify_chain(records).status == VerificationStatus.OK
-    assert all(r.signer_key == signer.public_key_hex for r in records)
+    # Every record up to and including the first (legitimate) agent_message is
+    # signed by the primary key; the final forged record is signed by a different key.
+    primary_signed = records[: len(SAMPLE_STEPS) + 1]
+    assert all(r.signer_key == signer.public_key_hex for r in primary_signed)
+    assert records[-1].signer_key != signer.public_key_hex
 
 
 def test_sample_chain_carries_user_intent_on_every_step(tmp_path: Path) -> None:
@@ -36,7 +46,7 @@ def test_sample_chain_triggers_all_implemented_detectors(tmp_path: Path) -> None
     write_sample_log(sample)
     findings = run_detectors(load_chain(sample))
     detector_ids = {f.detector_id for f in findings}
-    for expected in ("ASI01", "ASI02", "AIR-01", "AIR-02", "AIR-03", "ASI04", "AIR-04"):
+    for expected in ("ASI01", "ASI02", "ASI04", "ASI05", "ASI06", "ASI07", "ASI08", "ASI09", "AIR-01", "AIR-02", "AIR-03", "AIR-04"):
         assert expected in detector_ids, f"{expected} missing from demo findings: {detector_ids}"
 
 
@@ -50,7 +60,7 @@ def test_air_demo_runs_end_to_end(tmp_path: Path) -> None:
     assert sample.exists()
     assert report.exists()
     assert "[Chain verified]" in result.stdout
-    for asi in ("ASI01", "ASI02", "AIR-01", "AIR-02", "AIR-03", "ASI04", "AIR-04"):
+    for asi in ("ASI01", "ASI02", "ASI04", "ASI05", "ASI06", "ASI07", "ASI08", "ASI09", "AIR-01", "AIR-02", "AIR-03", "AIR-04"):
         assert asi in result.stdout, f"{asi} not surfaced by `air demo`"
 
 

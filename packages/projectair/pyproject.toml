@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "projectair"
-version = "0.1.6"
+version = "0.3.0"
 description = "Project AIR: forensic reconstruction and incident response for AI agents. Turn agent traces into signed forensic records with BLAKE3 + Ed25519."
 readme = "README.md"
 license = "MIT"
@@ -34,6 +34,10 @@ dependencies = [
     "langchain-core>=1.2.22,<2.0",
     # fpdf2: pure-Python PDF rendering for `air trace --format pdf`. No system deps.
     "fpdf2>=2.8.0,<3.0",
+    # PyYAML: parses agent registry files for ASI03/ASI10 Zero-Trust enforcement.
+    # Load path uses yaml.safe_load only. JSON registries work via stdlib and do
+    # not require this package at runtime.
+    "pyyaml>=6.0.2,<7.0",
 ]
 
 [project.optional-dependencies]
@@ -42,6 +46,7 @@ dev = [
     "pytest-cov>=5.0.0,<6.0",
     "ruff>=0.6.0,<1.0",
     "mypy>=1.11.0,<2.0",
+    "types-PyYAML>=6.0.12,<7.0",
 ]
 
 [project.scripts]

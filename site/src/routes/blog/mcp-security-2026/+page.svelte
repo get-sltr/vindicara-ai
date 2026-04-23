@@ -61,7 +61,7 @@
   </p>
 
   <p class="text-zinc-300 leading-relaxed mt-4">
-    That door is also the most common starting point for incidents we reconstruct with Project AIR. When security calls us in after an agent has exfiltrated data, modified records, or shelled out to a host it should not have touched, the path almost always traces back to an MCP tool that never should have been exposed in the first place. Scanning before deployment is cheap. Reconstructing what happened afterward, from partial logs, is not.
+    That door is also the most common starting point for incidents we reconstruct with Project AIR™. When security calls us in after an agent has exfiltrated data, modified records, or shelled out to a host it should not have touched, the path almost always traces back to an MCP tool that never should have been exposed in the first place. Scanning before deployment is cheap. Reconstructing what happened afterward, from partial logs, is not.
   </p>
 
   <!-- Section 2: The 92% problem -->

@@ -2,19 +2,31 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Current state (2026-04-20)
+## Current state (2026-04-22)
+Brand hierarchy:
+- Company: Vindicara
+- Flagship initiative (external-facing, gravity surfaces): Project AIR
+- Product tier names (developer-facing, light surfaces): AIR SDK, AIR Cloud, AIR Enterprise
+- Technical artifacts (package names, imports, CLI): air, airsdk, vindicara
 
+Rule: use "Project AIR" on hero pages, pitch decks, whitepapers, legal documents, press, investor materials. Use "AIR" in code, docs, CLI, and technical copy where brevity matters.
 The AIR pivot shipped. The OSS promise is live on PyPI. Read this before doing anything substantive.
 
 **On PyPI:**
-- `projectair` 0.1.5 live (0.1.6 wheel built, uploaded by user). MIT. Ships the `air` CLI and the `airsdk` library. This is the public product.
+- `projectair` **0.3.0** is the latest live release (published 2026-04-22). MIT. Ships the `air` CLI and the `airsdk` library. This is the public product. **Full 10 of 10 OWASP Top 10 for Agentic Applications coverage** lands in this release: ASI03 Identity & Privilege Abuse (Zero-Trust-for-agents via operator-declared `AgentRegistry`) and ASI10 Rogue Agents (Zero-Trust behavioral-scope enforcement via declared `BehavioralScope`). Also ships `air report article72` for EU AI Act Article 72 post-market monitoring evidence generation. Live PyPI versions: 0.1.0–0.1.5, 0.2.1 (ASI06+ASI07), 0.2.3 (ASI05+ASI09), 0.2.4 (ASI08), 0.3.0 (ASI03+ASI10+Article72). 0.2.0 and 0.2.2 were local-only bumps that got rolled into the next published release. To publish a new release: bump `packages/projectair/pyproject.toml` + `airsdk/__init__.py`, then from `packages/projectair/`: `rm -f dist/*.whl dist/*.tar.gz && python -m build && python -m twine check dist/* && python -m twine upload dist/projectair-<ver>*`. Always `cd packages/projectair` first; running `python -m build` from the repo root produces a vindicara wheel instead. The simple index at `https://pypi.org/simple/projectair/` updates faster than the JSON endpoint when checking propagation. Credentials live in `~/.pypirc` (permissions `-rw-------`, username `__token__`, password is the PyPI API token starting with `pypi-`). With `~/.pypirc` in place, `twine upload` is non-interactive.
 - `vindicara` 0.2.0 live, repositioned as "server-side engine behind AIR Cloud." `vindicara` 0.1.0 yanked.
 
 **Detector coverage (honest, ground this in the actual OWASP specs, do not fabricate):**
-- OWASP **Top 10 for Agentic Applications** (3 of 10): `ASI01` Agent Goal Hijack, `ASI02` Tool Misuse & Exploitation, `ASI04` Agentic Supply Chain Vulnerabilities (partial, MCP only). `ASI03, ASI05-ASI10` on roadmap.
+- OWASP **Top 10 for Agentic Applications** (**10 of 10**): `ASI01` Agent Goal Hijack, `ASI02` Tool Misuse & Exploitation, `ASI03` Identity & Privilege Abuse (shipped 0.3.0; Zero-Trust-for-agents via `AgentRegistry`: identity forgery / unknown agent / out-of-scope tool / privilege-tier escalation), `ASI04` Agentic Supply Chain Vulnerabilities (partial, MCP only), `ASI05` Unexpected Code Execution (shipped 0.2.2), `ASI06` Memory & Context Poisoning (shipped 0.2.1), `ASI07` Insecure Inter-Agent Communication (shipped 0.2.0), `ASI08` Cascading Failures (shipped 0.2.4; oscillating-pair threshold 4 cycles + fan-out threshold 5 distinct targets / 10-record window, operating over AGENT_MESSAGE records), `ASI09` Human-Agent Trust Exploitation (shipped 0.2.3), `ASI10` Rogue Agents (shipped 0.3.0; Zero-Trust behavioral-scope enforcement via `BehavioralScope`: unexpected tool / fan-out breach / off-hours activity / session tool budget). `UNIMPLEMENTED_DETECTORS` is now empty.
 - OWASP **Top 10 for LLM Applications** (3 categories, implemented as AIR-specific detectors): `AIR-01` -> LLM01 Prompt Injection, `AIR-02` -> LLM06 Sensitive Information Disclosure, `AIR-03` -> LLM04 Model Denial of Service.
 - **AIR-native**: `AIR-04` Untraceable Action (forensic-chain-integrity check; no direct OWASP equivalent).
-- **Never claim "7 of 10 ASI"** or similar inflated headlines. The correct framing is "3 OWASP Agentic + 3 OWASP LLM + 1 AIR-native." I fabricated ASI names on an earlier attempt and the user caught it; do not repeat that mistake.
+- As of projectair 0.3.0 the correct framing is **"10 OWASP Agentic + 3 OWASP LLM + 1 AIR-native."** Every public claim must cite this exact taxonomy. Never revert to the "8 of 10" or "3 of 10" framing from earlier releases.
+- **ASI10 is Zero-Trust enforcement, not anomaly detection.** Frame it as declared-scope enforcement in every doc, docstring, README, and HN post. The learned-baseline anomaly-detection variant (statistical profiling, peer comparison) is explicitly on the roadmap for a later release and is labelled as such in `detections.py`. Calling the shipped detector "anomaly detection" is overclaim and will attract HN skepticism in under a minute.
+- **Do not conflate AIR-04 with ASI10.** AIR-04 detects gaps in our own chain (missing tool_end records, silent intervals). ASI10 Rogue Agents is about agents acting outside their authorization scope / stealth infiltration. OWASP lists signed audit logs as a *mitigation* for ASI10, not a detection signal. Calling AIR-04 "ASI10 coverage" is overclaim. If we want real ASI10 coverage, we ship a behavioral-scope detector.
+
+**Terminology: "Intent Capsule" is the public-facing term.** OWASP's ASI01 mitigation #5 names "intent capsule" as the emerging pattern for binding declared goal, constraints, and context to each execution cycle in a signed envelope, which is what AIR writes. Lead external comms (README, blog, pitch) with "Signed Intent Capsule." The record-level Python types (`AgDRRecord`, `AgDRPayload`, `packages/projectair/src/airsdk/agdr.py`) stay named AgDR for format compatibility with the accountability.ai/me2resh spec, but describe them as "AgDR-format-compatible Intent Capsules" in docs. This defuses the naming-collision risk around authorship claims on AgDR.
+
+**Detector targets (next):** 10 of 10 Agentic shipped as of 0.3.0 (2026-04-22). The OWASP Q3 Solutions Landscape submission bar is cleared. Next-release roadmap: learned-baseline ASI10 variant (statistical behavioural profile + peer comparison, requires training-data collection), a full ASI04 Agentic Supply Chain detector beyond MCP naming patterns (dependency poisoning, tool-manifest tampering), framework integrations for LlamaIndex / CrewAI / AutoGen, and AIR Cloud (hosted ingestion + dashboard backing the Team tier).
 
 **Framework integrations shipped:** LangChain (`AIRCallbackHandler`), OpenAI (`instrument_openai`), Anthropic (`instrument_anthropic`). LlamaIndex, CrewAI, AutoGen are on the roadmap.
 
@@ -32,6 +44,15 @@ Install dev environment (editable, with API + dev extras):
 
 ```bash
 pip install -e ".[api,dev]"
+```
+
+The public `projectair` package has its own pyproject and dev extras:
+
+```bash
+pip install -e "packages/projectair[dev]"    # installs the `air` CLI + `airsdk` editable
+pytest packages/projectair/tests              # runs the MIT package's own test suite
+air demo                                      # 10-second sanity check: signed chain + report
+air trace path/to/agent.log                   # replay chain, verify signatures, emit forensic-report.json
 ```
 
 Lint, format check, and type check (runs ruff + mypy strict):
@@ -79,6 +100,17 @@ cd site && npm run check                 # svelte-check
 ## Repo Layout (actual, current)
 
 The project structure in the spec below lists the intended layout. What actually ships today:
+
+### `packages/projectair/` (the public MIT package, this is the product)
+
+- `packages/projectair/pyproject.toml` — own build. Declares `[project.scripts] air = "projectair.cli:main"`. Wheel packages are `src/airsdk` + `src/projectair`.
+- `packages/projectair/src/airsdk/` — library surface. `callback.py` (`AIRCallbackHandler` for LangChain), `recorder.py` (`AIRRecorder` that writes signed records), `agdr.py` (BLAKE3 + Ed25519 signing; the "AgDR format" layer, product-labelled "Signed Intent Capsule"), `detections.py` (all ASI + AIR-XX detectors), `exports.py` (JSON/PDF/CEF emitters), `types.py` (`AgDRRecord`, `AgDRPayload`, `Finding`, `ForensicReport`), `_demo.py` (what `air demo` runs).
+- `packages/projectair/src/airsdk/integrations/` — `openai.py` (`instrument_openai`), `anthropic.py` (`instrument_anthropic`). LangChain lives in `callback.py` (historical; may relocate).
+- `packages/projectair/src/projectair/cli.py` — Typer CLI. Only `air` subcommands live here.
+- `packages/projectair/tests/` — pytest suite for the MIT package. Separate from the root `tests/`. Run with `pytest packages/projectair/tests`.
+- `packages/projectair/examples/` — `build_sample_trace.py` and `sample_trace.log` for manual testing of `air trace`.
+
+### `src/vindicara/` (Apache-2.0 engine substrate)
 
 - `src/vindicara/sdk/` — public SDK surface (`client.py`, `decorators.py`, `types.py`, `exceptions.py`). `vindicara.__init__` re-exports `Client` and the typed exceptions. The package ships a `py.typed` marker, so downstream `mypy --strict` users get Vindicara's type hints directly.
 - `src/vindicara/engine/` — policy engine (`evaluator.py`, `policy.py`, `rules/`). `Evaluator.with_builtins()` is the canonical bootstrap; `PolicyRegistry` holds built-in policies. There is no `cache.py` or `composite.py` yet, despite the spec.
@@ -191,39 +223,37 @@ We are NOT a gateway. We are NOT an observability tool. We are the policy enforc
 
 ## Value Optimization Strategy
 
-### Five Revenue Pillars (Not Just One Product)
+### Three Revenue Pillars (post-AIR-pivot)
 
-**Pillar 1: Vindicara SDK (Core)**
-The open-core SDK. `pip install vindicara`. Intercepts AI inputs/outputs, enforces policies, logs everything. This is the land. Free tier gets developers in. Paid tiers scale with volume.
+Previous drafts enumerated five separate pillars (SDK, MCP scanner, Agent IAM, Compliance, Drift Detection). Post-AIR-pivot those are no longer separate product lines; they are detector surfaces and library features that all ship in the OSS `projectair` package. The business is now three tiers stacked on the same technical substrate.
 
-**Pillar 2: MCP Security Scanner**
-Standalone tool (and SDK module) that evaluates MCP server configurations for authentication weaknesses, overprivileged tool access, and known attack vectors. This is timely: RSA 2026 just showed that only 8% of MCP servers have proper OAuth, and the ecosystem is growing faster than any security team can manually review. This can be a freemium acquisition channel on its own.
+**Pillar 1: Project AIR OSS (land)**
+`pip install projectair`. MIT. The `air` CLI and `airsdk` Python library. 10 OWASP Agentic ASI detectors (ASI01–ASI10), 3 OWASP LLM Top 10 detectors, 1 AIR-native chain-integrity check, signed Intent Capsule chain, agent registry for Zero-Trust enforcement, Article 72 Markdown template generator. Lives in developer workflows, gets embedded in agent code, produces signed forensic records. Every install is a hook for the expand motion.
 
-**Pillar 3: Agent Identity & Access Management**
-Every AI agent gets treated as a first-class identity. Scoped permissions, per-task authorization, continuous authorization aligned with Zero Trust principles. This is where Cisco and enterprise players are going, but nobody offers it as an independent, embeddable layer.
+**Pillar 2: AIR Cloud (Team tier, $1,499/mo, expand)**
+Hosted ingestion, incident dashboard, SIEM export, alerting, cross-trace correlation, multi-user agent registry management. Built for security and platform teams that have agents in production and need a managed incident-response surface rather than running `air trace` by hand. The upgrade path once OSS is in the daily workflow.
 
-**Pillar 4: Compliance-as-Code Engine**
-Automated evidence generation for EU AI Act Article 72 (post-market monitoring), NIST AI RMF, SOC 2 AI controls, and ISO 42001. Technical documentation, conformity assessment artifacts, incident reporting templates, audit trail exports. This is the expand. Once the SDK is in production, compliance becomes a natural upsell because the data is already flowing through Vindicara.
-
-**Pillar 5: Behavioral Drift Detection**
-Baseline agent behavior in production, detect anomalies, alert on drift. Not just "is this output toxic" but "is this agent acting differently than it did last week." This is the most underserved capability in the market. Miggo is the only company explicitly tackling it, and they are runtime observability, not enforcement.
+**Pillar 3: AIR Enterprise ($50K–$250K ACV, moat)**
+Branded regulator-ready PDF evidence (EU AI Act Article 72, SB 53, SOC 2, NIST AI RMF), multi-system compliance aggregation, insurance-carrier integrations, SSO/SAML/RBAC, on-prem / VPC / air-gapped deployments, dedicated IR contact, SLA, BAA. Built for regulated industries (fintech, healthtech, govtech, insurance). This is the tier that converts "Admissible by Design" from an architecture claim into a compliance artefact a regulator or insurer accepts.
 
 ### Pricing Model
 
+Three tiers. The bottom-of-funnel developer-only tiers from earlier drafts (**$49/Developer**, **$149/Team**, **$499/Scale**) are retired; we target security and platform teams with budget authority, not hobbyist developers. OSS is the land, AIR Cloud is the expand, Enterprise is the moat.
+
 | Tier | Price | What You Get |
 |------|-------|-------------|
-| **Open Source** | Free | Core SDK, basic policy enforcement, local-only logging, community support |
-| **Developer** | $49/mo | Managed policy dashboard, cloud logging, MCP scanner (5 servers), email support |
-| **Team** | $149/mo | Everything in Developer + Agent IAM, behavioral baselines, 25 MCP servers, Slack support |
-| **Scale** | $499/mo | Everything in Team + compliance engine, custom policies, 100 MCP servers, priority support |
-| **Enterprise** | Custom | On-prem/VPC deployment, SSO/SAML, dedicated CSM, SLA, unlimited MCP, custom compliance frameworks |
+| **Open Source** | Free, MIT, forever | `air` CLI + `airsdk` Python SDK. 10 OWASP Agentic ASI detectors + 3 OWASP LLM categories + 1 AIR-native chain-integrity check. LangChain / OpenAI / Anthropic instrumentation. Signed Intent Capsule chain (BLAKE3 + Ed25519, AgDR format). JSON / PDF / SIEM-CEF forensic export. Agent registry (YAML/JSON) for ASI03/ASI10 Zero-Trust enforcement. Article 72 Markdown template generator. Community support. |
+| **Team (AIR Cloud)** | $1,499/mo | Everything in Open Source. Hosted incident dashboard, up to 25 agents. SIEM export (Datadog, Splunk, Sumo, Sentinel). Incident workflows + alerting (Slack, email, PagerDuty, webhook). Shared agent registry. Cloud retention and cross-trace correlation. Email and Slack support. |
+| **Enterprise** | $50K–$250K ACV | Everything in Team. SSO / SAML / RBAC. Branded, regulator-ready PDF evidence (EU AI Act Article 72, SB 53, SOC 2, NIST AI RMF). Multi-system compliance aggregation. Insurance carrier integrations. On-prem / VPC / air-gapped deployment. Dedicated IR contact, SLA, BAA. Unlimited agents and records. |
 
-### Go-To-Market Sequence
+The OSS Article 72 template generator ships the evidence structure; Enterprise gates the branded, multi-system, regulator-ready packaging. OSS distributes the "Admissible by Design" moat so every pip install inherits it; Enterprise monetizes the filing-ready artefact.
 
-1. **Phase 1 (Now)**: Ship open-source SDK. Get it into developer hands. Write content. Build credibility on Reddit, Hacker News, and dev Twitter. Target: 500 GitHub stars, 100 weekly pip installs within 90 days.
-2. **Phase 2 (Q3 2026)**: Launch MCP Security Scanner as free standalone tool. This is the viral acquisition hook. Every team deploying MCP agents needs this.
-3. **Phase 3 (Q4 2026)**: Launch managed dashboard and compliance engine. Convert free users to paid. Target regulated industries (fintech, healthtech, govtech) where EU AI Act pressure is real.
-4. **Phase 4 (2027)**: Enterprise push. SOC 2 certification. On-prem deployment option. Channel partnerships with consultancies doing AI compliance work.
+### Go-To-Market Sequence (post-AIR-pivot)
+
+1. **Phase 1 (May 4, 2026, public launch)**: Ship `projectair` 0.3.0 OSS with 10 of 10 OWASP Agentic + 3 OWASP LLM + 1 AIR-native detector coverage. Admissibility by Design page live with FRE 901/902(13)/803(6) mapping and sample certification template. Hacker News + LinkedIn + founder outbound. Target: 500 GitHub stars, 100 weekly pip installs within 90 days of launch. Start warming 3-5 design-partner conversations in parallel.
+2. **Phase 2 (day 60, late June 2026)**: AIR Cloud Team tier ($1,499/mo) goes live with the first warm-pipeline design partner converted. Hosted ingestion, incident dashboard, SIEM export. Target: first paying customer by day 60, 3+ active design-partner conversations by day 90.
+3. **Phase 3 (6 months post-launch, November 2026)**: AIR Cloud generally available. First enterprise LOI conversation mature. SOC 2 Type I controls observation period begins. Target: 10+ paying Team-tier teams.
+4. **Phase 4 (12 months post-launch, May 2027)**: AIR Enterprise tier live with branded compliance evidence packaging, SSO/SAML, on-prem option. SOC 2 Type I complete or near-complete. Target: 50+ paying teams, first signed enterprise contract, Series seed pitch-ready.
 
 ---
 

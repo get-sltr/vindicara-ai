@@ -1,4 +1,5 @@
 <script lang="ts">
+  import vindicaraLogo from '$lib/assets/vindicara-logo.png';
   import ChainExplorer from '$lib/components/admissibility/ChainExplorer.svelte';
   import CertificationGenerator from '$lib/components/admissibility/CertificationGenerator.svelte';
   import FrameworkTabs from '$lib/components/admissibility/FrameworkTabs.svelte';
@@ -100,7 +101,7 @@
 </script>
 
 <svelte:head>
-  <title>Admissibility by Design: Court-Admissible AI Agent Forensics | Project AIR</title>
+  <title>Admissibility by Design: Court-Admissible AI Agent Forensics | Project AIR™</title>
   <meta
     name="description"
     content="Every Project AIR record is a Signed Intent Capsule: BLAKE3-hashed, Ed25519-signed, forward-chained. Mapped to US Federal Rules of Evidence 901/902/803, EU eIDAS Articles 25-26, EU AI Act Article 72, GDPR Article 30. Live chain verification and an FRE 902(13) certification generator included."
@@ -154,14 +155,9 @@
 <!-- NAV -->
 <nav class="fixed top-0 w-full z-50 bg-obsidian/60 backdrop-blur-2xl border-b border-white/5">
   <div class="max-w-screen-2xl mx-auto px-6 flex items-center justify-between h-16">
-    <a href="/" class="flex items-center gap-2.5">
-      <div class="w-8 h-8 rounded-lg bg-brand-red flex items-center justify-center">
-        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-        </svg>
-      </div>
-      <span class="text-lg font-bold tracking-tight">Vindicara</span>
-      <span class="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-400 border border-white/15 px-1.5 py-0.5">AIR</span>
+    <a href="/" class="flex items-center gap-1">
+      <img src={vindicaraLogo} alt="Vindicara" class="h-10 w-auto mix-blend-screen" />
+      <span class="font-mono text-[10px] tracking-[0.18em] uppercase text-white border border-white/30 px-1.5 py-0.5 shadow-[0_0_10px_rgba(255,255,255,0.25)]">Project AIR™</span>
     </a>
     <div class="hidden md:flex items-center gap-8 text-sm text-zinc-400">
       <button onclick={() => scrollTo('four-bars')} class="hover:text-white transition-colors cursor-pointer">The four bars</button>
@@ -633,14 +629,9 @@
   <div class="max-w-screen-xl mx-auto px-6 py-14">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
       <div class="col-span-2 md:col-span-1">
-        <div class="flex items-center gap-2.5 mb-4">
-          <div class="w-7 h-7 rounded-md bg-brand-red flex items-center justify-center">
-            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-            </svg>
-          </div>
-          <span class="font-bold">Vindicara</span>
-          <span class="font-mono text-[10px] tracking-[0.18em] uppercase text-zinc-400 border border-white/15 px-1.5 py-0.5">AIR</span>
+        <div class="flex items-center gap-1 mb-4">
+          <img src={vindicaraLogo} alt="Vindicara" class="h-8 w-auto mix-blend-screen" />
+          <span class="font-mono text-[10px] tracking-[0.18em] uppercase text-white border border-white/30 px-1.5 py-0.5 shadow-[0_0_10px_rgba(255,255,255,0.25)]">Project AIR™</span>
         </div>
         <p class="text-sm text-zinc-500 leading-relaxed">
           AI Incident Response. Forensic reconstruction, signed evidence, and containment for autonomous agents.
@@ -667,7 +658,7 @@
       <div>
         <h4 class="text-sm font-semibold mb-4">Company</h4>
         <ul class="space-y-2 text-sm text-zinc-500">
-          <li><a href="mailto:kevin@vindicara.io" class="hover:text-white transition-colors">kevin@vindicara.io</a></li>
+          <li><a href="mailto:Kevin.Minn@vindicara.io" class="hover:text-white transition-colors">Kevin.Minn@vindicara.io</a></li>
           <li><a href="mailto:legal@vindicara.io" class="hover:text-white transition-colors">legal@vindicara.io</a></li>
           <li><a href="mailto:security@vindicara.io" class="hover:text-white transition-colors">security@vindicara.io</a></li>
           <li><a href="https://github.com/get-sltr/vindicara-ai" class="hover:text-white transition-colors">GitHub</a></li>

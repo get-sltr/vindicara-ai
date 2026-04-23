@@ -117,7 +117,7 @@
   <!-- Mid-article CTA -->
   <div class="glass-panel rounded-xl p-8 my-12 text-center border-green-500/20">
     <h3 class="text-xl font-bold mb-2">Start the Article 12 record now</h3>
-    <p class="text-sm text-zinc-400 mb-6">Project AIR writes every agent decision as a signed forensic record. The compliance engine exports it as Article 72 evidence.</p>
+    <p class="text-sm text-zinc-400 mb-6">Project AIR™ writes every agent decision as a signed forensic record. The compliance engine exports it as Article 72 evidence.</p>
     <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
       <a href="https://github.com/get-sltr/vindicara-ai?utm_source=blog&utm_medium=cta&utm_campaign=eu-ai-act-article-72-guide" class="btn-primary text-sm px-6 py-3">View on GitHub</a>
       <a href="https://vindicara.io/#how-it-works?utm_source=blog&utm_medium=cta&utm_campaign=eu-ai-act-article-72-guide" class="btn-secondary text-sm px-6 py-3">How AIR works</a>
