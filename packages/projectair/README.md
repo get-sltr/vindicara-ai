@@ -75,6 +75,27 @@ response = client.chat.completions.create(
 )
 ```
 
+The same wrapper works with any OpenAI-compatible endpoint including **NVIDIA NIM**, **vLLM**, **TGI**, **Together AI**, **Groq**, **Mistral**, and **Fireworks**. Point the client at the target endpoint and instrument it the same way. Example with a Llama3 NIM:
+
+```python
+from openai import OpenAI
+from airsdk import AIRRecorder
+from airsdk.integrations.openai import instrument_openai
+
+recorder = AIRRecorder(log_path="my-agent.log", user_intent="...")
+client = instrument_openai(
+    OpenAI(base_url="https://integrate.api.nvidia.com/v1", api_key=NVIDIA_API_KEY),
+    recorder,
+)
+
+response = client.chat.completions.create(
+    model="meta/llama-3.3-70b-instruct",
+    messages=[{"role": "user", "content": "..."}],
+)
+```
+
+See `examples/nim_demo.py` for the full runnable end-to-end script.
+
 ### Anthropic SDK
 
 ```python
@@ -165,7 +186,7 @@ Additional detectors (OWASP LLM Top 10 + AIR-native):
 [Export] forensic-report.json
 ```
 
-Export formats: `air trace --format pdf` emits a human-readable PDF for legal and insurance stakeholders; `--format siem` emits ArcSight CEF v0 events for SIEM ingestion (Splunk, Sumo, QRadar, Datadog).
+Export formats: `air trace --format pdf` emits a human-readable PDF for legal and insurance stakeholders; `--format siem` emits CEF v0 events for SIEM ingestion across ArcSight, Splunk, QRadar, Sentinel, Sumo, and Datadog.
 
 ## Session 1 scope
 
@@ -191,9 +212,10 @@ This release covers the minimum forensic surface end-to-end:
 | AIR-04 Untraceable Action                  | implemented - AIR-native, no OWASP equivalent     |
 | JSON forensic export                       | implemented                                       |
 | PDF forensic export                        | implemented                                       |
-| SIEM forensic export (ArcSight CEF v0)     | implemented                                       |
+| SIEM forensic export (CEF v0, multi-vendor: ArcSight, Splunk, QRadar, Sentinel, Sumo, Datadog) | implemented                                       |
 | LangChain callback integration             | implemented                                       |
 | OpenAI SDK integration                     | implemented                                       |
+| OpenAI-compatible endpoints (NVIDIA NIM, vLLM, Together, Groq, Mistral, Fireworks) | works via `instrument_openai`, see `examples/nim_demo.py` |
 | Anthropic SDK integration                  | implemented                                       |
 | LlamaIndex LLM integration                 | implemented                                       |
 | CrewAI / AutoGen                           | not yet implemented                               |

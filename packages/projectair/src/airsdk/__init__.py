@@ -26,6 +26,8 @@ from airsdk.detections import (
     run_detectors,
 )
 from airsdk.exports import export_json, export_pdf, export_siem
+from airsdk.integrations.adk import instrument_adk, make_air_callbacks
+from airsdk.integrations.gemini import instrument_gemini
 from airsdk.recorder import AIRRecorder, resolve_signing_key
 from airsdk.registry import (
     AgentDescriptor,
@@ -81,8 +83,11 @@ __all__ = [
     "export_pdf",
     "export_siem",
     "generate_article72_report",
+    "instrument_adk",
+    "instrument_gemini",
     "load_chain",
     "load_registry",
+    "make_air_callbacks",
     "resolve_signing_key",
     "run_detectors",
     "verify_chain",

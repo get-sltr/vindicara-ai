@@ -63,6 +63,10 @@ packages = ["src/airsdk", "src/projectair"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+markers = [
+    "network: requires outbound network access; skipped by default. Run with `pytest -m network`.",
+]
+addopts = "-m 'not network'"
 
 [tool.ruff]
 target-version = "py312"
