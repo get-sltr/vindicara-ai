@@ -16,7 +16,7 @@
 	<meta property="og:image:height" content="630" />
 
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:site" content="@vindicara" />
+	<meta name="twitter:site" content="@AIRbyVindicara" />
 	<meta name="twitter:image" content="https://vindicara.io/og-image.png" />
 
 	<meta name="theme-color" content="#0a0a0f" />
@@ -31,7 +31,7 @@
 				name: 'Vindicara',
 				url: 'https://vindicara.io',
 				logo: 'https://vindicara.io/og-image.png',
-				sameAs: ['https://github.com/vindicara-inc/projectair', 'https://x.com/vindicara', 'https://linkedin.com/company/vindicara'],
+				sameAs: ['https://github.com/vindicara-inc/projectair', 'https://x.com/AIRbyVindicara', 'https://linkedin.com/company/vindicara-ai'],
 			},
 			{
 				'@type': 'WebSite',
