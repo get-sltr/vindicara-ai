@@ -37,7 +37,7 @@ The following are in scope for security research under this Policy:
 - The Vindicara API endpoints used by the AIR Cloud / Team Tier.
 - The Vindicara dashboard (when generally available).
 - The `projectair` Python package distributed on PyPI, including the `air` CLI and the `airsdk` library.
-- The Project AIR™ source code hosted at https://github.com/get-sltr/vindicara-ai.
+- The Project AIR™ source code hosted at https://github.com/vindicara-inc/projectair.
 - Published cryptographic design and primitives as described in the Admissibility by Design architecture document at https://vindicara.io/admissibility/.
 
 ### 2.2 Out of Scope

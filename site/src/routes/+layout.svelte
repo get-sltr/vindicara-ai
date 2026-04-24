@@ -31,7 +31,7 @@
 				name: 'Vindicara',
 				url: 'https://vindicara.io',
 				logo: 'https://vindicara.io/og-image.png',
-				sameAs: ['https://github.com/get-sltr/vindicara-ai', 'https://x.com/vindicara', 'https://linkedin.com/company/vindicara'],
+				sameAs: ['https://github.com/vindicara-inc/projectair', 'https://x.com/vindicara', 'https://linkedin.com/company/vindicara'],
 			},
 			{
 				'@type': 'WebSite',

@@ -119,7 +119,7 @@ Pre-1.0. The detector heuristics will produce false positives and false negative
 
 ## Contributing
 
-Issues, traces that break the detectors, and new ASI detector PRs are welcome. Bugs and feature requests: https://github.com/get-sltr/vindicara-ai/issues.
+Issues, traces that break the detectors, and new ASI detector PRs are welcome. Bugs and feature requests: https://github.com/vindicara-inc/projectair/issues.
 
 ## License
 

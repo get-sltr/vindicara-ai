@@ -57,7 +57,7 @@ dev = [
 
 [project.urls]
 Homepage = "https://vindicara.io"
-Repository = "https://github.com/get-sltr/vindicara-ai"
+Repository = "https://github.com/vindicara-inc/projectair"
 Documentation = "https://docs.vindicara.io"
 
 [tool.hatch.build.targets.sdist]

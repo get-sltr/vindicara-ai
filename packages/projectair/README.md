@@ -93,6 +93,23 @@ response = client.messages.create(
 )
 ```
 
+### LlamaIndex
+
+```python
+from llama_index.llms.openai import OpenAI as LlamaOpenAI
+from airsdk import AIRRecorder
+from airsdk.integrations.llamaindex import instrument_llamaindex
+
+recorder = AIRRecorder(log_path="my-agent.log", user_intent="Draft a Q3 sales report")
+llm = instrument_llamaindex(LlamaOpenAI(model="gpt-4o"), recorder)
+
+# complete / chat / stream_complete / stream_chat and their async variants all emit
+# llm_start + llm_end Signed Intent Capsules automatically.
+response = llm.complete("Draft the opening paragraph.")
+```
+
+The wrapped LLM is a duck-typed proxy, not an `llama_index.core.llms.LLM` subclass. It works wherever LlamaIndex calls the LLM directly. Components that run Pydantic validation against the `LLM` type (for example, some query engines and `Settings.llm`) will reject the proxy; in those flows, instrument the call sites in your own code or attach the recorder to a callback instead. Requires llama-index >= 0.10.
+
 For tool calls your code executes, wrap them with `recorder.tool_start(...)` / `recorder.tool_end(...)` so the forensic chain captures them too.
 
 ### Custom code (any framework)
@@ -178,7 +195,8 @@ This release covers the minimum forensic surface end-to-end:
 | LangChain callback integration             | implemented                                       |
 | OpenAI SDK integration                     | implemented                                       |
 | Anthropic SDK integration                  | implemented                                       |
-| LlamaIndex / CrewAI / AutoGen              | not yet implemented                               |
+| LlamaIndex LLM integration                 | implemented                                       |
+| CrewAI / AutoGen                           | not yet implemented                               |
 
 The detectors are honest first-pass heuristics. They will produce false positives and false negatives. The signed chain itself is production-grade cryptography.
 
@@ -194,4 +212,4 @@ MIT. See [LICENSE](LICENSE).
 
 ## Contributing
 
-This is pre-1.0 and the shape will evolve. Issues, traces that break the detectors, and new ASI detector PRs are all welcome at https://github.com/get-sltr/vindicara-ai.
+This is pre-1.0 and the shape will evolve. Issues, traces that break the detectors, and new ASI detector PRs are all welcome at https://github.com/vindicara-inc/projectair.

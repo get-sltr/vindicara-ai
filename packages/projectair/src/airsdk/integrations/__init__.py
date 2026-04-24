@@ -4,9 +4,11 @@ Each submodule provides a small wrapper that instruments a specific AI SDK
 to emit AgDR records through an :class:`airsdk.recorder.AIRRecorder`.
 
 Available:
-    - openai  (instrument_openai)
+    - openai      (instrument_openai)
+    - anthropic   (instrument_anthropic)
+    - llamaindex  (instrument_llamaindex)
 
 Planned:
-    - anthropic
-    - llamaindex
+    - crewai
+    - autogen
 """

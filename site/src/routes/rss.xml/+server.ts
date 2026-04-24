@@ -14,6 +14,14 @@ type Post = {
 
 const posts: Post[] = [
   {
+    slug: 'trustworthy-agents-forensic-evidence',
+    title: 'Implementing Trustworthy Agents: A Forensic Evidence Layer for Production',
+    description:
+      "Anthropic's April 9 paper on trustworthy agents names three ecosystem gaps. Project AIR is our answer to evidence sharing and open standards, and a concrete contribution to a problem no single company can solve alone.",
+    date: '2026-04-24',
+    category: 'Perspective',
+  },
+  {
     slug: 'secure-ai-agents-5-minutes',
     title: 'Run your first `air trace` in 5 minutes',
     description:

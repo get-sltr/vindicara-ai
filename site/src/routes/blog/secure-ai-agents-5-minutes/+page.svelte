@@ -103,7 +103,7 @@ agent = AgentExecutor(callbacks=[handler], ...)`}</code></pre></div>
     <h3 class="text-xl font-bold mb-2">Start the forensic record before the incident</h3>
     <p class="text-sm text-zinc-400 mb-6"><code class="font-mono text-zinc-200">air</code> and <code class="font-mono text-zinc-200">airsdk</code> are MIT-licensed and open source. One <code class="font-mono text-zinc-200">pip install</code> and you have a signed chain.</p>
     <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-      <a href="https://github.com/get-sltr/vindicara-ai?utm_source=blog&utm_medium=cta&utm_campaign=secure-ai-agents-5-minutes" class="btn-primary text-sm px-6 py-3">View on GitHub</a>
+      <a href="https://github.com/vindicara-inc/projectair?utm_source=blog&utm_medium=cta&utm_campaign=secure-ai-agents-5-minutes" class="btn-primary text-sm px-6 py-3">View on GitHub</a>
       <a href="https://vindicara.io/#how-it-works?utm_source=blog&utm_medium=cta&utm_campaign=secure-ai-agents-5-minutes" class="btn-secondary text-sm px-6 py-3">How AIR works</a>
     </div>
   </div>
@@ -171,7 +171,7 @@ agent = AgentExecutor(callbacks=[handler], ...)`}</code></pre></div>
     <h3 class="text-xl font-bold mb-2">Your next incident is already on its way.</h3>
     <p class="text-sm text-zinc-400 mb-6">Make sure you can prove what happened. <code class="font-mono text-zinc-200">pip install projectair</code> and the record starts now.</p>
     <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-      <a href="https://github.com/get-sltr/vindicara-ai?utm_source=blog&utm_medium=cta&utm_campaign=secure-ai-agents-5-minutes" class="btn-primary text-sm px-6 py-3">View on GitHub</a>
+      <a href="https://github.com/vindicara-inc/projectair?utm_source=blog&utm_medium=cta&utm_campaign=secure-ai-agents-5-minutes" class="btn-primary text-sm px-6 py-3">View on GitHub</a>
       <a href="https://vindicara.io/#how-it-works?utm_source=blog&utm_medium=cta&utm_campaign=secure-ai-agents-5-minutes" class="btn-secondary text-sm px-6 py-3">How AIR works</a>
     </div>
   </div>

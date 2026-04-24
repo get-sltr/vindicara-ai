@@ -22,6 +22,17 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Post 0: Trustworthy Agents (Perspective, founder essay) -->
+      <a href="/blog/trustworthy-agents-forensic-evidence" class="glass-panel rounded-xl p-6 hover:border-brand-red/30 transition-colors group block">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-[10px] font-bold uppercase tracking-wider bg-brand-red/10 text-brand-red border border-brand-red/20 rounded-full px-2.5 py-0.5">Perspective</span>
+          <span class="text-[10px] text-zinc-600">6 min read</span>
+        </div>
+        <h2 class="text-lg font-semibold mb-2 group-hover:text-brand-red transition-colors">Implementing Trustworthy Agents: A Forensic Evidence Layer for Production</h2>
+        <p class="text-sm text-zinc-400 leading-relaxed">Anthropic's April 9 paper names three ecosystem gaps. Project AIR is our answer to evidence sharing and open standards.</p>
+        <p class="text-xs text-zinc-600 mt-4">April 24, 2026</p>
+      </a>
+
       <!-- Post 1: MCP Security -->
       <a href="/blog/mcp-security-2026" class="glass-panel rounded-xl p-6 hover:border-brand-cyan/30 transition-colors group block">
         <div class="flex items-center gap-2 mb-4">

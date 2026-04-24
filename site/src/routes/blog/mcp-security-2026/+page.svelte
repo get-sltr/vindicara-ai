@@ -152,7 +152,7 @@
     <h3 class="text-xl font-bold mb-2">Reconstruct the next MCP incident</h3>
     <p class="text-sm text-zinc-400 mb-6">The <code class="font-mono text-zinc-200">air</code> CLI is open source. Ingest any agent trace and get a signed forensic timeline in seconds.</p>
     <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-      <a href="https://github.com/get-sltr/vindicara-ai?utm_source=blog&utm_medium=cta&utm_campaign=mcp-security-2026" class="btn-primary text-sm px-6 py-3">View on GitHub</a>
+      <a href="https://github.com/vindicara-inc/projectair?utm_source=blog&utm_medium=cta&utm_campaign=mcp-security-2026" class="btn-primary text-sm px-6 py-3">View on GitHub</a>
       <a href="https://vindicara.io/#how-it-works?utm_source=blog&utm_medium=cta&utm_campaign=mcp-security-2026" class="btn-secondary text-sm px-6 py-3">How AIR works</a>
     </div>
   </div>
@@ -244,7 +244,7 @@ for finding in report.findings:
     <h3 class="text-xl font-bold mb-2">When prevention fails, reconstruction wins</h3>
     <p class="text-sm text-zinc-400 mb-6">Project AIR is the forensic and incident response layer for AI agents. Open source today.</p>
     <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-      <a href="https://github.com/get-sltr/vindicara-ai?utm_source=blog&utm_medium=cta&utm_campaign=mcp-security-2026" class="btn-primary text-sm px-6 py-3">View on GitHub</a>
+      <a href="https://github.com/vindicara-inc/projectair?utm_source=blog&utm_medium=cta&utm_campaign=mcp-security-2026" class="btn-primary text-sm px-6 py-3">View on GitHub</a>
       <a href="https://vindicara.io/#how-it-works?utm_source=blog&utm_medium=cta&utm_campaign=mcp-security-2026" class="btn-secondary text-sm px-6 py-3">How AIR works</a>
     </div>
   </div>

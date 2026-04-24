@@ -68,7 +68,7 @@ I, ${name}, hereby certify the following:
    independently reproducible. Ed25519 is specified in RFC 8032. BLAKE3 is
    specified in the BLAKE3 reference specification. The Project AIR verifier
    source code is MIT-licensed and available at
-   https://github.com/get-sltr/vindicara-ai.
+   https://github.com/vindicara-inc/projectair.
 
 I declare under penalty of perjury under the laws of ${jur} that the
 foregoing is true and correct.

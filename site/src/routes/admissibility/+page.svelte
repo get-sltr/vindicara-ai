@@ -168,7 +168,7 @@
       <a href="/blog" class="hover:text-white transition-colors">Blog</a>
     </div>
     <div class="hidden md:flex items-center gap-3">
-      <a href="https://github.com/get-sltr/vindicara-ai#readme" class="btn-secondary text-xs px-4 py-2">Docs</a>
+      <a href="https://github.com/vindicara-inc/projectair#readme" class="btn-secondary text-xs px-4 py-2">Docs</a>
       <a href="#certification" onclick={(e) => { e.preventDefault(); scrollTo('certification'); }} class="btn-primary text-xs px-4 py-2">Generate certification</a>
     </div>
     <button class="md:hidden text-zinc-400 hover:text-white" onclick={() => (mobileMenuOpen = !mobileMenuOpen)}>
@@ -602,12 +602,12 @@
             EU AI Act Article 72 guide
           </a>
           <a
-            href="https://github.com/get-sltr/vindicara-ai"
+            href="https://github.com/vindicara-inc/projectair"
             target="_blank"
             rel="noopener noreferrer"
             class="text-center font-mono text-[11px] uppercase tracking-wider text-zinc-500 hover:text-white transition-colors pt-2"
           >
-            Source: github.com/get-sltr/vindicara-ai ↗
+            Source: github.com/vindicara-inc/projectair ↗
           </a>
         </div>
       </div>
@@ -652,7 +652,7 @@
           <li><a href="/" class="hover:text-white transition-colors">Home</a></li>
           <li><a href="/pricing" class="hover:text-white transition-colors">Pricing</a></li>
           <li><a href="/blog" class="hover:text-white transition-colors">Blog</a></li>
-          <li><a href="https://github.com/get-sltr/vindicara-ai#readme" class="hover:text-white transition-colors">Docs</a></li>
+          <li><a href="https://github.com/vindicara-inc/projectair#readme" class="hover:text-white transition-colors">Docs</a></li>
         </ul>
       </div>
       <div>
@@ -661,7 +661,7 @@
           <li><a href="mailto:Kevin.Minn@vindicara.io" class="hover:text-white transition-colors">Kevin.Minn@vindicara.io</a></li>
           <li><a href="mailto:legal@vindicara.io" class="hover:text-white transition-colors">legal@vindicara.io</a></li>
           <li><a href="mailto:security@vindicara.io" class="hover:text-white transition-colors">security@vindicara.io</a></li>
-          <li><a href="https://github.com/get-sltr/vindicara-ai" class="hover:text-white transition-colors">GitHub</a></li>
+          <li><a href="https://github.com/vindicara-inc/projectair" class="hover:text-white transition-colors">GitHub</a></li>
         </ul>
       </div>
     </div>

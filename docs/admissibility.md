@@ -73,7 +73,7 @@ Project AIR satisfies this by construction. A record claims to have been produce
 
 > "Evidence describing a process or system and showing that it produces an accurate result."
 
-Project AIR's logging process is fully documented (see this page, [RFC 8032](https://www.rfc-editor.org/rfc/rfc8032) for Ed25519, the [BLAKE3 specification](https://github.com/BLAKE3-team/BLAKE3-specs), and the [airsdk source](https://github.com/get-sltr/vindicara-ai/tree/main/packages/projectair)). The process is deterministic: the same inputs produce the same hashes and the same signatures. An expert witness can describe it, demonstrate it, and have their demonstration independently reproduced.
+Project AIR's logging process is fully documented (see this page, [RFC 8032](https://www.rfc-editor.org/rfc/rfc8032) for Ed25519, the [BLAKE3 specification](https://github.com/BLAKE3-team/BLAKE3-specs), and the [airsdk source](https://github.com/vindicara-inc/projectair/tree/main/packages/projectair)). The process is deterministic: the same inputs produce the same hashes and the same signatures. An expert witness can describe it, demonstrate it, and have their demonstration independently reproduced.
 
 This is the strongest authentication hook for Project AIR. It is also the hook used for almost all machine-generated business records in federal court.
 
@@ -238,7 +238,7 @@ No pre-image attack, collision attack, or signature forgery is known against Ed2
 >
 > 7. The attached records have been verified using the ``air trace`` command. The verification output is attached as **Exhibit A** to this certification. The chain verified with status **"ok"** for **[N]** records.
 >
-> 8. The cryptographic primitives used are industry-standard, open, and independently reproducible. Ed25519 is specified in RFC 8032. BLAKE3 is specified in the BLAKE3 reference specification. The Project AIR verifier source code is MIT-licensed and available at https://github.com/get-sltr/vindicara-ai.
+> 8. The cryptographic primitives used are industry-standard, open, and independently reproducible. Ed25519 is specified in RFC 8032. BLAKE3 is specified in the BLAKE3 reference specification. The Project AIR verifier source code is MIT-licensed and available at https://github.com/vindicara-inc/projectair.
 >
 > I declare under penalty of perjury under the laws of **[Jurisdiction]** that the foregoing is true and correct.
 >
@@ -273,6 +273,6 @@ Admissibility by Design means the architecture does not stand in your way. Every
 
 ---
 
-*Project AIR is maintained by Vindicara. The ``projectair`` package is MIT-licensed. Source code at https://github.com/get-sltr/vindicara-ai. For questions about this document, contact eng@vindicara.io.*
+*Project AIR is maintained by Vindicara. The ``projectair`` package is MIT-licensed. Source code at https://github.com/vindicara-inc/projectair. For questions about this document, contact eng@vindicara.io.*
 
 *Last reviewed: [date]. This document will be updated as rules evolve; subscribe at vindicara.io for notifications.*
