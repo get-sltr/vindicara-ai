@@ -44,6 +44,18 @@ const CANONICAL_HOST = 'vindicara.io';
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
+  // http -> https, at the app layer. The ALB forwards :80 here rather than doing
+  // its own redirect, because the ALB redirect appends a literal ":443" to the
+  // Location (https://vindicara.io:443/) which strict domain verifiers (e.g.
+  // Google for Startups) read as "a different host". Building the Location from
+  // CANONICAL_HOST here yields a clean https://vindicara.io/... with no port, and
+  // collapses www -> apex in the same hop.
+  if (event.request.headers.get('x-forwarded-proto') === 'http') {
+    return new Response(null, {
+      status: 301,
+      headers: { location: `https://${CANONICAL_HOST}${event.url.pathname}${event.url.search}` }
+    });
+  }
   // Host header reflects the real request (no ORIGIN pinned in the Fargate task,
   // so adapter-node derives event.url from it). Redirect www -> apex first, then
   // the moved console URL, so a request to www/dashboard resolves in one hop each.

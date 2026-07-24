@@ -92,7 +92,12 @@ class SiteServerStack(Stack):
             desired_count=2,
             assign_public_ip=True,
             public_load_balancer=True,
-            redirect_http=True,
+            # Do NOT let the ALB do the http->https redirect: its redirect action
+            # templates the port into the Location (https://vindicara.io:443/),
+            # which strict domain verifiers reject as a different host. Instead we
+            # forward :80 to the app (below) and redirect to clean https in
+            # hooks.server.js, where the Location has no port.
+            redirect_http=False,
             certificate=certificate,
             protocol=elbv2.ApplicationProtocol.HTTPS,
             # No domain_name/domain_zone on purpose: do NOT auto-create the
@@ -123,6 +128,16 @@ class SiteServerStack(Stack):
                 log_driver=ecs.LogDrivers.aws_logs(stream_prefix="site", log_group=log_group),
             ),
             health_check_grace_period=Duration.seconds(30),
+        )
+
+        # Forward plain HTTP (:80) to the app so it issues a clean http->https
+        # redirect (redirect_http=False above). hooks.server.js returns
+        # 301 -> https://vindicara.io/... with no ":443" port artifact.
+        service.load_balancer.add_listener(
+            "HttpForward",
+            port=80,
+            protocol=elbv2.ApplicationProtocol.HTTP,
+            default_action=elbv2.ListenerAction.forward([service.target_group]),
         )
 
         # SvelteKit's node server returns 200 on /; 200-399 covers any redirect.
