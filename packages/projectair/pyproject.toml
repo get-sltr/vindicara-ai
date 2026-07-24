@@ -137,6 +137,13 @@ ignore = [
     "TC003",  # keep runtime imports for pathlib.Path et al. Typer / pydantic resolve types at runtime.
 ]
 
+[tool.ruff.lint.per-file-ignores]
+# firstrun.py opens exactly one hardcoded https URL (the registration endpoint).
+# The scheme is a constant, so S310 ("audit URL open") is a false positive here.
+# Ignoring at file level avoids version-dependent noqa placement (ruff anchors
+# S310 to different call sites across releases).
+"src/projectair/firstrun.py" = ["S310"]
+
 [tool.mypy]
 python_version = "3.10"
 strict = true

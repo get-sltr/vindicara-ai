@@ -59,14 +59,14 @@ def _register(email: str) -> bool:
             "platform": sys.platform,
         }
     ).encode("utf-8")
-    req = urllib.request.Request(  # noqa: S310 - constant https URL, not user-controlled
+    req = urllib.request.Request(
         _REGISTER_URL,
         data=payload,
         headers={"Content-Type": "application/json"},
         method="POST",
     )
     try:
-        with urllib.request.urlopen(req, timeout=3) as resp:  # noqa: S310
+        with urllib.request.urlopen(req, timeout=3) as resp:
             return 200 <= resp.status < 300
     except Exception:
         return False
