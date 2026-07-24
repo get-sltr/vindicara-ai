@@ -133,6 +133,11 @@ class SiteServerStack(Stack):
         # Forward plain HTTP (:80) to the app so it issues a clean http->https
         # redirect (redirect_http=False above). hooks.server.js returns
         # 301 -> https://vindicara.io/... with no ":443" port artifact.
+        #
+        # NOTE: this listener is added in a SECOND deploy. CloudFormation creates
+        # a new listener before deleting the old redirect one, which conflicts on
+        # port 80; so the first deploy runs with redirect_http=False and no :80
+        # listener (removes the old redirect), then this is added on the next.
         service.load_balancer.add_listener(
             "HttpForward",
             port=80,
