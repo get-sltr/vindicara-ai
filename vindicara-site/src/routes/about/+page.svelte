@@ -44,9 +44,14 @@
 
     <div class="backed">
       <div class="bh">Backed by</div>
-      <a href="https://www.nvidia.com/en-us/startups/" target="_blank" rel="noopener" aria-label="NVIDIA Inception Program">
-        <img src="/nvidia-inception-program-badge.svg" alt="NVIDIA Inception Program member" />
-      </a>
+      <div class="badges">
+        <a href="https://www.nvidia.com/en-us/startups/" target="_blank" rel="noopener" aria-label="NVIDIA Inception Program">
+          <img src="/nvidia-inception-program-badge.svg" alt="NVIDIA Inception Program member" />
+        </a>
+        <a class="e2b" href="https://e2b.dev/startups" target="_blank" rel="noopener" aria-label="E2B for Startups">
+          <img src="/e2b-startups.svg" alt="Sponsored by E2B for Startups" />
+        </a>
+      </div>
     </div>
   </div>
 </AppShell>
@@ -66,8 +71,10 @@
   .dogfood .dh{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--air2);margin-bottom:8px}
   .dogfood p{font-size:13px;color:var(--soft);line-height:1.6}
   .backed{margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
-  .backed .bh{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin-bottom:12px}
+  .backed .bh{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--white);margin-bottom:12px}
+  .badges{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
   .backed a{display:inline-block}
   .backed img{height:64px;width:auto;display:block}
+  .backed .e2b img{height:30px}
   @media (max-width:1080px){ .pillars{grid-template-columns:1fr 1fr} .prins{grid-template-columns:1fr} }
 </style>

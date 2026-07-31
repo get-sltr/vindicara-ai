@@ -106,6 +106,12 @@ air governance dsar       Layer 5: data-subject access report (Pro)
 air attest                Hardware root of trust: NVIDIA NRAS attestation (experimental)
 ```
 
+## Backed by
+
+<p align="center">
+  <a href="https://e2b.dev/startups"><img src="assets/e2b-startups.svg" alt="Sponsored by E2B for Startups" height="30"></a>
+</p>
+
 ## License
 
 - `packages/projectair/` and the `projectair` PyPI distribution: **MIT**. See [`packages/projectair/LICENSE`](packages/projectair/LICENSE).
