@@ -13,13 +13,13 @@
   "devDependencies": {
     "@sveltejs/adapter-node": "^5.5.5",
     "@sveltejs/adapter-static": "^3.0.5",
-    "@sveltejs/kit": "^2.8.0",
-    "@sveltejs/vite-plugin-svelte": "^7.1.2",
-    "@types/node": "^26.0.0",
-    "svelte": "^5.1.0",
-    "svelte-check": "^4.0.0",
-    "vite": "^8.0.16",
-    "vitest": "^4.1.9"
+    "@sveltejs/kit": "^2.70.2",
+    "@sveltejs/vite-plugin-svelte": "^7.2.0",
+    "@types/node": "^26.1.2",
+    "svelte": "^5.56.8",
+    "svelte-check": "^4.7.4",
+    "vite": "^8.2.0",
+    "vitest": "^4.1.10"
   },
   "dependencies": {
     "@google-analytics/data": "^6.1.0",
@@ -27,7 +27,7 @@
     "@noble/hashes": "^2.2.0",
     "d3-geo": "^3.1.1",
     "geoip-lite": "^2.0.3",
-    "three": "^0.160.1",
+    "three": "^0.185.1",
     "topojson-client": "^3.1.0",
     "world-atlas": "^2.0.2"
   },
