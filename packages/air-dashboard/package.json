@@ -32,7 +32,7 @@
 	"dependencies": {
 		"@auth0/auth0-spa-js": "^2.19.2",
 		"@noble/curves": "^1.7.0",
-		"@noble/hashes": "^1.6.1",
+		"@noble/hashes": "^2.2.0",
 		"three": "^0.169.0"
 	},
 	"overrides": {
