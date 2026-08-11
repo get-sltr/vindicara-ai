@@ -36,7 +36,7 @@ jobs:
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Gate: type-check the site before we spend time building an image. The
       # actual production build happens inside vindicara-site/Dockerfile.
