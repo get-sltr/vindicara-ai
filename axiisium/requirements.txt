@@ -1,5 +1,5 @@
 # Stage 0 feasibility skeleton (runs anywhere)
-numpy>=1.24
+numpy>=2.5.2
 cryptography>=42.0.0
 
 # Stage 1+ (real pipeline, NVIDIA GPU) — install when you move off synthetic data:
