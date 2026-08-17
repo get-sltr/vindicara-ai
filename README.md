@@ -109,6 +109,8 @@ air attest                Hardware root of trust: NVIDIA NRAS attestation (exper
 ## Backed by
 
 <p align="center">
+  <a href="https://www.nvidia.com/en-us/startups/"><img src="assets/nvidia-inception-program-badge.svg" alt="NVIDIA Inception Program member" height="64"></a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://e2b.dev/startups"><img src="assets/e2b-startups.svg" alt="Sponsored by E2B for Startups" height="30"></a>
 </p>
 
