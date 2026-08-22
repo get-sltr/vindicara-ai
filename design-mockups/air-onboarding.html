@@ -23,12 +23,14 @@
 
   /* LEFT */
   .left{position:relative;overflow:hidden;display:flex;flex-direction:column;padding:34px 6vw;color:#fff;
-    background:linear-gradient(165deg,#16223f 0%,#101a30 55%,#0b1020 100%)}
+    background:linear-gradient(165deg,#2e3719 0%,#222811 55%,#141809 100%)}
   .left > *{position:relative;z-index:1}
   .logo{display:flex;align-items:center;gap:10px}
   .sq{width:15px;height:15px;border-radius:3px;background:var(--air);box-shadow:0 0 18px var(--air)}
+  .plane{width:27px;height:23px;filter:drop-shadow(0 0 9px rgba(230,57,70,.55))}
   .logo b{font-family:var(--mono);letter-spacing:.2em;font-size:15px}
   .logo b .a{color:var(--air)}
+  .logo b .air{color:var(--air)}
   .center{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:400px;width:100%;margin:0 auto}
   .chip{align-self:flex-start;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:7px 13px;border-radius:20px;
     background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);color:#fff;margin-bottom:22px}
@@ -88,13 +90,42 @@
   .rlabel{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);position:relative}
 
   @media (max-width:880px){.wrap{grid-template-columns:1fr}.right{display:none}}
+
+  /* light-gray right panel, paired with the dark olive sign-in side */
+  .right{background:#edefe9;border-left:1px solid rgba(20,26,12,.10)}
+  .right::before{background-image:radial-gradient(rgba(20,26,12,.06) 1px,transparent 1px);opacity:.6}
+  .right .rlabel{color:#5c6356}
+  .right .card{background:#ffffff;border-color:rgba(20,26,12,.10);backdrop-filter:none;box-shadow:0 6px 20px rgba(20,26,12,.07)}
+  .right .card .h{color:#1b2114}
+  .right .card p{color:#566052}
+  .right .card p b{color:#1b2114}
+  .right .badge{color:#3a4232;background:rgba(20,26,12,.04);border-color:rgba(20,26,12,.12)}
+  .right .sec{color:#5c6356;border-color:rgba(20,26,12,.14)}
+
+  /* white light running around the whole page border (4 corners) */
+  @property --bdeg{syntax:'<angle>';inherits:false;initial-value:0deg}
+  /* static brushed-gold frame */
+  .wrap::before{
+    content:"";position:fixed;inset:0;z-index:59;pointer-events:none;padding:4px;
+    background:conic-gradient(from 0deg at 50% 50%,#6e5417,#d8b33a 12%,#fff4c2 22%,#a8841f 34%,#5c4711 48%,#e7c44a 62%,#fff4c2 72%,#b8941f 84%,#6e5417 100%);
+    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;opacity:.8}
+  /* moving polished specular glint */
+  .wrap::after{
+    content:"";position:fixed;inset:0;z-index:60;pointer-events:none;padding:4px;
+    background:conic-gradient(from var(--bdeg) at 50% 50%,transparent 0 54%,rgba(92,74,18,.6) 62%,rgba(216,179,58,.9) 70%,#ffe11a 76%,#fffbe0 81%,#ffffff 84.5%,#fffbe0 88%,#ffe11a 93%,rgba(216,179,58,.9) 97%,rgba(92,74,18,.6) 99.5%,transparent 100%);
+    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    filter:drop-shadow(0 0 8px #ffffff) drop-shadow(0 0 18px rgba(255,225,26,.95)) drop-shadow(0 0 34px rgba(255,205,40,.65));
+    animation:runlight 9s linear infinite}
+  @keyframes runlight{to{--bdeg:360deg}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <!-- LEFT : dev-first sign-in -->
   <section class="left">
-    <div class="logo"><div class="sq"></div><b>V<span class="a">/</span>AIR</b></div>
+    <div class="logo"><svg class="plane" viewBox="0 0 28 24" aria-hidden="true"><path d="M27 11 L2 2 L11 12 Z" fill="#ffffff"/><path d="M27 11 L11 12 L2 21 Z" fill="#e63946"/><path d="M11 12 L2 21 L7 13 Z" fill="#c92d3a"/></svg><b>V<span class="a">/</span>P <span class="air">AIR</span></b></div>
     <div class="center">
       <div class="chip">⚡ One-click onboarding</div>
       <h1>Start auditing your agents.</h1>

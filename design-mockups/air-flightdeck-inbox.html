@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#070710; --panel:#0b0b15; --panel2:#10101c; --raise:#16162a; --slide:#0a0a14;
+    --bg:#161b09; --panel:#1d240d; --panel2:#232b11; --raise:#2c3516; --slide:#161b09;
     --ink:#fff; --muted:rgba(255,255,255,.58); --faint:rgba(255,255,255,.40);
     --air:#e63946; --air2:#ff5d68; --cyan:#67e8f9; --ok:#5dcaa5; --warn:#ffb454; --blue:#6aa8ff; --violet:#9b8cff;
     --hair:rgba(255,255,255,.08); --stroke:rgba(255,255,255,.14);
@@ -23,11 +23,13 @@
   /* layout */
   .app{display:grid;grid-template-columns:228px 1fr;min-height:100vh}
   /* rail */
-  .rail{background:#08080f;border-right:1px solid var(--hair);padding:14px 12px;display:flex;flex-direction:column;gap:2px}
+  .rail{background:#111606;border-right:1px solid var(--hair);padding:14px 12px;display:flex;flex-direction:column;gap:2px}
   .logo{display:flex;align-items:center;gap:9px;padding:4px 8px 14px}
   .sq{width:14px;height:14px;border-radius:3px;background:var(--air);box-shadow:0 0 16px var(--air)}
   .logo b{font-family:var(--mono);letter-spacing:.18em;font-size:14px}
   .logo b .a{color:var(--air)}
+  .logo b .air{color:var(--air)}
+  .plane{width:24px;height:20px;filter:drop-shadow(0 0 8px rgba(230,57,70,.55))}
   .trial{margin:0 6px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(230,57,70,.12);border:1px solid rgba(230,57,70,.4);border-radius:7px;padding:7px 10px}
   .trial .lab{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#fff}
   .trial a{color:var(--air2);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;text-decoration:none}
@@ -43,8 +45,12 @@
   .nav.lk{opacity:.5}
   .nav.lk .ct{color:var(--warn);background:rgba(255,180,84,.12)}
   /* main */
-  .main{position:relative;overflow:hidden}
-  .topbar{display:flex;align-items:center;gap:16px;padding:16px 26px 4px}
+  .main{position:relative;overflow:hidden;background:
+    radial-gradient(560px 380px at 80% 6%,rgba(230,57,70,.12),transparent 60%),
+    radial-gradient(520px 360px at 10% 16%,rgba(255,255,255,.06),transparent 60%),
+    radial-gradient(600px 420px at 92% 94%,rgba(255,225,26,.08),transparent 62%),
+    radial-gradient(460px 340px at 40% 80%,rgba(255,255,255,.035),transparent 60%)}
+  .topbar{display:flex;align-items:center;gap:16px;padding:16px 26px 4px;max-width:1180px}
   .hello{font-size:20px;font-weight:600}
   .hello b{color:#fff}
   .grow{flex:1}
@@ -62,8 +68,35 @@
   .meter .fill{height:100%;background:linear-gradient(90deg,var(--air),var(--air2))}
   .upg{background:var(--air);color:#fff;border:0;border-radius:7px;padding:8px 14px;font-weight:600;font-size:12px}
   .av{width:32px;height:32px;border-radius:50%;background:var(--air);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+  /* hero: planet area (left) + stacked stats (right); table drops below */
+  .hero{display:flex;gap:14px;align-items:stretch;margin:8px 0 16px}
+  .heroleft{flex:0 0 212px;width:212px;position:relative;min-height:178px;overflow:hidden;background:radial-gradient(46% 56% at 50% 46%,rgba(120,150,255,.05),transparent 72%);-webkit-mask-image:radial-gradient(ellipse 82% 82% at 50% 48%,#000 46%,transparent 80%);mask-image:radial-gradient(ellipse 82% 82% at 50% 48%,#000 46%,transparent 80%)}
+  .heroleft::before{content:"";position:absolute;inset:0;pointer-events:none;animation:twinkle 6s ease-in-out infinite;background-image:
+    radial-gradient(1.5px 1.5px at 12% 22%,rgba(255,255,255,.95),transparent),
+    radial-gradient(1px 1px at 22% 64%,rgba(255,255,255,.6),transparent),
+    radial-gradient(1.2px 1.2px at 34% 38%,rgba(255,255,255,.75),transparent),
+    radial-gradient(1px 1px at 44% 82%,rgba(255,255,255,.5),transparent),
+    radial-gradient(1.7px 1.7px at 58% 14%,rgba(255,255,255,1),transparent),
+    radial-gradient(1px 1px at 66% 56%,rgba(255,255,255,.55),transparent),
+    radial-gradient(1.2px 1.2px at 76% 30%,rgba(255,255,255,.7),transparent),
+    radial-gradient(1px 1px at 84% 72%,rgba(255,255,255,.5),transparent),
+    radial-gradient(1.3px 1.3px at 90% 44%,rgba(255,255,255,.8),transparent),
+    radial-gradient(1px 1px at 16% 88%,rgba(255,255,255,.5),transparent),
+    radial-gradient(1px 1px at 28% 12%,rgba(255,255,255,.55),transparent),
+    radial-gradient(1.1px 1.1px at 72% 88%,rgba(255,255,255,.6),transparent),
+    radial-gradient(1.4px 1.4px at 6% 50%,rgba(255,255,255,.7),transparent),
+    radial-gradient(1px 1px at 50% 94%,rgba(255,255,255,.45),transparent)}
+  @keyframes twinkle{0%,100%{opacity:.85}50%{opacity:.55}}
+  .pslot{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;perspective:1100px}
+  .globe{width:100%;height:100%}
+  .globe canvas{display:block}
+  @keyframes glow{0%,100%{filter:drop-shadow(0 0 20px rgba(230,150,70,.22))}50%{filter:drop-shadow(0 0 44px rgba(230,150,70,.5))}}
+  .pslab{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .pslab b{color:var(--air2)}
+  .stats{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stats .tile{padding:11px 14px}
   /* content */
-  .content{padding:14px 26px 60px;max-width:980px}
+  .content{padding:14px 26px 48px;max-width:1180px}
   .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:10px 0 20px}
   .tile{background:var(--panel);border:1px solid var(--hair);border-radius:11px;padding:14px 15px}
   .tile.alt{background:var(--panel2)}
@@ -77,7 +110,7 @@
   .legend{display:flex;gap:12px;font-family:var(--mono);font-size:10px;color:var(--faint)}
   .legend i{display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:4px;vertical-align:middle}
   /* filter bar */
-  .fbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .fbar{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
   .search{display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--hair);border-radius:20px;padding:8px 14px;color:var(--faint);font-size:12px;min-width:200px}
   .toggle{display:flex;background:var(--panel2);border:1px solid var(--hair);border-radius:20px;padding:3px;position:relative}
   .toggle button{background:transparent;border:0;color:var(--muted);font-size:12px;padding:6px 14px;border-radius:16px}
@@ -100,9 +133,9 @@
   tbody tr{border-bottom:1px solid var(--hair)}
   tbody tr:hover{background:rgba(255,255,255,.03);cursor:pointer}
   tbody tr.sel{background:rgba(230,57,70,.07);box-shadow:inset 2px 0 0 var(--air)}
-  td{padding:14px;vertical-align:top}
+  td{padding:9px 14px;vertical-align:top}
   td.ty{width:44px}
-  .tyic{width:26px;height:26px;border-radius:6px;background:var(--panel2);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--cyan)}
+  .tyic{width:26px;height:26px;border-radius:6px;background:var(--panel2);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:#fff}
   .nm{font-size:13.5px;font-weight:500}
   .loc{font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:3px}
   .tag{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--violet);background:rgba(155,140,255,.12);padding:2px 6px;border-radius:4px;margin-left:7px}
@@ -113,7 +146,7 @@
   .sev.m{color:var(--med);background:rgba(106,168,255,.12)} .sev.m i{background:var(--med)}
   .sev.l{color:var(--low);background:rgba(93,202,165,.12)} .sev.l i{background:var(--low)}
   .blast{font-family:var(--mono);font-size:12px;color:var(--muted)}
-  .empty{text-align:center;color:var(--faint);font-size:12px;padding:24px;border-top:1px solid var(--hair);margin-top:4px}
+  .empty{text-align:center;color:var(--faint);font-size:12px;padding:13px;border-top:1px solid var(--hair);margin-top:4px}
   /* slide-over */
   .slide{position:fixed;top:0;right:0;height:100vh;width:560px;background:var(--slide);border-left:1px solid var(--stroke);transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);z-index:50;display:flex;flex-direction:column;box-shadow:-30px 0 80px rgba(0,0,0,.5)}
   .slide.open{transform:translateX(0)}
@@ -169,13 +202,57 @@
   .note{font-size:11px;color:var(--faint);font-family:var(--mono)}
   .mono{font-family:var(--mono)}
   .hideRow{display:none !important}
+
+  /* ===== two-tone: olive main UI + light-gray panels / dropdowns / pop-ups ===== */
+  /* stat panels */
+  .tile{background:#cdd1c2;border-color:rgba(20,26,12,.14);border-radius:20px 7px 7px 20px}
+  .tile.alt{background:#c4c9b7}
+  .tile .top{color:#5a6150}
+  .tile .big{color:#1b2114}
+  .tile .sub{color:#7c8270}
+  .tile .sub b{color:#7e63c9}
+  .tile .legend{color:#7c8270}
+  /* filter bar = dropdowns / controls */
+  .search,.chip,.toggle{background:#cdd1c2;border-color:rgba(20,26,12,.14);color:#4f5546}
+  .toggle button{color:#5a6150}
+  .toggle button.on{background:#1b2114;color:#fff}
+  .chip.act{color:#6b46c1;border-color:rgba(107,70,193,.4)} .chip.act b{color:#6b46c1}
+  /* slide-over pop-up */
+  .slide{background:#f4f5ef;border-left-color:rgba(20,26,12,.14)}
+  .sl-top{border-bottom-color:rgba(20,26,12,.12)}
+  .sl-head{border-bottom-color:rgba(20,26,12,.12)}
+  .tabs{border-bottom-color:rgba(20,26,12,.12)}
+  .iconbtn,.actbtn,.ghostbtn{background:#fff;border-color:rgba(20,26,12,.14);color:#1b2114}
+  .sl-title h3{color:#1b2114}
+  .sl-title .det{color:#7c8270}
+  .tabs button{color:#8a9080}
+  .tabs button.on{color:#1b2114}
+  .sl-body h4{color:#7c8270}
+  .sl-body p{color:#3a4232}
+  .steps{border-color:rgba(20,26,12,.12)}
+  .steps .sh{background:#e6e8e0;color:#7c8270;border-bottom-color:rgba(20,26,12,.12)}
+  .steps .it{border-bottom-color:rgba(20,26,12,.12);color:#3a4232}
+  .badge.cat{background:#e6e8e0;color:#5a6150;border-color:rgba(20,26,12,.12)}
+  /* modal pop-ups */
+  .modal{background:#f4f5ef;border-color:rgba(20,26,12,.14)}
+  .modal .k{color:#8a9080}
+  .modal h2{color:#1b2114}
+  .modal p{color:#5a6150}
+  .btn-ghost{color:#1b2114;border-color:rgba(20,26,12,.18)}
+  .note{color:#8a9080}
+  /* header controls match the card's one-side-bigger rounding */
+  .seg{border-radius:16px 8px 8px 16px}
+  .upg{border-radius:16px 8px 8px 16px}
+  .meter .bar{border-radius:8px 3px 3px 8px}
+  /* side rail = olive green (a touch darker than the main) */
+  .rail{background:#10150a}
 </style>
 </head>
 <body>
 <div class="app">
   <!-- RAIL -->
   <aside class="rail">
-    <div class="logo"><div class="sq"></div><b>V<span class="a">/</span>AIR</b></div>
+    <div class="logo"><svg class="plane" viewBox="0 0 28 24" aria-hidden="true"><path d="M27 11 L2 2 L11 12 Z" fill="#ffffff"/><path d="M27 11 L11 12 L2 21 Z" fill="#e63946"/><path d="M11 12 L2 21 L7 13 Z" fill="#c92d3a"/></svg><b>V<span class="a">/</span>P <span class="air">AIR</span></b></div>
     <div class="trial"><span class="lab">⚡ Free plan</span><a href="#" onclick="openWall('plan');return false">Upgrade</a></div>
     <div class="ws">vindicara-inc <span>▾</span></div>
 
@@ -224,27 +301,34 @@
     </div>
 
     <div class="content">
-      <!-- TILES -->
-      <div class="tiles">
-        <div class="tile">
-          <div class="sevbar"><i style="background:var(--crit);flex:1.2"></i><i style="background:var(--high);flex:3"></i><i style="background:var(--med);flex:2.4"></i><i style="background:var(--low);flex:1.6"></i></div>
-          <div class="big">23</div><div class="top" style="margin:6px 0 0">Open findings</div>
-          <div class="legend" style="margin-top:8px"><span><i style="background:var(--crit)"></i>2 critical</span><span><i style="background:var(--high)"></i>11 high</span></div>
+      <!-- HERO: planet (left) + stacked stats (right); table drops below -->
+      <div class="hero">
+        <div class="heroleft">
+          <div class="pslot">
+            <div id="globe" class="globe"></div>
+          </div>
         </div>
-        <div class="tile alt">
-          <div class="top"><span class="dot" style="background:rgba(255,255,255,.08)">◎</span>Auto-filtered</div>
-          <div class="big">9</div>
-          <div class="sub"><b>causal engine</b> · noise removed</div>
-        </div>
-        <div class="tile">
-          <div class="top"><span class="dot" style="background:rgba(155,140,255,.18);color:var(--violet)">＋</span>New</div>
-          <div class="big">7</div>
-          <div class="sub">in last 7 days</div>
-        </div>
-        <div class="tile">
-          <div class="top"><span class="dot" style="background:rgba(93,202,165,.18);color:var(--low)">✓</span>Contained</div>
-          <div class="big">1</div>
-          <div class="sub">in last 7 days</div>
+        <div class="stats">
+          <div class="tile">
+            <div class="sevbar"><i style="background:var(--crit);flex:1.2"></i><i style="background:var(--high);flex:3"></i><i style="background:var(--med);flex:2.4"></i><i style="background:var(--low);flex:1.6"></i></div>
+            <div class="big">23</div><div class="top" style="margin:6px 0 0">Open findings</div>
+            <div class="legend" style="margin-top:8px"><span><i style="background:var(--crit)"></i>2 critical</span><span><i style="background:var(--high)"></i>11 high</span></div>
+          </div>
+          <div class="tile alt">
+            <div class="top"><span class="dot" style="background:rgba(255,255,255,.08)">◎</span>Auto-filtered</div>
+            <div class="big">9</div>
+            <div class="sub"><b>causal engine</b> · noise removed</div>
+          </div>
+          <div class="tile">
+            <div class="top"><span class="dot" style="background:rgba(155,140,255,.18);color:var(--violet)">＋</span>New</div>
+            <div class="big">7</div>
+            <div class="sub">in last 7 days</div>
+          </div>
+          <div class="tile">
+            <div class="top"><span class="dot" style="background:rgba(93,202,165,.18);color:var(--low)">✓</span>Contained</div>
+            <div class="big">1</div>
+            <div class="sub">in last 7 days</div>
+          </div>
         </div>
       </div>
 
@@ -433,9 +517,18 @@ policy = ContainmentPolicy(
     if(tier==='free'){used.textContent='94';meter.querySelector('.lab').innerHTML='<span>Hosted actions</span><span><b>94</b>/100</span>';mfill.style.width='94%';mfill.style.background='linear-gradient(90deg,var(--high),var(--crit))';}
     if(tier==='pro'){meter.querySelector('.lab').innerHTML='<span>Hosted actions</span><span><b>3.1k</b>/25k</span>';mfill.style.width='12%';mfill.style.background='linear-gradient(90deg,var(--air),var(--air2))';}
     if(tier==='team'){meter.querySelector('.lab').innerHTML='<span>Hosted actions</span><span><b>41k</b>/250k</span>';mfill.style.width='16%';mfill.style.background='linear-gradient(90deg,var(--ok),var(--cyan))';}
+    // planet swaps with the tier
+    const planet=document.getElementById('planetImg');
+    const PMAP={free:['assets/free-planet.png','rgba(230,150,70,.28)'],pro:['assets/pro-planet.png','rgba(120,150,255,.32)'],team:['assets/team-planet.png','rgba(220,180,90,.26)']};
+    if(planet&&PMAP[tier]){planet.src=PMAP[tier][0];planet.style.filter='drop-shadow(0 0 26px '+PMAP[tier][1]+')';}
   }
   document.getElementById('seg').addEventListener('click',e=>{
-    if(e.target.dataset.t){tier=e.target.dataset.t;document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on',b===e.target));applyTier();}
+    const p=e.target.closest('[data-t]'); if(!p)return;
+    const t=p.dataset.t;
+    if(t==='ent'||t==='air'){openWall('plan');return;}
+    tier=t;
+    document.querySelectorAll('#seg .planet').forEach(b=>b.classList.toggle('on',b===p));
+    applyTier();
   });
 
   function gatedClick(el){
@@ -459,6 +552,38 @@ policy = ContainmentPolicy(
   function closeInstr(){document.getElementById('instr').classList.remove('show');}
 
   render(); applyTier();
+</script>
+
+<!-- 3D spinning planet (same method as the live FlightDeck Globe3D) -->
+<script src="assets/three.min.js"></script>
+<script>
+  (function(){
+    const host=document.getElementById('globe');
+    if(!host) return;
+    if(!window.THREE){ host.innerHTML='<img src="assets/free-planet.png" alt="" style="width:124%;height:auto;max-width:none">'; return; }
+    function size(){return {W:host.clientWidth||220,H:host.clientHeight||190};}
+    let {W,H}=size();
+    const scene=new THREE.Scene();
+    const camera=new THREE.PerspectiveCamera(40,W/H,0.1,100); camera.position.set(0,0,3.05);
+    const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+    renderer.setClearColor(0x000000,0); renderer.setSize(W,H);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    renderer.outputEncoding=THREE.sRGBEncoding;
+    host.appendChild(renderer.domElement);
+    const tex=new THREE.TextureLoader().load('assets/venus-equirect.jpg');
+    tex.encoding=THREE.sRGBEncoding; tex.anisotropy=4;
+    const planet=new THREE.Mesh(
+      new THREE.SphereGeometry(1,96,96),
+      new THREE.MeshStandardMaterial({map:tex,roughness:1,metalness:0})
+    );
+    scene.add(planet);
+    scene.add(new THREE.AmbientLight(0x4a4030,0.55));
+    const key=new THREE.DirectionalLight(0xffe6c8,1.9); key.position.set(-1.7,0.4,1.0); scene.add(key);
+    const rim=new THREE.DirectionalLight(0x9fb6ff,0.4); rim.position.set(2,-0.3,-1.1); scene.add(rim);
+    function loop(){ planet.rotation.y+=0.0016; renderer.render(scene,camera); requestAnimationFrame(loop); }
+    loop();
+    window.addEventListener('resize',()=>{const s=size();camera.aspect=s.W/s.H;camera.updateProjectionMatrix();renderer.setSize(s.W,s.H);});
+  })();
 </script>
 </body>
 </html>
