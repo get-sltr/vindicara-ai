@@ -17,23 +17,23 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "^3.0.10",
-		"@sveltejs/kit": "^2.50.2",
+		"@sveltejs/kit": "^2.70.3",
 		"@sveltejs/vite-plugin-svelte": "^6.2.4",
-		"@tailwindcss/vite": "^4.2.2",
+		"@tailwindcss/vite": "^4.3.3",
 		"@types/node": "^22.9.0",
-		"@types/three": "^0.169.0",
-		"svelte": "^5.54.0",
-		"svelte-check": "^4.4.2",
+		"@types/three": "^0.185.4",
+		"svelte": "^5.56.10",
+		"svelte-check": "^4.7.6",
 		"tailwindcss": "^4.2.2",
 		"typescript": "^5.9.3",
 		"vite": "^7.3.5",
-		"vitest": "^4.1.7"
+		"vitest": "^4.1.11"
 	},
 	"dependencies": {
-		"@auth0/auth0-spa-js": "^2.19.2",
+		"@auth0/auth0-spa-js": "^2.24.1",
 		"@noble/curves": "^1.7.0",
 		"@noble/hashes": "^1.6.1",
-		"three": "^0.169.0"
+		"three": "^0.185.1"
 	},
 	"overrides": {
 		"cookie": "^0.7.2",
