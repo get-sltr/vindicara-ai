@@ -1,6 +1,6 @@
 # Stage 0 feasibility skeleton (runs anywhere)
 numpy>=1.24
-cryptography>=42.0.0
+cryptography>=50.0.1
 
 # Stage 1+ (real pipeline, NVIDIA GPU) — install when you move off synthetic data:
 # monai>=1.3            # pathology/imaging encoders
