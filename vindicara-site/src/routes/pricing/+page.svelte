@@ -2,7 +2,8 @@
   import { goto } from '$app/navigation';
   import AppShell from '$components/AppShell.svelte';
 
-  // Stripe Payment Link for Pro ($99/mo, single seat). Fires
+  // Stripe Payment Link for Pro ($25/mo, single seat; the Stripe price behind
+  // this link must be the $25 one). Fires
   // checkout.session.completed, which the deployed license webhook turns into a
   // signed Pro license token + fulfillment email. See docs/pro-tier-spec.md.
   const PRO_CHECKOUT = 'https://buy.stripe.com/dRm4gy7fk7IwbfO1eT1RC06';
@@ -37,7 +38,7 @@
 
     <div class="tier feat">
       <div class="tn">Pro</div><div class="tl">individual · self-serve</div>
-      <div class="price">$99<span>/mo</span></div>
+      <div class="price">$25<span>/mo</span></div>
       <div class="appm"><span class="p on">Audit</span><span class="p on">Prove</span><span class="p">Protect</span><span class="p">Monitor</span></div>
       <ul>
         <li>25,000 signed actions / mo · then $1.50 / 1k</li>

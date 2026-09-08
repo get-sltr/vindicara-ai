@@ -84,7 +84,7 @@ from airsdk.verification import (
 )
 from airsdk.verification.checks.delegation import check_delegation
 
-__version__ = "1.3.1"
+__version__ = "1.4.0"
 
 __all__ = [
     "AGDR_VERSION",

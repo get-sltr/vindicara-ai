@@ -5,7 +5,7 @@ bundles, the pricing page, Stripe prices, and the FlightDeck console gating all
 mirror this document. Do not change the tier contents without updating this file
 first.
 
-## Pro AIR — $99/month, single seat
+## Pro AIR — $25/month, single seat (was $99 until 2026-09-07; capabilities unchanged)
 
 ### Capabilities (entitlement features in `issuer.py`)
 

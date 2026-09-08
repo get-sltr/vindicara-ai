@@ -72,7 +72,8 @@ class LicensePlan:
 # Price ID → plan mapping. The Price IDs are public (they appear in Stripe
 # Checkout URLs); the secret material is the signing key, not these.
 _PRICE_TO_PLAN: dict[str, LicensePlan] = {
-    # Current Pro AIR price: $99/mo (docs/pro-tier-spec.md).
+    # Pro AIR price ID. Priced $25/mo from 2026-09-07 (docs/pro-tier-spec.md);
+    # if a new Stripe price is created for the change, add its ID here too.
     "price_1TbIB2C4TNI7tWa0226pj2SS": LicensePlan(
         tier="individual", duration_days=33, features=_INDIVIDUAL_FEATURES
     ),

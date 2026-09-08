@@ -4,6 +4,9 @@ All notable changes to `projectair` are documented here. Format: [Keep a Changel
 
 ## [Unreleased]
 
+### Changed
+- **1.4.0 is the first release under the tiered model; the license does not change.** `projectair` stays MIT, exactly as through 1.3.1. The split is open core, the way Langfuse and LangSmith split theirs: everything that runs on your own machine and prints in the terminal is free and MIT (`air demo`, `air trace`, `air watch`, `air explain`, `air incident`, `air health`, the security-review status table, all 16 detectors, every integration). The paid tiers are the hosted product and the artifacts around it: Pro at US $25/month (single seat: hosted FlightDeck, permanent anchoring, evidence packs, premium detectors, NIST AI RMF report), Team at $599/month base, Enterprise self-hosted. The pricing page at https://vindicara.io/pricing is the source of truth and `air upgrade` mirrors it.
+
 ## [1.3.1] - 2026-07-23
 
 ### Fixed
