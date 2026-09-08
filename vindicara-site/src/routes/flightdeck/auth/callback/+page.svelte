@@ -27,8 +27,12 @@
       unlock(token);
       // Trade the identity for this person's workspace (created on first
       // sign-in). A minted key means a first visit: land on Keys and show it.
-      const cloud = await establishCloudSession(token);
-      goto(cloud.api_key ? '/flightdeck/keys?welcome=1' : '/flightdeck/runs');
+      await establishCloudSession(token);
+      // Home handles both cases: it reveals a freshly minted key when there is
+      // one, offers to issue one when there is not, and polls for the first
+      // run either way. Sending first-time users to Keys and returning users to
+      // Runs meant nobody ever saw it.
+      goto('/flightdeck');
     } catch (e) {
       error = e instanceof Error ? e.message : 'Sign-in failed.';
       returnToSignIn(error);
