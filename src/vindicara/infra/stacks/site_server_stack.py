@@ -44,7 +44,15 @@ class SiteServerStack(Stack):
         scope: Construct,
         construct_id: str,
         *,
-        api_origin: str = "https://qk0ymrk5be.execute-api.us-west-2.amazonaws.com",
+        # AIR Cloud, not the engine API. The console's only backend is AIR Cloud
+        # (POST /v1/auth/exchange, /v1/runs, /v1/keys). Pointing this at the
+        # engine (qk0ymrk5be / vindicara-api) makes every console call hit the
+        # engine's APIKeyAuth middleware, which answers "Invalid API key.
+        # Provide a valid key via X-Vindicara-Key header." and sign-in dies
+        # right after Auth0 succeeds. This value is also the CSP connect-src
+        # allowance in hooks.server.js, so it must be the origin the browser
+        # actually calls.
+        api_origin: str = "https://cloud.vindicara.io",
         env: Environment | None = None,
     ) -> None:
         super().__init__(scope, construct_id, env=env)

@@ -9,7 +9,7 @@
 
 import { recordVisit } from '$lib/server/visitors.js';
 
-const API_ORIGIN = process.env.AIR_API_ORIGIN || 'https://qk0ymrk5be.execute-api.us-west-2.amazonaws.com';
+const API_ORIGIN = process.env.AIR_API_ORIGIN || 'https://cloud.vindicara.io';
 const AUTH0_ORIGIN = 'https://dev-kilt2vkudvbu75ny.us.auth0.com';
 
 // Google Analytics 4 via gtag.js (loaded in app.html). gtag.js is served from

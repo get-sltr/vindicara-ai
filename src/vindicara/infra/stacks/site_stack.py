@@ -31,7 +31,8 @@ ALARM_EMAIL = "kev.minn9@gmail.com"
 # sync with vindicara-site/.env (PUBLIC_AIR_API_BASE, PUBLIC_AUTH0_DOMAIN): the
 # console fetches the API gateway and POSTs to Auth0 /oauth/token. A host that is
 # absent here is silently blocked by connect-src once the CSP is enforced.
-API_ORIGIN = "https://qk0ymrk5be.execute-api.us-west-2.amazonaws.com"
+# AIR Cloud, not the engine: the console's backend is AIR Cloud.
+API_ORIGIN = "https://cloud.vindicara.io"
 AUTH0_ORIGIN = "https://dev-kilt2vkudvbu75ny.us.auth0.com"
 
 # script-src/style-src carry 'unsafe-inline' for SvelteKit's inline hydration
