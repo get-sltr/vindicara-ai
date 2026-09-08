@@ -32,6 +32,9 @@
     "world-atlas": "^2.0.2"
   },
   "overrides": {
-    "brace-expansion": "2.1.2"
+    "brace-expansion": "2.1.4",
+    "ip-address": "10.3.1",
+    "postcss": "^8.5.28",
+    "nanoid": "^5.1.9"
   }
 }
