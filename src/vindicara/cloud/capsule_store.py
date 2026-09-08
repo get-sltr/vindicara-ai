@@ -44,6 +44,9 @@ class StoredCapsule:
     workspace_id: str
     record: AgDRRecord
     api_key_id: str = ""
+    # The run (recorder session) this record belongs to: the genesis step_id.
+    # Empty for rows stored before runs existed; ``runs.group_runs`` rejoins them.
+    run_id: str = ""
 
 
 @runtime_checkable
@@ -66,6 +69,10 @@ class CapsuleStore(Protocol):
         """Return capsule count for ``workspace_id``, or all if ``None``."""
         ...
 
+    def for_run(self, workspace_id: str, run_id: str) -> list[StoredCapsule]:
+        """Every capsule stored under ``run_id`` in ``workspace_id``."""
+        ...
+
 
 class InMemoryCapsuleStore:
     """Thread-safe list-backed store for tests and local dev."""
@@ -85,6 +92,10 @@ class InMemoryCapsuleStore:
     def for_key(self, workspace_id: str, api_key_id: str) -> list[StoredCapsule]:
         with self._lock:
             return [c for c in self._items if c.workspace_id == workspace_id and c.api_key_id == api_key_id]
+
+    def for_run(self, workspace_id: str, run_id: str) -> list[StoredCapsule]:
+        with self._lock:
+            return [c for c in self._items if c.workspace_id == workspace_id and c.run_id == run_id]
 
     def count(self, workspace_id: str | None = None) -> int:
         with self._lock:
@@ -121,6 +132,7 @@ class JSONLCapsuleStore:
             {
                 "workspace_id": capsule.workspace_id,
                 "api_key_id": capsule.api_key_id,
+                "run_id": capsule.run_id,
                 "record": json.loads(capsule.record.model_dump_json(exclude_none=True)),
             },
             separators=(",", ":"),
@@ -146,12 +158,16 @@ class JSONLCapsuleStore:
                         workspace_id=obj["workspace_id"],
                         record=record,
                         api_key_id=obj.get("api_key_id", ""),
+                        run_id=obj.get("run_id", ""),
                     )
                 )
         return out
 
     def for_key(self, workspace_id: str, api_key_id: str) -> list[StoredCapsule]:
         return [c for c in self.for_workspace(workspace_id) if c.api_key_id == api_key_id]
+
+    def for_run(self, workspace_id: str, run_id: str) -> list[StoredCapsule]:
+        return [c for c in self.for_workspace(workspace_id) if c.run_id == run_id]
 
     def count(self, workspace_id: str | None = None) -> int:
         if workspace_id is not None:

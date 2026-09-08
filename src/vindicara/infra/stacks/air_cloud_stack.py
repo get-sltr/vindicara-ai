@@ -42,6 +42,14 @@ class AirCloudStack(Stack):
             point_in_time_recovery=True,
             removal_policy=RemovalPolicy.RETAIN,
         )
+        # A run's records in one query (the run page). One GSI per deploy is
+        # the CloudFormation limit; this is the only one the capsules table needs.
+        self.capsules_table.add_global_secondary_index(
+            index_name="by_run",
+            partition_key=dynamodb.Attribute(name="workspace_id", type=dynamodb.AttributeType.STRING),
+            sort_key=dynamodb.Attribute(name="run_id", type=dynamodb.AttributeType.STRING),
+            projection_type=dynamodb.ProjectionType.ALL,
+        )
 
         self.workspaces_table = dynamodb.Table(
             self,

@@ -37,10 +37,12 @@ from vindicara.cloud.routes import (
     findings,
     identity,
     keys,
+    runs,
     sso,
     workspaces,
 )
 from vindicara.cloud.routes import stream as stream_route
+from vindicara.cloud.run_store import InMemoryRunStore, RunStore
 from vindicara.cloud.signup import ServiceOidc, service_oidc_from_env
 from vindicara.cloud.sso import InMemorySsoConfigStore, SsoConfigStore
 from vindicara.cloud.workspace import (
@@ -73,12 +75,13 @@ def _seed_sso_from_env(store: SsoConfigStore) -> None:
     _log.info("air_cloud.sso.seeded_from_env", extra={"workspace_id": workspace_id})
 
 
-def _build_ddb_stores() -> tuple[CapsuleStore, WorkspaceStore, ApiKeyStore, IdentityStore] | None:
+def _build_ddb_stores() -> tuple[CapsuleStore, WorkspaceStore, ApiKeyStore, IdentityStore, RunStore] | None:
     """Build DDB stores if the table env vars are set."""
     capsules_table = os.environ.get("AIR_CLOUD_CAPSULES_TABLE")
     workspaces_table = os.environ.get("AIR_CLOUD_WORKSPACES_TABLE")
     api_keys_table = os.environ.get("AIR_CLOUD_API_KEYS_TABLE")
     identities_table = os.environ.get("AIR_CLOUD_IDENTITIES_TABLE")
+    runs_table = os.environ.get("AIR_CLOUD_RUNS_TABLE")
 
     if capsules_table is None or workspaces_table is None or api_keys_table is None:
         return None
@@ -88,6 +91,7 @@ def _build_ddb_stores() -> tuple[CapsuleStore, WorkspaceStore, ApiKeyStore, Iden
     from vindicara.cloud.ddb_api_key_store import DDBApiKeyStore
     from vindicara.cloud.ddb_capsule_store import DDBCapsuleStore
     from vindicara.cloud.ddb_identity_store import DDBIdentityStore
+    from vindicara.cloud.ddb_run_store import DDBRunStore
     from vindicara.cloud.ddb_workspace_store import DDBWorkspaceStore
 
     ddb = boto3.resource("dynamodb")
@@ -96,12 +100,16 @@ def _build_ddb_stores() -> tuple[CapsuleStore, WorkspaceStore, ApiKeyStore, Iden
     )
     if not identities_table:
         _log.warning("air_cloud.identities.in_memory: AIR_CLOUD_IDENTITIES_TABLE unset; sign-ins will not persist")
+    run_store: RunStore = DDBRunStore(ddb.Table(runs_table)) if runs_table else InMemoryRunStore()
+    if not runs_table:
+        _log.warning("air_cloud.runs.in_memory: AIR_CLOUD_RUNS_TABLE unset; the runs list will not persist")
     _log.info("air_cloud.ddb_stores.wired")
     return (
         DDBCapsuleStore(ddb.Table(capsules_table)),
         DDBWorkspaceStore(ddb.Table(workspaces_table)),
         DDBApiKeyStore(ddb.Table(api_keys_table)),
         identities,
+        run_store,
     )
 
 
@@ -151,6 +159,7 @@ def create_air_cloud_app(
     admin_token: str | None = None,
     license_signing_key_pem: str | None = None,
     identity_store: IdentityStore | None = None,
+    run_store: RunStore | None = None,
     service_oidc: ServiceOidc | None = None,
     cloud_url: str | None = None,
     console_url: str | None = None,
@@ -198,11 +207,13 @@ def create_air_cloud_app(
         app.state.cloud_workspaces = ddb_stores[1]
         app.state.cloud_api_keys = ddb_stores[2]
         app.state.cloud_identities = identity_store or ddb_stores[3]
+        app.state.run_store = run_store or ddb_stores[4]
     else:
         app.state.capsule_store = capsule_store or InMemoryCapsuleStore()
         app.state.cloud_workspaces = workspace_store or InMemoryWorkspaceStore()
         app.state.cloud_api_keys = api_key_store or InMemoryApiKeyStore()
         app.state.cloud_identities = identity_store or InMemoryIdentityStore()
+        app.state.run_store = run_store or InMemoryRunStore()
     app.state.service_oidc = service_oidc if service_oidc is not None else service_oidc_from_env()
     app.state.cloud_url = cloud_url or os.environ.get("AIR_CLOUD_PUBLIC_URL", "https://cloud.vindicara.io")
     app.state.console_url = console_url or os.environ.get("AIR_CLOUD_CONSOLE_URL", "https://vindicara.io/flightdeck")
@@ -250,6 +261,7 @@ def create_air_cloud_app(
     app.include_router(analytics.router)
     app.include_router(entitlements.router)
     app.include_router(auth.router)
+    app.include_router(runs.router)
 
     @app.get("/health")
     async def _health() -> dict[str, str]:
