@@ -33,10 +33,12 @@ def requires_pro(*, feature: str | None = None) -> Callable[[_F], _F]:
     def _wrap(fn: _F) -> _F:
         @wraps(fn)
         def _gated(*args: Any, **kwargs: Any) -> Any:
-            try:
-                license_obj = load_license()
-            except LicenseError:
-                raise
+            license_obj = load_license()
+            if not license_obj.is_paid:
+                raise LicenseInvalidError(
+                    "this feature requires a paid tier; the installed grant is for the free tier. "
+                    "See https://vindicara.io/pricing"
+                )
             if feature is not None and not license_obj.has_feature(feature):
                 raise LicenseInvalidError(
                     f"this feature requires the {feature!r} entitlement; your current "

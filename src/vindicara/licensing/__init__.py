@@ -9,10 +9,12 @@ from vindicara.licensing.issuer import (
     LicenseIssuanceError,
     issue_license_token,
     plan_for_price_id,
+    plan_for_tier,
 )
 
 __all__ = [
     "LicenseIssuanceError",
     "issue_license_token",
     "plan_for_price_id",
+    "plan_for_tier",
 ]

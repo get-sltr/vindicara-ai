@@ -60,6 +60,32 @@ _TEAM_FEATURES: tuple[str, ...] = (
 )
 
 
+# Enterprise: everything in Team plus the boundary features the Team comment
+# above reserves for Enterprise+ (SOC 2-AI attestation report, HL7 / FHIR
+# clinical capture under a BAA).
+_ENTERPRISE_FEATURES: tuple[str, ...] = (
+    *_TEAM_FEATURES,
+    F.REPORT_SOC2_AI,
+    F.HL7_FHIR,
+)
+
+#: Free tier grants nothing: everything that runs locally is MIT and ungated,
+#: so the grant exists only to say "this workspace is on the free tier".
+_FREE_FEATURES: tuple[str, ...] = ()
+
+#: Lifetime of a console-issued grant. Short on purpose: the console is the
+#: authority, and a workspace that downgrades or lapses simply stops renewing.
+GRANT_DAYS = 30
+
+#: Workspace tier -> the grant it earns. Keys are ``Workspace.tier`` values.
+_TIER_TO_FEATURES: dict[str, tuple[str, ...]] = {
+    "free": _FREE_FEATURES,
+    "pro": _INDIVIDUAL_FEATURES,
+    "team": _TEAM_FEATURES,
+    "enterprise": _ENTERPRISE_FEATURES,
+}
+
+
 @dataclass(frozen=True)
 class LicensePlan:
     """Resolved plan derived from a Stripe Price ID."""
@@ -111,6 +137,19 @@ def plan_for_price_id(price_id: str) -> LicensePlan:
             f"unrecognized Stripe Price ID {price_id!r}; refusing to issue a license"
         )
     return plan
+
+
+def plan_for_tier(tier: str) -> LicensePlan:
+    """Resolve a workspace tier to the console grant it earns; raise if unknown.
+
+    This is the console-grant path: the workspace's ``tier`` in AIR Cloud is
+    the authority for every tier, free included, and the grant is re-issued
+    on request for ``GRANT_DAYS`` at a time.
+    """
+    features = _TIER_TO_FEATURES.get(tier)
+    if features is None:
+        raise LicenseIssuanceError(f"unknown workspace tier {tier!r}; refusing to issue a grant")
+    return LicensePlan(tier=tier, duration_days=GRANT_DAYS, features=features)
 
 
 def _canonical_signing_bytes(payload: dict[str, object]) -> bytes:

@@ -27,7 +27,17 @@ from starlette.middleware.cors import CORSMiddleware
 from vindicara.cloud.capsule_store import CapsuleStore, InMemoryCapsuleStore
 from vindicara.cloud.event_bus import CapsuleEventBus
 from vindicara.cloud.middleware import AirCloudAuthMiddleware
-from vindicara.cloud.routes import analytics, capsules, compliance, findings, identity, keys, sso, workspaces
+from vindicara.cloud.routes import (
+    analytics,
+    capsules,
+    compliance,
+    entitlements,
+    findings,
+    identity,
+    keys,
+    sso,
+    workspaces,
+)
 from vindicara.cloud.routes import stream as stream_route
 from vindicara.cloud.sso import InMemorySsoConfigStore, SsoConfigStore
 from vindicara.cloud.workspace import (
@@ -128,6 +138,7 @@ def create_air_cloud_app(
     api_key_store: ApiKeyStore | None = None,
     sso_config_store: SsoConfigStore | None = None,
     admin_token: str | None = None,
+    license_signing_key_pem: str | None = None,
     title: str = "AIR Cloud",
     version: str = "0.1.0",
 ) -> FastAPI:
@@ -141,6 +152,11 @@ def create_air_cloud_app(
     wins; otherwise the ``AIR_CLOUD_ADMIN_TOKEN`` env var is used. When
     neither is set, workspace creation is disabled (fail-closed) rather
     than left open.
+
+    ``license_signing_key_pem`` signs console grants (``GET
+    /v1/entitlements/grant``). Explicit kwarg wins; otherwise the
+    ``VINDICARA_LICENSE_SIGNING_KEY_PEM`` env var. When neither is set the
+    grant route answers 503 (fail-closed) rather than minting unsigned tokens.
     """
     ddb_stores = None
     if capsule_store is None and workspace_store is None and api_key_store is None:
@@ -183,6 +199,9 @@ def create_air_cloud_app(
     app.state.cloud_sso_configs = sso_store
     app.state.capsule_event_bus = CapsuleEventBus()
     app.state.cloud_admin_token = admin_token if admin_token is not None else os.environ.get("AIR_CLOUD_ADMIN_TOKEN")
+    app.state.license_signing_key_pem = (
+        license_signing_key_pem if license_signing_key_pem is not None else os.environ.get("VINDICARA_LICENSE_SIGNING_KEY_PEM")
+    )
 
     app.add_middleware(AirCloudAuthMiddleware, prefix="/v1")
     app.add_middleware(
@@ -203,6 +222,7 @@ def create_air_cloud_app(
     app.include_router(stream_route.router)
     app.include_router(compliance.router)
     app.include_router(analytics.router)
+    app.include_router(entitlements.router)
 
     @app.get("/health")
     async def _health() -> dict[str, str]:

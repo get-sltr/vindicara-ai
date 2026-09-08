@@ -36,7 +36,9 @@ from airsdk_pro._keys import VENDOR_LICENSE_PUBLIC_KEY_HEX
 
 TOKEN_VERSION = 1
 DEFAULT_LICENSE_PATH = Path.home() / ".airsdk" / "license.json"
-VALID_TIERS = frozenset({"individual", "team", "enterprise"})
+FREE_TIER = "free"
+#: ``individual`` is the pre-1.4.0 name for Pro; tokens already in the field carry it.
+VALID_TIERS = frozenset({FREE_TIER, "pro", "individual", "team", "enterprise"})
 
 
 class LicenseError(Exception):
@@ -68,6 +70,12 @@ class LicenseToken:
     @property
     def is_expired(self) -> bool:
         return time.time() >= self.expires_at
+
+    @property
+    def is_paid(self) -> bool:
+        """``True`` for any tier above free. A free grant proves the workspace
+        exists on the console; it unlocks nothing."""
+        return self.tier != FREE_TIER
 
     @property
     def days_remaining(self) -> int:
@@ -182,8 +190,9 @@ def current_license(path: Path | None = None) -> LicenseToken | None:
 
 
 def is_pro_active(path: Path | None = None) -> bool:
-    """``True`` when a valid non-expired license is installed."""
-    return current_license(path) is not None
+    """``True`` when a valid, non-expired, paid-tier license is installed."""
+    license_obj = current_license(path)
+    return license_obj is not None and license_obj.is_paid
 
 
 def has_feature(feature: str, path: Path | None = None) -> bool:

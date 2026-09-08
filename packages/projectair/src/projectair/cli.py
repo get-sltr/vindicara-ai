@@ -87,6 +87,11 @@ from projectair.health_cli import register as _register_health_cli  # noqa: E402
 
 _register_health_cli(app)
 
+# Console grant: `air grant` (pull this workspace's entitlements from AIR Cloud).
+from projectair.grant_cli import register as _register_grant_cli  # noqa: E402
+
+_register_grant_cli(app)
+
 # Layer 3 step-up approval command: `air approve` (Auth0 + token + device flow).
 from projectair.approve_cli import register as _register_approve_cli  # noqa: E402
 
@@ -1093,8 +1098,8 @@ def _require_license_or_exit(feature: str) -> None:
     license, which routes through the existing Stripe checkout.
     """
     try:
-        from airsdk_pro.license import current_license
-        licensed = current_license() is not None
+        from airsdk_pro.license import is_pro_active
+        licensed = is_pro_active()
     except ImportError:
         licensed = False
     if licensed:
@@ -1104,7 +1109,7 @@ def _require_license_or_exit(feature: str) -> None:
         "  Free:  air demo, air trace, air watch, air explain, air incident, air health (printed).\n"
         f"  Paid:  {feature} and all ongoing / report / export features.\n\n"
         "  Start or buy:      https://vindicara.io/pricing\n"
-        "  Already licensed:  air install-license --license <token>",
+        "  Already paid:      air grant   (pulls your workspace entitlements from the console)",
         fg=typer.colors.YELLOW,
         err=True,
     )
@@ -1208,6 +1213,7 @@ def login() -> None:
     )
 
     typer.secho(f"Logged in as {email}", fg=typer.colors.GREEN, bold=True)
+    typer.echo("Next: `air grant` pulls your workspace entitlements from the console (needs AIRSDK_CLOUD_API_KEY).")
 
 
 @app.command()
@@ -1256,13 +1262,20 @@ def status() -> None:
 
     license_obj = current_license()
     if license_obj is None:
-        typer.secho("No active Pro license.", fg=typer.colors.YELLOW)
+        typer.secho("No grant installed.", fg=typer.colors.YELLOW)
         typer.echo("")
-        typer.echo("Free OSS detectors and exports continue to work.")
-        typer.echo("Run `air install-license --license <token>` to activate Pro features.")
+        typer.echo("Everything local is free and keeps working. Paid features need a grant:")
+        typer.echo("  air grant                                  (from your console workspace)")
+        typer.echo("  air install-license --license <token>      (a token you were handed)")
         return
 
-    typer.secho("Pro license active.", fg=typer.colors.GREEN, bold=True)
+    if not license_obj.is_paid:
+        typer.secho("Free-tier grant installed.", fg=typer.colors.YELLOW, bold=True)
+        typer.echo(f"  email:           {license_obj.email}")
+        typer.echo("  Everything local is free; paid features need Pro or above: https://vindicara.io/pricing")
+        return
+
+    typer.secho(f"{license_obj.tier.capitalize()} grant active.", fg=typer.colors.GREEN, bold=True)
     typer.echo(f"  email:           {license_obj.email}")
     typer.echo(f"  tier:            {license_obj.tier}")
     typer.echo(f"  features:        {', '.join(license_obj.features) if license_obj.features else '(none)'}")

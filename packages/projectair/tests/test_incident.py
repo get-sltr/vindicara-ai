@@ -235,7 +235,7 @@ def test_cli_prints_timeline_free_and_gates_the_pack(tmp_path: Path) -> None:
 def test_cli_writes_the_pack_when_licensed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake_pro = types.ModuleType("airsdk_pro")
     fake_license = types.ModuleType("airsdk_pro.license")
-    fake_license.current_license = lambda: {"tier": "team"}  # type: ignore[attr-defined]
+    fake_license.is_pro_active = lambda: True  # type: ignore[attr-defined]
     monkeypatch.setitem(sys.modules, "airsdk_pro", fake_pro)
     monkeypatch.setitem(sys.modules, "airsdk_pro.license", fake_license)
     log, _ = _demo(tmp_path)
