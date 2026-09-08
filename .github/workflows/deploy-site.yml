@@ -55,7 +55,7 @@ jobs:
         run: npm run check
 
       # CDK app is Python (cdk.json -> `python3 -m vindicara.infra.app`).
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
