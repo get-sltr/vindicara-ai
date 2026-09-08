@@ -203,6 +203,20 @@ Total: **10 + 3 + 3 = 16 detectors** running over every chain, mapped to public 
 
 ## Instrument your agent
 
+Findings print in your terminal the moment they fire. No second command, no dashboard, nothing to poll. Every recorder prints a banner naming the chain file, an alert per finding with the `air explain` command that unpacks it, and a summary at exit so a clean run says so:
+
+```
+[air] recording signed chain: agent.log
+[air] findings print here as they fire. Report any time: air trace agent.log
+[air] ALERT  AIR-01  HIGH  Prompt Injection  (step 4)
+[air]        Prompt at step 4 matches the `ignore-previous-instructions` pattern (matched: 'Ignore all previous instructions').
+[air]        explain: air explain agent.log --step 4
+[air] done: 8 steps recorded, 1 alert (1 high), chain signed.
+[air] full report: air trace agent.log
+```
+
+Silence it with `AIRRecorder(..., live=False)` or `AIR_LIVE=0`; raise the bar with `live_min_severity="high"`. Seeing findings is free everywhere. Routing them (Slack, PagerDuty, hosted retention) is Pro.
+
 | Framework | Entrypoint | Since |
 |---|---|---|
 | LangChain | `AIRCallbackHandler` | 0.1.0 |
@@ -408,12 +422,14 @@ air governance classify chain.jsonl                        # Auto-detect PII/PHI
 ```
 air demo                  Run the brutal cold-start demo end to end
 air trace <chain>         Verify signatures, run detectors, emit forensic report
+air watch <chain>         Tail a chain and print each finding the moment it fires
 air verify <chain>        Verify chain integrity (signatures + chain links)
 air verify-public <chain> Verify the chain using only public infrastructure
 air anchor <chain>        Force-emit an anchor record covering the unanchored tail
 air explain <chain>       Causal explanation: --step <id> | --finding <detector_id>
 air approve               Layer 3 step-up approval: --token | --device | --authorize-url
 air report article72      Generate EU AI Act Article 72 post-market monitoring template
+air report security-review  Answer an enterprise security review from the agent's own chain (beta)
 air governance index      Build governance index from tagged chains (Pro)
 air governance query      Query data accesses by subject or asset (Pro)
 air governance dsar       Generate a DSAR report for a data subject (Pro)

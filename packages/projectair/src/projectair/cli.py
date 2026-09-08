@@ -32,6 +32,7 @@ from airsdk.detections import (
 )
 from airsdk.exports import export_json, export_pdf, export_siem
 from airsdk.registry import AgentRegistry, load_registry
+from airsdk.security_review import STATUS_EVIDENCED, assess_security_review, generate_security_review_report
 from airsdk.types import (
     AgDRRecord,
     ForensicReport,
@@ -427,16 +428,15 @@ def watch(
         ),
     ),
 ) -> None:
-    """Watch a chain in real time and alert the instant a detector fires (licensed).
+    """Watch a chain in real time and alert the instant a detector fires.
 
     Leave it running in a second terminal while your agent writes its chain;
-    AIR prints an alert the moment it catches something. Requires a license;
-    `air demo` and `air trace` are the free tier. Hosted delivery (Slack /
-    email / team routing) is Pro.
+    AIR prints an alert the moment it catches something. Seeing findings in
+    the terminal is free. Hosted delivery (Slack / PagerDuty / email / team
+    routing) and retention are Pro.
     """
     import time as _time
 
-    _require_license_or_exit("air watch")
     registry = _load_registry_or_exit(agent_registry)
     alerter = LocalAlerter(registry=registry)
     typer.secho(
@@ -478,6 +478,22 @@ def watch(
             f"\n[air watch] stopped  -  {alerter.seen_count} alert(s) this session.",
             fg=typer.colors.BRIGHT_BLACK,
         )
+
+
+def _print_next_step() -> None:
+    """Close the demo with the one line that puts AIR in the user's own agent.
+
+    Findings then print in their terminal exactly as they did here, the
+    moment they fire, with no extra command to run.
+    """
+    typer.echo()
+    typer.secho("  Now in your own agent (findings print in your terminal as they fire):", fg=typer.colors.WHITE, bold=True)
+    typer.secho("    from airsdk import AIRRecorder", fg=typer.colors.WHITE)
+    typer.secho("    from airsdk.integrations.openai import instrument_openai   # or .anthropic / .gemini / .adk", fg=typer.colors.WHITE)
+    typer.secho('    client = instrument_openai(OpenAI(), AIRRecorder("agent.log", user_intent="what the user asked"))', fg=typer.colors.WHITE)
+    typer.secho("    LangChain: callbacks=[AIRCallbackHandler()]      Any code: recorder.tool_start() / tool_end()", fg=typer.colors.WHITE)
+    typer.secho("  Full report later:  air trace agent.log        Live tail:  air watch agent.log", fg=typer.colors.WHITE)
+    typer.echo()
 
 
 def _truncate(text: str, limit: int = 80) -> str:
@@ -668,7 +684,7 @@ def demo(
     typer.echo()
     typer.secho("  Result: tamper-evident at the byte level. The cover-up is provable.", fg=typer.colors.GREEN, bold=True)
     typer.secho(f"  Artifacts written to: {workdir.resolve()}", fg=typer.colors.BRIGHT_BLACK)
-    typer.echo()
+    _print_next_step()
 
 
 def _run_healthcare_demo(
@@ -843,6 +859,80 @@ def report_alcoa(
         "[Reminder] Evidence for a qualified reviewer, not a certificate of compliance. "
         "'Faithful capture' is necessary, not sufficient, for GxP.",
         fg=typer.colors.BRIGHT_BLACK,
+    )
+
+
+@report_app.command("security-review")
+def report_security_review(
+    log: Path = typer.Argument(..., exists=True, readable=True, help="Path to a JSON-lines AgDR log."),
+    output: Path = typer.Option(
+        Path("security-review-pack.md"),
+        "--output", "-o",
+        help="Where to write the evidence pack (Markdown).",
+    ),
+    vendor: str = typer.Option("[Vendor]", "--vendor", help="Your company name, as it appears on the pack."),
+    system_name: str = typer.Option(
+        "[AI agent / system name]", "--system-name", help="Human-readable name of the agent or system.",
+    ),
+    agent_registry: Path | None = typer.Option(
+        None, "--agent-registry", exists=True, readable=True,
+        help="Optional agent registry to enable the ASI03 / ASI10 Zero-Trust detectors.",
+    ),
+) -> None:
+    """Answer an enterprise security review from the agent's own signed chain (beta).
+
+    Ten questions a security reviewer or procurement questionnaire asks about
+    an AI agent (logging, tamper evidence, external anchoring, scope, human
+    oversight, detection, data handling, attribution, review, key custody),
+    each with a status computed from the chain, the evidence, and a draft
+    answer. The status table prints free; the full pack requires a license.
+    """
+    registry = _load_registry_or_exit(agent_registry)
+    typer.secho(f"[Security review] Loading {log}...", fg=typer.colors.WHITE, bold=True)
+    records = load_chain(log)
+    verification = verify_chain(records)
+    findings = run_detectors(records, registry=registry)
+    results = assess_security_review(records, findings, verification.status)
+
+    typer.echo()
+    for result in results:
+        color = typer.colors.GREEN if result.status == STATUS_EVIDENCED else typer.colors.YELLOW
+        typer.secho(f"  {result.status:14s} ", fg=color, bold=True, nl=False)
+        typer.secho(f"{result.question.number:>2}. {result.question.text}", fg=typer.colors.WHITE)
+    evidenced = sum(1 for r in results if r.status == STATUS_EVIDENCED)
+    typer.echo()
+    typer.secho(
+        f"  {evidenced} of {len(results)} evidenced by this chain; "
+        f"{len(findings)} finding(s); chain verification {verification.status.value}.",
+        fg=typer.colors.WHITE, bold=True,
+    )
+    typer.echo()
+    _require_license_or_exit("air report security-review (full pack with evidence and draft answers)")
+
+    report = ForensicReport(
+        air_version=airsdk_version,
+        report_id=str(uuid4()),
+        source_log=str(log.resolve()),
+        generated_at=datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        records=len(records),
+        conversations=_count_conversations(records),
+        verification=verification,
+        findings=findings,
+    )
+    markdown = generate_security_review_report(report, records, vendor=vendor, system_name=system_name)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(markdown, encoding="utf-8")
+    if verification.status != VerificationStatus.OK:
+        typer.secho(
+            f"[WARNING] Chain verification did NOT pass: {verification.reason}. "
+            "Review before handing this pack to anyone.",
+            fg=typer.colors.YELLOW, err=True,
+        )
+    typer.secho(f"[Security review] Wrote evidence pack to {output.resolve()} ({len(records)} records).", fg=typer.colors.CYAN)
+    typer.secho(
+        "[Reminder] Draft answers must be reviewed and adapted before submission. "
+        "The pack evidences the recorded chain, not systems outside it.",
+        fg=typer.colors.WHITE,
     )
 
 

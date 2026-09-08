@@ -26,8 +26,9 @@ class AIRCallbackHandler(BaseCallbackHandler):
         Ed25519 signing key. Accepts a 64-char hex seed, a PEM-encoded private key,
         or a raw ``Ed25519PrivateKey``. When ``None``, a fresh keypair is generated.
     log_path:
-        Where AgDR records are appended. Defaults to ``air-trace-<unix>.log`` in
-        the current working directory.
+        Where AgDR records are appended. Defaults to ``.air/air-trace-<unix>.log``
+        under the current working directory; the recorder prints the path on
+        its first record.
     user_intent:
         Optional plain-text statement of what the user asked the agent to do.
         Attached to every record so the ASI01 Goal Hijack detector has a reliable
@@ -42,7 +43,7 @@ class AIRCallbackHandler(BaseCallbackHandler):
         user_intent: str | None = None,
     ) -> None:
         super().__init__()
-        resolved_path = Path(log_path) if log_path else Path(f"air-trace-{int(time.time())}.log")
+        resolved_path = Path(log_path) if log_path else Path(".air") / f"air-trace-{int(time.time())}.log"
         self._recorder = AIRRecorder(log_path=resolved_path, key=key, user_intent=user_intent)
 
     @property

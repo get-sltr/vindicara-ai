@@ -19,6 +19,9 @@ def _activation_isolation(tmp_path_factory: pytest.TempPathFactory) -> None:
     cfg = tmp_path_factory.mktemp("air-config")
     os.environ["XDG_CONFIG_HOME"] = str(cfg)
     os.environ.setdefault("AIR_EMAIL", "ci@vindicara.io")
+    # Recorders print live alerts to stderr by default; tests that exercise
+    # the live hook opt in explicitly with AIRRecorder(..., live=True).
+    os.environ.setdefault("AIR_LIVE", "0")
     marker_dir = cfg / "projectair"
     marker_dir.mkdir(parents=True, exist_ok=True)
     (marker_dir / "registered").touch()

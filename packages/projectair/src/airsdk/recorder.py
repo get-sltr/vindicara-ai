@@ -12,6 +12,7 @@ explicit ``transports=`` list.
 """
 from __future__ import annotations
 
+import atexit
 import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -38,6 +39,7 @@ from airsdk.containment import (
     StepUpRequiredError,
     evaluate_require_delegation,
 )
+from airsdk.live import LiveAlerts, live_enabled_from_env
 from airsdk.reference_vault import ReferenceVault, salted_digest
 from airsdk.transport import FileTransport, Transport
 from airsdk.types import (
@@ -124,6 +126,13 @@ class AIRRecorder:
         historical behaviour. Pass an explicit list to compose multiple
         sinks (e.g. ``[FileTransport(log_path), HTTPTransport(endpoint)]``)
         for AIR Cloud ingestion alongside local disk.
+    live:
+        Print a banner, each finding as it fires, and an exit summary to
+        stderr (see :mod:`airsdk.live`). ``None`` (default) follows the
+        ``AIR_LIVE`` environment variable, which defaults to on. Pass
+        ``False`` for a silent recorder.
+    live_min_severity:
+        Lowest severity printed live; ``medium`` by default.
     """
 
     def __init__(
@@ -144,6 +153,8 @@ class AIRRecorder:
         reference_vault: ReferenceVault | None = None,
         signing_algorithm: SigningAlgorithm = SigningAlgorithm.ED25519,
         verify_on_step: bool = False,
+        live: bool | None = None,
+        live_min_severity: str = "medium",
     ) -> None:
         priv = resolve_signing_key(key, algorithm=signing_algorithm)
         self._signer = Signer(priv) if priv is not None else Signer.generate(signing_algorithm)
@@ -178,6 +189,10 @@ class AIRRecorder:
         self._prior_findings: list[Finding] = []
         self._verify_on_step = verify_on_step
         self._chain_records: list[AgDRRecord] = []
+        self._live: LiveAlerts | None = None
+        if live if live is not None else live_enabled_from_env():
+            self._live = LiveAlerts(self._log_path, min_severity=live_min_severity)
+            atexit.register(self._live.summarize, self._chain_records)
 
         if delegation is not None:
             genesis = self.open_delegation(delegation)
@@ -198,6 +213,11 @@ class AIRRecorder:
     def log_path(self) -> Path:
         """Where this recorder appends its JSONL (default ``FileTransport`` only)."""
         return self._log_path
+
+    @property
+    def live(self) -> LiveAlerts | None:
+        """The live stderr alerter, or ``None`` when the recorder is silent."""
+        return self._live
 
     @property
     def transports(self) -> list[Transport]:
@@ -622,6 +642,8 @@ class AIRRecorder:
         for transport in self._transports:
             transport.emit(record)
         self._chain_records.append(record)
+        if self._live is not None:
+            self._live.observe(self._chain_records)
         if self._orchestrator is not None:
             self._orchestrator.observe_step(record)
         if (
