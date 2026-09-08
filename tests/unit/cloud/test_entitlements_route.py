@@ -7,7 +7,12 @@ import os
 
 import pytest
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-from cryptography.hazmat.primitives.serialization import Encoding, NoEncryption, PrivateFormat
+from cryptography.hazmat.primitives.serialization import (
+    Encoding,
+    NoEncryption,
+    PrivateFormat,
+    PublicFormat,
+)
 from httpx import ASGITransport, AsyncClient
 
 os.environ.setdefault("VINDICARA_SESSION_SECRET", "test_secret_for_unit_tests_only_0000")
@@ -19,6 +24,20 @@ from vindicara.cloud.workspace import ApiKey, InMemoryApiKeyStore, InMemoryWorks
 from vindicara.licensing import LicenseIssuanceError, plan_for_tier
 
 KEY = Ed25519PrivateKey.generate()
+
+
+@pytest.fixture(autouse=True)
+def _expect_this_test_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Point the issuer's key guard at this module's throwaway key.
+
+    The issuer refuses to mint under a key whose public half is not the one
+    airsdk_pro embeds. That guard is the point in production, so rather than
+    weaken it, tests declare which key they are signing with.
+    """
+    monkeypatch.setattr(
+        "vindicara.licensing.issuer.EXPECTED_LICENSE_PUBLIC_KEY_HEX",
+        KEY.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw).hex(),
+    )
 KEY_PEM = KEY.private_bytes(Encoding.PEM, PrivateFormat.PKCS8, NoEncryption()).decode()
 
 

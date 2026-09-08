@@ -15,14 +15,17 @@ import json
 import time
 from dataclasses import dataclass
 
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-from cryptography.hazmat.primitives.serialization import load_pem_private_key
-
 # Single source of truth for feature strings (OSS base package). The same
 # constants are imported by the airsdk_pro @requires_pro gates, so a granted
 # feature here can never drift from the checked feature there. A contract test
 # enforces it. Never type a bare feature string in this module.
 from airsdk import features as F
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+from cryptography.hazmat.primitives.serialization import (
+    Encoding,
+    PublicFormat,
+    load_pem_private_key,
+)
 
 TOKEN_VERSION = 1
 
@@ -166,6 +169,20 @@ def _canonical_signing_bytes(payload: dict[str, object]) -> bytes:
     ).encode("utf-8")
 
 
+#: Public half of the license signing key, hex-encoded raw Ed25519.
+#:
+#: This MUST equal ``airsdk_pro._keys.VENDOR_LICENSE_PUBLIC_KEY_HEX``: the
+#: issuer signs with the private half, the customer's ``airsdk_pro`` verifies
+#: against that constant, and a token only validates when the two agree. The
+#: two drifted apart undetected from 2026-04-27 to 2026-09-08 (the constant
+#: named a key whose private half existed nowhere), so every token minted in
+#: that window failed verification on the customer side with no signal here.
+#: A cross-package test asserts the two constants are equal.
+EXPECTED_LICENSE_PUBLIC_KEY_HEX = (
+    "8627b4309db46b9fa42ac9c47c9a409819d1e62cfd4ab079609a78db2d587d23"
+)
+
+
 def _load_signing_key(pem: str) -> Ed25519PrivateKey:
     if not pem:
         raise LicenseIssuanceError(
@@ -175,6 +192,17 @@ def _load_signing_key(pem: str) -> Ed25519PrivateKey:
     if not isinstance(key_obj, Ed25519PrivateKey):
         raise LicenseIssuanceError(
             f"configured signing key is not Ed25519 (got {type(key_obj).__name__})"
+        )
+    # Fail closed on a signing key the customer's verifier cannot match. Minting
+    # a token nobody can verify is worse than refusing: the customer has paid,
+    # the webhook reports success, and the failure only surfaces later on their
+    # machine as an invalid license.
+    actual = key_obj.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw).hex()
+    if actual != EXPECTED_LICENSE_PUBLIC_KEY_HEX:
+        raise LicenseIssuanceError(
+            "configured signing key does not match the public key embedded in "
+            f"airsdk_pro (expected {EXPECTED_LICENSE_PUBLIC_KEY_HEX}, got {actual}); "
+            "refusing to mint a token no customer can verify"
         )
     return key_obj
 

@@ -2,7 +2,7 @@
 
 All notable changes to `projectair` are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
-## [Unreleased]
+## [1.4.0] - 2026-09-08
 
 ### Changed
 - **License: MIT to Apache License 2.0, starting with this release (1.4.0).** Apache 2.0 is as permissive as MIT, adds an explicit patent grant and a NOTICE file, and is what the Vindicara engine already uses, so the whole repository is now under one license. Versions 1.3.1 and earlier remain MIT on PyPI.

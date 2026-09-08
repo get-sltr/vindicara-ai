@@ -12,6 +12,7 @@ from cryptography.hazmat.primitives.serialization import (
     Encoding,
     NoEncryption,
     PrivateFormat,
+    PublicFormat,
 )
 from httpx import ASGITransport, AsyncClient
 
@@ -31,6 +32,22 @@ def _generate_signing_key_pem() -> str:
 
 
 _SIGNING_KEY_PEM = _generate_signing_key_pem()
+
+
+@pytest.fixture(autouse=True)
+def _expect_this_test_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Point the issuer's key guard at this module's throwaway signing key.
+
+    Production refuses to mint under a key airsdk_pro cannot verify; tests say
+    which key they signed with instead of disabling the check.
+    """
+    from cryptography.hazmat.primitives.serialization import load_pem_private_key
+
+    key = load_pem_private_key(_SIGNING_KEY_PEM.encode(), password=None)
+    monkeypatch.setattr(
+        "vindicara.licensing.issuer.EXPECTED_LICENSE_PUBLIC_KEY_HEX",
+        key.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw).hex(),
+    )
 
 
 def _checkout_event(email: str = "buyer@example.com") -> dict[str, object]:
