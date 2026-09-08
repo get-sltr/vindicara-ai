@@ -2,11 +2,14 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { lockSession } from '$lib/console/stores/session';
-  import { openSignIn } from '$lib/console/stores/operator';
 
   let { open = false, onclose } = $props();
 
   const groups = [
+    { title: 'Workspace', items: [
+      { label: 'Runs', to: '/flightdeck/runs', tag: 'live' },
+      { label: 'Keys and setup', to: '/flightdeck/keys' }
+    ]},
     { title: 'Console', items: [
       { label: 'Overview', to: '/flightdeck' },
       { label: 'Agents', to: '/flightdeck/rules' },
@@ -52,7 +55,7 @@
   {/each}
 
   <div class="dgrp"> </div>
-  <button class="ditem lk" onclick={() => { lockSession(); openSignIn(); onclose?.(); }}><span class="di"></span>Lock session</button>
+  <button class="ditem lk" onclick={() => { lockSession(); onclose?.(); goto('/flightdeck/sign-in/'); }}><span class="di"></span>Lock session</button>
 </nav>
 
 <style>

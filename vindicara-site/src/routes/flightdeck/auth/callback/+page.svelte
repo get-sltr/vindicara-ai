@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { exchangeAuthCode, unlock, authError } from '$lib/console/stores/session';
+  import { establishCloudSession } from '$lib/console/stores/cloud';
 
   let error = $state<string | null>(null);
 
@@ -24,7 +25,10 @@
     try {
       const token = await exchangeAuthCode(code);
       unlock(token);
-      goto('/flightdeck');
+      // Trade the identity for this person's workspace (created on first
+      // sign-in). A minted key means a first visit: land on Keys and show it.
+      const cloud = await establishCloudSession(token);
+      goto(cloud.api_key ? '/flightdeck/keys?welcome=1' : '/flightdeck/runs');
     } catch (e) {
       error = e instanceof Error ? e.message : 'Sign-in failed.';
       returnToSignIn(error);

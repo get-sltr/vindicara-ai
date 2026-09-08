@@ -7,8 +7,6 @@
   import Rail from '$lib/console/components/Rail.svelte';
   import Drawer from '$lib/console/components/Drawer.svelte';
   import FlightDeckNav from '$lib/console/components/FlightDeckNav.svelte';
-  import LockScreen from '$lib/console/components/LockScreen.svelte';
-  import SignIn from '$lib/console/components/forensics/SignIn.svelte';
   import ClockOut from '$lib/console/components/forensics/ClockOut.svelte';
   import { sessionToken } from '$lib/console/stores/session';
   import { mode } from '$lib/console/stores/mode';
@@ -48,9 +46,7 @@
   {#key $mode}
     {@render children()}
   {/key}
-  <SignIn />
   <ClockOut />
-  <LockScreen />
 {:else}
 <div class="aurora"><i></i><i></i><i></i></div>
 <div class="grain"></div>
@@ -78,8 +74,6 @@
 </div>
 
 <Drawer open={drawerOpen} onclose={() => (drawerOpen = false)} />
-<LockScreen />
-<SignIn />
 <ClockOut />
 {/if}
 

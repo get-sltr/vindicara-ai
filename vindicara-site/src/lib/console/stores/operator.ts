@@ -5,10 +5,6 @@ import { derived, writable } from 'svelte/store';
 import { persisted } from './persisted';
 
 // Controls the sign-in modal so any surface (top bar, operator card) can open it.
-export const signInOpen = writable(false);
-export function openSignIn(): void {
-  signInOpen.set(true);
-}
 
 export interface Operator {
   name: string;

@@ -32,6 +32,8 @@
 
     <nav class="fd-links">
       <button class="fd-link" class:on={path === '/flightdeck'} type="button" onclick={() => goto('/flightdeck')}>Overview</button>
+      <button class="fd-link" class:on={path.startsWith('/flightdeck/runs')} type="button" onclick={() => goto('/flightdeck/runs')}>Runs</button>
+      <button class="fd-link" class:on={path === '/flightdeck/keys'} type="button" onclick={() => goto('/flightdeck/keys')}>Keys</button>
       <button class="fd-link" class:on={path === '/flightdeck/rules'} type="button" onclick={() => goto('/flightdeck/rules')}>Agents</button>
       <button class="fd-link" class:on={path === '/flightdeck/incidents'} type="button" onclick={() => goto('/flightdeck/incidents')}>Incidents</button>
       <button class="fd-link" class:on={path === '/flightdeck/report'} type="button" onclick={() => goto('/flightdeck/report')}>Forensics</button>

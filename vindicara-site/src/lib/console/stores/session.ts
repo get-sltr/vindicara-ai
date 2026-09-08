@@ -13,12 +13,14 @@ import {
   storeVerifier,
   takeVerifier
 } from '$lib/console/auth/pkce';
+import { clearCloudSession } from '$lib/console/stores/cloud';
 
 export const locked = writable(false);
 export const sessionToken = writable<string | null>(loadAccessToken());
 export const authError = writable<string | null>(null);
 
 export function lockSession() {
+  clearCloudSession();
   clearAccessToken();
   sessionToken.set(null);
   locked.set(true);
@@ -30,6 +32,7 @@ export function lockSession() {
 export function logout(): void {
   const domain = env.PUBLIC_AUTH0_DOMAIN;
   const clientId = env.PUBLIC_AUTH0_CLIENT_ID;
+  clearCloudSession();
   clearAccessToken();
   sessionToken.set(null);
   locked.set(true);

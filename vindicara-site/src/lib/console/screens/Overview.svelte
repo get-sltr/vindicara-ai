@@ -28,7 +28,6 @@
   import { flashOverview, overviewToast } from './overview-toast';
   import { openClockOut, recordReview } from '$lib/console/stores/sessionlog';
   import { lockSession } from '$lib/console/stores/session';
-  import { openSignIn } from '$lib/console/stores/operator';
 
   let askQuery = $state('');
   let drawerOpen = $state(false);
@@ -131,7 +130,7 @@
   function employeeBreak() {
     flashOverview('Break started · session locked until re-authorize', 'warn');
     lockSession();
-    openSignIn();
+    void goto('/flightdeck/sign-in/');
   }
 
   function openTimelineEvent(title: string) {

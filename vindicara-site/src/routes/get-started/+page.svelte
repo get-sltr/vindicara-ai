@@ -18,6 +18,8 @@
     } catch (_) { /* keep baked value */ }
   });
 
+  import { SNIPPETS, shellHeader } from '$lib/console/screens/keys/snippets';
+
   let plat = $state<'mac' | 'windows' | 'linux'>('mac');
   let copied = $state('');
 
@@ -27,13 +29,7 @@
     setTimeout(() => { if (copied === key) copied = ''; }, 1800);
   }
 
-  const frameworks = [
-    { name: 'OpenAI (and any compatible API)', code: 'from airsdk import AIRRecorder\nfrom airsdk.integrations.openai import instrument_openai\n\nrecorder = AIRRecorder("chain.jsonl", user_intent="Draft a report")\nclient = instrument_openai(OpenAI(), recorder)' },
-    { name: 'Anthropic', code: 'from airsdk import AIRRecorder\nfrom airsdk.integrations.anthropic import instrument_anthropic\n\nrecorder = AIRRecorder("chain.jsonl", user_intent="Draft a report")\nclient = instrument_anthropic(Anthropic(), recorder)' },
-    { name: 'LangChain', code: 'from airsdk import AIRRecorder, AIRCallbackHandler\n\nrecorder = AIRRecorder("chain.jsonl")\nagent.run("task", callbacks=[AIRCallbackHandler(recorder)])' },
-    { name: 'Google Gemini', code: 'from airsdk import AIRRecorder, instrument_gemini\n\nrecorder = AIRRecorder("chain.jsonl")\nclient = instrument_gemini(genai.Client(), recorder)' },
-    { name: 'LlamaIndex', code: 'from airsdk import AIRRecorder\nfrom airsdk.integrations.llamaindex import instrument_llamaindex\n\nrecorder = AIRRecorder("chain.jsonl")\nllm = instrument_llamaindex(LlamaOpenAI(model="gpt-4o"), recorder)' }
-  ];
+  const frameworks = SNIPPETS.filter((s) => s.id !== 'plain');
 
   const cli = [
     { cmd: 'air demo', desc: 'Run the full demo. A real signed chain in about 30 seconds, no setup.' },
@@ -206,6 +202,15 @@ recorder.agent_finish(final_output="Task complete")</pre>
         {/each}
       </div>
       <p class="note">Any OpenAI-compatible endpoint also works through <code>instrument_openai</code>, including NVIDIA NIM, vLLM, Together AI, Groq, and Fireworks.</p>
+    </section>
+
+    <!-- OPTIONAL: SEND TO FLIGHTDECK -->
+    <section class="step reveal builders">
+      <div class="sh"><span class="badge alt">+</span><h2>Optional: see your runs in Flightdeck</h2></div>
+      <p class="sp">Everything above stays on your machine. If you want the run on a screen you can share, sign in to Flightdeck, copy the workspace key it shows you once, and set it in the shell your agent runs in. The local chain is unchanged; each record is also mirrored to <span class="air">AIR</span> Cloud and the terminal prints the run link.</p>
+      <div class="codeblock"><pre>{shellHeader(null, 'https://cloud.vindicara.io')}</pre></div>
+      <p class="sub">Then run your agent again. The link it prints opens the run: what executed, under whose authority, and where the evidence stands.</p>
+      <p class="note"><a href="/flightdeck">Sign in to Flightdeck</a>. Free for individuals. Set <code>AIRSDK_CLOUD=off</code> to stop mirroring at any time.</p>
     </section>
 
     <!-- CLI REFERENCE -->
