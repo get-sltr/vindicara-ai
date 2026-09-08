@@ -22,6 +22,7 @@ from __future__ import annotations
 import stripe
 import structlog
 from fastapi import APIRouter, HTTPException, Request, Response
+from fastapi.responses import JSONResponse
 
 from vindicara.config.settings import VindicaraSettings
 from vindicara.licensing import (
@@ -51,6 +52,21 @@ def _settings() -> VindicaraSettings:
 
 @router.post("/webhooks/stripe")
 async def stripe_webhook(request: Request) -> Response:
+    """Render the outcome as JSON.
+
+    Success is ``{"status": ...}``; failure is ``{"error": ...}`` carrying the
+    HTTPException detail. Stripe only cares about the status code, but a typed
+    body makes the Stripe dashboard's delivery log readable when a fulfillment
+    fails, which is the moment someone has paid and not received a license.
+    """
+    try:
+        outcome = await _process(request)
+    except HTTPException as exc:
+        return JSONResponse(status_code=exc.status_code, content={"error": exc.detail})
+    return JSONResponse(status_code=200, content={"status": outcome})
+
+
+async def _process(request: Request) -> str:
     settings = _settings()
 
     if not settings.stripe_webhook_secret:
@@ -78,19 +94,16 @@ async def stripe_webhook(request: Request) -> Response:
     logger.info("stripe.webhook.received", event_type=event_type, event_id=event_id)
 
     if event_type not in _HANDLED_EVENTS:
-        return Response(status_code=200, content=f"ignored: {event_type}")
+        return "ignored"
 
     if event_type == "checkout.session.completed":
-        await _handle_checkout_completed(event, settings)
-    elif event_type == "invoice.paid":
-        await _handle_invoice_paid(event, settings)
-
-    return Response(status_code=200, content="ok")
+        return await _handle_checkout_completed(event, settings)
+    return await _handle_invoice_paid(event, settings)
 
 
 async def _handle_checkout_completed(
     event: stripe.Event, settings: VindicaraSettings
-) -> None:
+) -> str:
     session = event["data"]["object"]
     customer_email = (
         session.get("customer_details", {}).get("email")
@@ -119,38 +132,45 @@ async def _handle_checkout_completed(
         )
         raise HTTPException(status_code=500, detail="Could not fetch line items") from exc
 
-    if not line_items["data"]:
+    if not line_items.data:
         logger.error("stripe.webhook.empty_line_items", session_id=session_id)
         raise HTTPException(status_code=500, detail="Session has no line items")
 
-    price_id = line_items["data"][0]["price"]["id"]
-    await _issue_and_email(customer_email, price_id, settings, source="checkout")
+    # LineItem.price is optional in the Stripe model. 5xx rather than skip, so
+    # Stripe retries instead of silently dropping a paid session.
+    price = line_items.data[0].price
+    if price is None:
+        logger.error("stripe.webhook.line_item_no_price", session_id=session_id)
+        raise HTTPException(status_code=500, detail="Line item has no price")
+
+    await _issue_and_email(customer_email, price.id, settings, source="checkout")
+    return "fulfilled"
 
 
 async def _handle_invoice_paid(
     event: stripe.Event, settings: VindicaraSettings
-) -> None:
+) -> str:
     invoice = event["data"]["object"]
     customer_email = invoice.get("customer_email") or ""
     if not customer_email:
         logger.warning(
             "stripe.webhook.invoice_no_email", invoice_id=invoice.get("id")
         )
-        return
+        return "skipped"
 
     lines = invoice.get("lines", {}).get("data", [])
     if not lines:
         logger.warning(
             "stripe.webhook.invoice_no_lines", invoice_id=invoice.get("id")
         )
-        return
+        return "skipped"
 
     price_id = lines[0].get("price", {}).get("id")
     if not price_id:
         logger.warning(
             "stripe.webhook.invoice_no_price", invoice_id=invoice.get("id")
         )
-        return
+        return "skipped"
 
     # Skip the initial invoice from a new subscription. Stripe also emits
     # checkout.session.completed for that, and we already handled it there.
@@ -159,9 +179,10 @@ async def _handle_invoice_paid(
             "stripe.webhook.invoice_skipped_initial",
             invoice_id=invoice.get("id"),
         )
-        return
+        return "skipped"
 
     await _issue_and_email(customer_email, price_id, settings, source="renewal")
+    return "renewed"
 
 
 async def _issue_and_email(
