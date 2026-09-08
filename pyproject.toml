@@ -24,7 +24,7 @@ dependencies = [
     "httpx>=0.27.0,<1.0",
     "pydantic>=2.7.0,<3.0",
     "pydantic-settings>=2.3.0,<3.0",
-    "structlog>=24.1.0,<26.0",
+    "structlog>=24.1.0,<27.0",
     # Substrate consumes the OSS schema (AgDRRecord, verify_record) for cloud
     # ingestion. Single source of truth for the wire format; license-compatible
     # (Apache-2.0 both sides). Keep the pin in lockstep with the OSS surface AIR
