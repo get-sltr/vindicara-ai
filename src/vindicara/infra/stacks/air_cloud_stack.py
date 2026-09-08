@@ -187,7 +187,8 @@ class AirCloudStack(Stack):
                 # clients must be authorized for it in the tenant.
                 "AIR_CLOUD_OIDC_ISSUER": "https://dev-kilt2vkudvbu75ny.us.auth0.com/",
                 "AIR_CLOUD_OIDC_AUDIENCE": "https://api.vindicara.io",
-                "AIR_CLOUD_OIDC_CLIENT_IDS": "GszbWqSkD65eUjv7FrRWYO4IkmGWdd4y",
+                # AIR Cloud Dashboard (SPA, the site) and Air CLI (Native, device code).
+                "AIR_CLOUD_OIDC_CLIENT_IDS": "GszbWqSkD65eUjv7FrRWYO4IkmGWdd4y,ehK22gj7je6DtNcjEjKlftAQsSGPuSOV",
                 "AIR_CLOUD_PUBLIC_URL": "https://cloud.vindicara.io",
                 "AIR_CLOUD_CONSOLE_URL": "https://vindicara.io/flightdeck",
                 # First-run lead capture: the public /v1/identity/register route

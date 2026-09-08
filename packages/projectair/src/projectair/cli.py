@@ -1162,7 +1162,9 @@ def install_license(
 
 # -- Auth commands ----------------------------------------------------------
 
-_AUTH0_CLI_CLIENT_ID = "GszbWqSkD65eUjv7FrRWYO4IkmGWdd4y"
+# "Air CLI", the Native application in the Vindicara Auth0 tenant (device-code grant).
+# The site uses its own Single Page Application client; an SPA cannot use the device grant.
+_AUTH0_CLI_CLIENT_ID = "ehK22gj7je6DtNcjEjKlftAQsSGPuSOV"
 _AUTH0_DOMAIN = "dev-kilt2vkudvbu75ny.us.auth0.com"
 _AUTH0_AUDIENCE = "https://api.vindicara.io"
 
