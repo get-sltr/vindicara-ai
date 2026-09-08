@@ -158,3 +158,28 @@ def test_local_alerter_exclude_does_not_mark_seen(tmp_path: Path) -> None:
     assert [f.detector_id for f in alerter.new_findings(records, exclude=frozenset({"AIR-04"}))] == []
     assert [f.detector_id for f in alerter.new_findings(records)] == ["AIR-04"]
     assert alerter.new_findings(records) == []
+
+
+def test_cloud_announcement_and_run_link(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    class _Sink:
+        def emit(self, record: object) -> None:
+            return None
+
+        def drain(self, timeout: float) -> None:
+            return None
+
+    out = io.StringIO()
+    monkeypatch.setenv("AIRSDK_CLOUD_API_KEY", "air_env")
+    monkeypatch.setenv("AIRSDK_CLOUD_URL", "http://127.0.0.1:1")
+    monkeypatch.setenv("AIRSDK_CONSOLE_URL", "http://console.test/flightdeck")
+    recorder = AIRRecorder(log_path=tmp_path / "agent.log", live=True)
+    assert recorder.live is not None
+    recorder.live._stream = out
+    recorder.transports[:] = [_Sink()]
+    recorder.llm_start(prompt="hello")
+    text = out.getvalue()
+    assert "mirroring every record" in text
+    assert f"/runs/{recorder.run_id}" in text
+    assert "AIRSDK_CLOUD=off" in text
+    recorder._shutdown()
+    assert f"[air] Flightdeck: http://console.test/flightdeck/runs/{recorder.run_id}" in out.getvalue()

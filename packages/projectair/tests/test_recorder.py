@@ -70,3 +70,28 @@ def test_resolve_signing_key_passthrough_existing_key() -> None:
 
 def test_resolve_signing_key_none_returns_none() -> None:
     assert resolve_signing_key(None) is None
+
+
+def test_recorder_mirrors_to_cloud_when_env_key_is_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from airsdk.transport import FileTransport, HTTPTransport
+
+    monkeypatch.setenv("AIRSDK_CLOUD_API_KEY", "air_env")
+    monkeypatch.setenv("AIRSDK_CLOUD_URL", "http://127.0.0.1:1")
+    monkeypatch.setenv("AIRSDK_CONSOLE_URL", "http://console.test/flightdeck")
+    recorder = AIRRecorder(log_path=tmp_path / "r.log", live=False)
+    assert [type(t) for t in recorder.transports] == [FileTransport, HTTPTransport]
+    assert recorder.cloud is not None
+    assert recorder.cloud.api_key == "air_env"
+    recorder.llm_start(prompt="x")
+    assert recorder.run_url == f"http://console.test/flightdeck/runs/{recorder.run_id}"
+    assert (tmp_path / "r.log").exists()
+    monkeypatch.setenv("AIRSDK_CLOUD", "off")
+    assert [type(t) for t in AIRRecorder(log_path=tmp_path / "s.log", live=False).transports] == [FileTransport]
+
+
+def test_recorder_default_log_path_lands_under_dot_air(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    recorder = AIRRecorder(live=False)
+    recorder.llm_start(prompt="x")
+    assert recorder.log_path.parent == Path(".air")
+    assert recorder.log_path.exists()

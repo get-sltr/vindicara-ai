@@ -13,7 +13,9 @@ explicit ``transports=`` list.
 from __future__ import annotations
 
 import atexit
+import logging
 import os
+import time
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -28,6 +30,7 @@ from airsdk.agdr import (
     _require_mldsa,
     _uuid7,
 )
+from airsdk.cloud_config import CloudConfig, cloud_config_from_env, genesis_step_id, run_url
 from airsdk.containment import (
     ApprovalInvalidError,
     Auth0Verifier,
@@ -41,7 +44,7 @@ from airsdk.containment import (
 )
 from airsdk.live import LiveAlerts, live_enabled_from_env
 from airsdk.reference_vault import ReferenceVault, salted_digest
-from airsdk.transport import FileTransport, Transport
+from airsdk.transport import FileTransport, HTTPTransport, Transport
 from airsdk.types import (
     GENESIS_PREV_HASH,
     AgDRPayload,
@@ -101,16 +104,26 @@ def resolve_signing_key(
     return Ed25519PrivateKey.from_private_bytes(seed)
 
 
+_log = logging.getLogger(__name__)
+_SHUTDOWN_DRAIN_SECONDS = 5.0
+
+
+def default_log_path() -> Path:
+    """A fresh chain file per run: ``.air/air-trace-<unix ms>.log`` in the working directory."""
+    return Path(".air") / f"air-trace-{int(time.time() * 1000)}.log"
+
+
 class AIRRecorder:
     """Write signed AgDR records to one or more transports. Framework-agnostic.
 
     Parameters
     ----------
     log_path:
-        Where AgDR records are appended on disk. Required for backward
-        compatibility; passed to the default ``FileTransport`` when
-        ``transports`` is not provided. Parent directories are created on
-        first write.
+        Where AgDR records are appended on disk; passed to the default
+        ``FileTransport`` when ``transports`` is not provided. Defaults to
+        ``.air/air-trace-<unix ms>.log`` under the working directory, so every
+        run gets its own file and ``air trace`` never sees two chains in one.
+        Parent directories are created on first write.
     key:
         Ed25519 signing key. Accepts a 64-char hex seed, a PEM-encoded
         private key, or a raw ``Ed25519PrivateKey``. When ``None``, a fresh
@@ -122,10 +135,10 @@ class AIRRecorder:
         chain never echoes the original prompt.
     transports:
         Optional list of :class:`Transport` sinks. When omitted the
-        recorder uses a single ``FileTransport(log_path)``, matching
-        historical behaviour. Pass an explicit list to compose multiple
-        sinks (e.g. ``[FileTransport(log_path), HTTPTransport(endpoint)]``)
-        for AIR Cloud ingestion alongside local disk.
+        recorder uses ``FileTransport(log_path)`` and, when
+        ``AIRSDK_CLOUD_API_KEY`` is set, an ``HTTPTransport`` mirroring every
+        record to AIR Cloud (:mod:`airsdk.cloud_config`). Pass an explicit
+        list to compose your own sinks.
     live:
         Print a banner, each finding as it fires, and an exit summary to
         stderr (see :mod:`airsdk.live`). ``None`` (default) follows the
@@ -137,7 +150,7 @@ class AIRRecorder:
 
     def __init__(
         self,
-        log_path: str | Path,
+        log_path: str | Path | None = None,
         key: str | SigningKey | None = None,
         *,
         user_intent: str | None = None,
@@ -158,7 +171,7 @@ class AIRRecorder:
     ) -> None:
         priv = resolve_signing_key(key, algorithm=signing_algorithm)
         self._signer = Signer(priv) if priv is not None else Signer.generate(signing_algorithm)
-        self._log_path = Path(log_path).expanduser()
+        self._log_path = Path(log_path).expanduser() if log_path is not None else default_log_path()
         self._log_path.parent.mkdir(parents=True, exist_ok=True)
         if delegation is not None and intent_spec is not None:
             raise ValueError(
@@ -175,7 +188,14 @@ class AIRRecorder:
         self._attestation_provider = attestation_provider
         self._user_intent = user_intent
         self._intent_spec = delegation.scope if delegation is not None else intent_spec
-        self._transports: list[Transport] = transports if transports is not None else [FileTransport(self._log_path)]
+        self._cloud: CloudConfig | None = None
+        if transports is not None:
+            self._transports: list[Transport] = transports
+        else:
+            self._transports = [FileTransport(self._log_path)]
+            self._cloud = cloud_config_from_env()
+            if self._cloud is not None:
+                self._transports.append(HTTPTransport.from_config(self._cloud))
         self._orchestrator: AnchoringOrchestrator | None = None
         self._containment = containment
         self._delegation_policy = delegation_policy
@@ -192,7 +212,7 @@ class AIRRecorder:
         self._live: LiveAlerts | None = None
         if live if live is not None else live_enabled_from_env():
             self._live = LiveAlerts(self._log_path, min_severity=live_min_severity)
-            atexit.register(self._live.summarize, self._chain_records)
+        atexit.register(self._shutdown)
 
         if delegation is not None:
             genesis = self.open_delegation(delegation)
@@ -213,6 +233,34 @@ class AIRRecorder:
     def log_path(self) -> Path:
         """Where this recorder appends its JSONL (default ``FileTransport`` only)."""
         return self._log_path
+
+    @property
+    def cloud(self) -> CloudConfig | None:
+        """The AIR Cloud mirror configuration in effect, or ``None`` when local only."""
+        return self._cloud
+
+    @property
+    def run_id(self) -> str | None:
+        """The genesis step_id, once the first record is signed."""
+        return genesis_step_id(self._chain_records)
+
+    @property
+    def run_url(self) -> str | None:
+        """The Flightdeck page for this run, when mirroring is on and a record exists."""
+        run_id = self.run_id
+        if self._cloud is None or run_id is None:
+            return None
+        return run_url(self._cloud.console_url, run_id)
+
+    def _shutdown(self) -> None:
+        """Flush every transport, then print the live summary (so the run link is honest)."""
+        for transport in self._transports:
+            try:
+                transport.drain(_SHUTDOWN_DRAIN_SECONDS)
+            except Exception as exc:
+                _log.warning("airsdk.recorder transport drain failed: %s", exc)
+        if self._live is not None:
+            self._live.summarize(self._chain_records, run_url=self.run_url)
 
     @property
     def live(self) -> LiveAlerts | None:
@@ -643,6 +691,8 @@ class AIRRecorder:
             transport.emit(record)
         self._chain_records.append(record)
         if self._live is not None:
+            if len(self._chain_records) == 1 and (link := self.run_url) is not None:
+                self._live.announce_cloud(link)
             self._live.observe(self._chain_records)
         if self._orchestrator is not None:
             self._orchestrator.observe_step(record)

@@ -113,9 +113,10 @@ class _CapturingHandler(BaseHTTPRequestHandler):
         body = self.rfile.read(length).decode("utf-8")
         self.__class__.received.append({
             "path": self.path,
-            "api_key": self.headers.get("X-Vindicara-Key"),
+            "api_key": self.headers.get("X-API-Key"),
+            "run_id": self.headers.get("X-AIR-Run-Id"),
             "content_type": self.headers.get("Content-Type"),
-            "body": json.loads(body),
+            "body": [json.loads(line) for line in body.splitlines() if line.strip()] if "ndjson" in (self.headers.get("Content-Type") or "") else json.loads(body),
         })
         self.send_response(self.response_status)
         self.send_header("Content-Type", "application/json")
@@ -210,3 +211,60 @@ def test_recorder_with_http_transport_writes_disk_and_posts(http_server, tmp_pat
     assert len(handler.received) == 2
     posted_kinds = [r["body"]["kind"] for r in handler.received]
     assert posted_kinds == ["llm_start", "llm_end"]
+
+
+def test_http_transport_sends_run_id_and_batches_as_ndjson(http_server) -> None:
+    base_url, handler = http_server
+    transport = HTTPTransport(endpoint=base_url, api_key="air_test")
+    signer = Signer.generate()
+    records = [signer.sign(StepKind.LLM_START, AgDRPayload(prompt=f"p{i}")) for i in range(3)]
+    for record in records:
+        transport.emit(record)
+    transport.drain(timeout=5.0)
+    assert transport.run_id == records[0].step_id
+    assert transport.sent_count == 3
+    assert all(r["api_key"] == "air_test" for r in handler.received)
+    assert all(r["run_id"] == records[0].step_id for r in handler.received)
+    posted = [rec for r in handler.received for rec in (r["body"] if isinstance(r["body"], list) else [r["body"]])]
+    assert [p["step_id"] for p in posted] == [r.step_id for r in records]
+
+
+def test_http_transport_stops_after_401_and_counts_drops(http_server) -> None:
+    base_url, handler = http_server
+    handler.response_status = 401
+    transport = HTTPTransport(endpoint=base_url, api_key="air_bad")
+    signer = Signer.generate()
+    transport.emit(signer.sign(StepKind.LLM_START, AgDRPayload(prompt="a")))
+    transport.drain(timeout=5.0)
+    assert transport.stopped_reason is not None
+    assert "401" in transport.stopped_reason
+    transport.emit(signer.sign(StepKind.LLM_END, AgDRPayload(response="b")))
+    transport.drain(timeout=1.0)
+    assert transport.dropped_count == 2
+    assert len(handler.received) == 1
+
+
+def test_http_transport_falls_back_to_single_posts_when_bulk_is_404(http_server) -> None:
+    base_url, handler = http_server
+    handler.response_status = 201
+    original = handler.do_POST
+
+    def do_post(self: object) -> None:  # bulk unsupported on this server
+        if self.path.endswith("/bulk"):  # type: ignore[attr-defined]
+            self.__class__.response_status = 404  # type: ignore[attr-defined]
+        else:
+            self.__class__.response_status = 201  # type: ignore[attr-defined]
+        original(self)  # type: ignore[arg-type]
+
+    handler.do_POST = do_post  # type: ignore[method-assign]
+    try:
+        transport = HTTPTransport(endpoint=base_url, api_key="air_test")
+        signer = Signer.generate()
+        for i in range(3):
+            transport.emit(signer.sign(StepKind.LLM_START, AgDRPayload(prompt=f"p{i}")))
+        transport.drain(timeout=5.0)
+    finally:
+        handler.do_POST = original  # type: ignore[method-assign]
+    singles = [r for r in handler.received if not r["path"].endswith("/bulk")]
+    assert len(singles) == 3
+    assert transport.sent_count == 3

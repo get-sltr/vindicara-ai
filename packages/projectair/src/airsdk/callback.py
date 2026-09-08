@@ -1,7 +1,6 @@
 """LangChain callback that writes a signed AgDR chain for every agent step."""
 from __future__ import annotations
 
-import time
 from pathlib import Path
 from typing import Any
 from uuid import UUID
@@ -12,6 +11,7 @@ from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.outputs import LLMResult
 
 from airsdk.recorder import AIRRecorder
+from airsdk.transport import Transport
 
 
 class AIRCallbackHandler(BaseCallbackHandler):
@@ -26,13 +26,20 @@ class AIRCallbackHandler(BaseCallbackHandler):
         Ed25519 signing key. Accepts a 64-char hex seed, a PEM-encoded private key,
         or a raw ``Ed25519PrivateKey``. When ``None``, a fresh keypair is generated.
     log_path:
-        Where AgDR records are appended. Defaults to ``.air/air-trace-<unix>.log``
-        under the current working directory; the recorder prints the path on
-        its first record.
+        Where AgDR records are appended. Defaults to a fresh
+        ``.air/air-trace-<unix ms>.log`` under the current working directory;
+        the recorder prints the path on its first record.
     user_intent:
         Optional plain-text statement of what the user asked the agent to do.
         Attached to every record so the ASI01 Goal Hijack detector has a reliable
         anchor even when the underlying chain does not echo the original prompt.
+    recorder:
+        Use an existing recorder instead of building one; every other argument
+        is then ignored. This is how a LangChain agent shares one chain with
+        the rest of an application, and how it reaches AIR Cloud.
+    transports:
+        Explicit sinks for the recorder this handler builds (see
+        :class:`airsdk.recorder.AIRRecorder`).
     """
 
     def __init__(
@@ -41,10 +48,16 @@ class AIRCallbackHandler(BaseCallbackHandler):
         log_path: str | Path | None = None,
         *,
         user_intent: str | None = None,
+        recorder: AIRRecorder | None = None,
+        transports: list[Transport] | None = None,
     ) -> None:
         super().__init__()
-        resolved_path = Path(log_path) if log_path else Path(".air") / f"air-trace-{int(time.time())}.log"
-        self._recorder = AIRRecorder(log_path=resolved_path, key=key, user_intent=user_intent)
+        if recorder is not None:
+            self._recorder = recorder
+            return
+        self._recorder = AIRRecorder(
+            log_path=Path(log_path) if log_path else None, key=key, user_intent=user_intent, transports=transports
+        )
 
     @property
     def log_path(self) -> Path:

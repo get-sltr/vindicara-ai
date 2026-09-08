@@ -102,6 +102,7 @@ class LiveAlerts:
         self._summarized = False
         self._steps = 0
         self._alerts: list[Finding] = []
+        self._cloud_url: str | None = None
 
     # -- Public surface ------------------------------------------------------
 
@@ -130,10 +131,23 @@ class LiveAlerts:
             return []
         return self._scan(records, exclude=INLINE_EXCLUDED_DETECTORS)
 
-    def summarize(self, records: list[AgDRRecord]) -> None:
+    def announce_cloud(self, url: str) -> None:
+        """Say once, right after the banner, that records are being mirrored and where the run lives."""
+        if self._cloud_url is not None:
+            return
+        self._cloud_url = url
+        if not self._banner_shown:
+            self._banner_shown = True
+            self._print_banner()
+        self._write(f"{_PREFIX} mirroring every record (prompts, responses, tool output) to AIR Cloud: {url}")
+        self._write(f"{_PREFIX} stop mirroring with AIRSDK_CLOUD=off")
+
+    def summarize(self, records: list[AgDRRecord], *, run_url: str | None = None) -> None:
         """Final pass plus a one-line summary. Idempotent; a no-op on an empty chain."""
         if self._summarized or not records:
             return
+        if run_url is not None:
+            self._cloud_url = run_url
         self._summarized = True
         self._steps = len(records)
         self._scan(records, exclude=frozenset())
@@ -199,3 +213,5 @@ class LiveAlerts:
         summary = f"done: {self._steps} step{'s' if self._steps != 1 else ''} recorded, {alerts}, chain signed."
         self._write(f"{_PREFIX} {self._paint(summary, color, bold=True)}")
         self._write(f"{_PREFIX} full report: air trace {self._log_path}")
+        if self._cloud_url is not None:
+            self._write(f"{_PREFIX} Flightdeck: {self._cloud_url}")
