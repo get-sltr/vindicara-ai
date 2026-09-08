@@ -77,6 +77,16 @@ from projectair.explain_cli import register as _register_explain_cli  # noqa: E4
 
 _register_explain_cli(app)
 
+# Incident timeline: `air incident` (what executed, under whose authority, where evidence is missing).
+from projectair.incident_cli import register as _register_incident_cli  # noqa: E402
+
+_register_incident_cli(app)
+
+# Evidence health: `air health` (is the record complete, is verification working).
+from projectair.health_cli import register as _register_health_cli  # noqa: E402
+
+_register_health_cli(app)
+
 # Layer 3 step-up approval command: `air approve` (Auth0 + token + device flow).
 from projectair.approve_cli import register as _register_approve_cli  # noqa: E402
 
@@ -1076,11 +1086,11 @@ def _require_license_or_exit(feature: str) -> None:
     """Gate ``feature`` behind a valid license. Exits(2) with an upgrade prompt
     when no valid license is installed.
 
-    Free tier is intentionally minimal: `air demo` and `air trace` (run the 16
-    detectors on one chain, print findings). Everything with ongoing or
-    compliance value (real-time watch, the ALCOA+ / Article 72 / NIST / SOC 2
-    reports, exports) requires a license, which routes through the existing
-    Stripe checkout.
+    Seeing is free: `air demo`, `air trace`, `air watch`, `air explain`,
+    `air incident`, and `air health` print in the terminal without a license.
+    Artifacts and routing (the ALCOA+ / Article 72 / NIST / SOC 2 / security
+    review / incident packs, exports, Slack / PagerDuty delivery) require a
+    license, which routes through the existing Stripe checkout.
     """
     try:
         from airsdk_pro.license import current_license
@@ -1091,7 +1101,7 @@ def _require_license_or_exit(feature: str) -> None:
         return
     typer.secho(
         f"{feature} requires a Project AIR license.\n\n"
-        "  Free:  air demo   and   air trace <log>   (16 detectors, printed).\n"
+        "  Free:  air demo, air trace, air watch, air explain, air incident, air health (printed).\n"
         f"  Paid:  {feature} and all ongoing / report / export features.\n\n"
         "  Start or buy:      https://vindicara.io/pricing\n"
         "  Already licensed:  air install-license --license <token>",

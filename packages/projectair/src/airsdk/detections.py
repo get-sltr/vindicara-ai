@@ -615,7 +615,11 @@ def detect_untraceable_action(records: list[AgDRRecord]) -> list[Finding]:
     # of a "closing" kind matches it before any higher-level boundary.
     for index, record in enumerate(records):
         if record.kind == StepKind.TOOL_START:
-            # Next record must be tool_end; if it's anything else, flag.
+            # Next record must be tool_end; if it's anything else, flag. A
+            # halted start (``blocked=True``) is not a gap: the outcome IS
+            # recorded, as the block, and no tool_end can ever follow it.
+            if record.payload.blocked:
+                continue
             if index + 1 >= len(records) or records[index + 1].kind != StepKind.TOOL_END:
                 findings.append(
                     Finding(

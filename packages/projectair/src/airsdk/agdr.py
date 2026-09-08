@@ -65,6 +65,11 @@ _MLDSA_UNAVAILABLE = (
 )
 
 
+def mldsa_available() -> bool:
+    """``True`` when this install can sign and verify ML-DSA-65 records."""
+    return _HAS_MLDSA
+
+
 def _require_mldsa() -> None:
     """Raise a clear RuntimeError when ML-DSA-65 is requested but unavailable."""
     if not _HAS_MLDSA:

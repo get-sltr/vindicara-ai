@@ -99,6 +99,8 @@ air trace <chain>         Verify signatures, run detectors, emit forensic report
 air verify-public <chain> Verify using only public infrastructure (no Vindicara calls)
 air anchor <chain>        Anchor the chain to RFC 3161 + Sigstore Rekor
 air explain <chain>       Causal explanation: --step <id> | --finding <detector_id>
+air incident <chain>      Incident timeline: what executed, under whose authority, where evidence is missing (beta)
+air health <chain|dir>    Evidence health: eight checks, exit non-zero on failure (beta)
 air approve               Layer 3 step-up: --token | --device | --authorize-url
 air handoff verify        Layer 4: eight-step cross-agent chain-of-custody verifier
 air report article72      EU AI Act Article 72 post-market monitoring template

