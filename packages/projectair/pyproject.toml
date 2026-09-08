@@ -33,7 +33,7 @@ dependencies = [
     # conditionally: on <48 it raises a clear RuntimeError with upgrade
     # instructions instead of failing at import. Opt into the newer floor with
     # the [pqc] extra below.
-    "cryptography>=42.0.0,<47.0",
+    "cryptography>=42.0.0,<51.0",
     "pydantic>=2.7.0,<3.0",
     "typer>=0.12.0,<1.0",
     # langchain-core: floor 1.2.22 patches CVE-2026-34070 (load_prompt path traversal, HIGH)
@@ -82,7 +82,7 @@ webauthn = [
 # Ed25519 signing/verification works unchanged; ML-DSA operations raise a clear
 # RuntimeError with this upgrade hint.
 pqc = [
-    "cryptography>=48.0.0,<49.0",
+    "cryptography>=48.0.0,<51.0",
 ]
 dev = [
     # dev/CI installs the anchoring extra so the Layer 1 test suite can import it.
