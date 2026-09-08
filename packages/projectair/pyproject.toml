@@ -67,7 +67,7 @@ dependencies = [
 # of the core install because the sigstore chain pulls pre-release packages that
 # strict resolvers (uv/pipx) reject; opt in with: pip install 'projectair[anchoring]'.
 anchoring = [
-    "sigstore>=3.0,<4.0",
+    "sigstore>=3.0,<5.0",
     "rfc3161-client>=1.0,<2.0",
 ]
 # Native WebAuthn delegation (phase 2): the "biometric never leaves the device"
