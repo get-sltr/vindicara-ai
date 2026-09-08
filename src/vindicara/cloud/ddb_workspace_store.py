@@ -2,7 +2,7 @@
 
 Table schema:
     pk: workspace_id (String)
-    attrs: name (String), owner_email (String), created_at (String)
+    attrs: name (String), owner_email (String), created_at (String), tier (String)
 
 Implements the ``WorkspaceStore`` protocol from ``workspace.py``.
 """
@@ -33,6 +33,7 @@ class DDBWorkspaceStore:
                 "name": workspace.name,
                 "owner_email": workspace.owner_email,
                 "created_at": workspace.created_at,
+                "tier": workspace.tier,
             },
             ConditionExpression="attribute_not_exists(workspace_id)",
         )
@@ -50,6 +51,7 @@ class DDBWorkspaceStore:
             name=row["name"],
             owner_email=row["owner_email"],
             created_at=row["created_at"],
+            tier=row.get("tier", "free"),
         )
 
     def list(self) -> list[Workspace]:
@@ -71,6 +73,7 @@ class DDBWorkspaceStore:
                 name=item["name"],
                 owner_email=item["owner_email"],
                 created_at=item["created_at"],
+                tier=item.get("tier", "free"),
             )
             for item in items
         ]

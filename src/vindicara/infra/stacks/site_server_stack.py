@@ -121,7 +121,7 @@ class SiteServerStack(Stack):
                     "PUBLIC_AIR_API_BASE": api_origin,
                     "PUBLIC_AUTH0_DOMAIN": "dev-kilt2vkudvbu75ny.us.auth0.com",
                     "PUBLIC_AUTH0_CLIENT_ID": "GszbWqSkD65eUjv7FrRWYO4IkmGWdd4y",
-                    "PUBLIC_AUTH0_AUDIENCE": "cabinet-coach.v2",
+                    "PUBLIC_AUTH0_AUDIENCE": "https://api.vindicara.io",
                     # Also passed for the security-header hook's CSP (hooks.server.js).
                     "AIR_API_ORIGIN": api_origin,
                 },

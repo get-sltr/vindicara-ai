@@ -48,10 +48,16 @@ UNAUTHED_PATHS: frozenset[str] = frozenset(
         # /v1/identity/register is first-run lead capture; a fresh installer
         # has no API key yet, so it must be public.
         "/v1/identity/register",
+        # /v1/auth/exchange is self-serve sign-in: the caller trades an
+        # identity-provider token for its first AIR Cloud credential.
+        "/v1/auth/exchange",
     }
 )
 
 API_KEY_HEADER = "X-API-Key"
+# projectair 1.3.x HTTPTransport sent the key under this name; accept it so
+# an SDK already in the field keeps working after the server moves on.
+LEGACY_API_KEY_HEADER = "X-Vindicara-Key"
 
 # Routes that carry their own operator admin-token gate
 # (vindicara.cloud.admin.require_admin) instead of API-key / session auth.
@@ -100,7 +106,7 @@ class AirCloudAuthMiddleware(BaseHTTPMiddleware):
                 status_code=503,
             )
 
-        api_key_header = request.headers.get("X-API-Key")
+        api_key_header = request.headers.get(API_KEY_HEADER) or request.headers.get(LEGACY_API_KEY_HEADER)
         bearer_header = request.headers.get("Authorization", "")
 
         if api_key_header:

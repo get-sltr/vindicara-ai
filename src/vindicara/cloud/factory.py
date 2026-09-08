@@ -26,9 +26,11 @@ from starlette.middleware.cors import CORSMiddleware
 
 from vindicara.cloud.capsule_store import CapsuleStore, InMemoryCapsuleStore
 from vindicara.cloud.event_bus import CapsuleEventBus
+from vindicara.cloud.identity_store import IdentityStore, InMemoryIdentityStore
 from vindicara.cloud.middleware import AirCloudAuthMiddleware
 from vindicara.cloud.routes import (
     analytics,
+    auth,
     capsules,
     compliance,
     entitlements,
@@ -39,6 +41,7 @@ from vindicara.cloud.routes import (
     workspaces,
 )
 from vindicara.cloud.routes import stream as stream_route
+from vindicara.cloud.signup import ServiceOidc, service_oidc_from_env
 from vindicara.cloud.sso import InMemorySsoConfigStore, SsoConfigStore
 from vindicara.cloud.workspace import (
     ApiKeyStore,
@@ -70,11 +73,12 @@ def _seed_sso_from_env(store: SsoConfigStore) -> None:
     _log.info("air_cloud.sso.seeded_from_env", extra={"workspace_id": workspace_id})
 
 
-def _build_ddb_stores() -> tuple[CapsuleStore, WorkspaceStore, ApiKeyStore] | None:
-    """Build DDB stores if all three table env vars are set."""
+def _build_ddb_stores() -> tuple[CapsuleStore, WorkspaceStore, ApiKeyStore, IdentityStore] | None:
+    """Build DDB stores if the table env vars are set."""
     capsules_table = os.environ.get("AIR_CLOUD_CAPSULES_TABLE")
     workspaces_table = os.environ.get("AIR_CLOUD_WORKSPACES_TABLE")
     api_keys_table = os.environ.get("AIR_CLOUD_API_KEYS_TABLE")
+    identities_table = os.environ.get("AIR_CLOUD_IDENTITIES_TABLE")
 
     if capsules_table is None or workspaces_table is None or api_keys_table is None:
         return None
@@ -83,14 +87,21 @@ def _build_ddb_stores() -> tuple[CapsuleStore, WorkspaceStore, ApiKeyStore] | No
 
     from vindicara.cloud.ddb_api_key_store import DDBApiKeyStore
     from vindicara.cloud.ddb_capsule_store import DDBCapsuleStore
+    from vindicara.cloud.ddb_identity_store import DDBIdentityStore
     from vindicara.cloud.ddb_workspace_store import DDBWorkspaceStore
 
     ddb = boto3.resource("dynamodb")
+    identities: IdentityStore = (
+        DDBIdentityStore(ddb.Table(identities_table)) if identities_table else InMemoryIdentityStore()
+    )
+    if not identities_table:
+        _log.warning("air_cloud.identities.in_memory: AIR_CLOUD_IDENTITIES_TABLE unset; sign-ins will not persist")
     _log.info("air_cloud.ddb_stores.wired")
     return (
         DDBCapsuleStore(ddb.Table(capsules_table)),
         DDBWorkspaceStore(ddb.Table(workspaces_table)),
         DDBApiKeyStore(ddb.Table(api_keys_table)),
+        identities,
     )
 
 
@@ -139,6 +150,10 @@ def create_air_cloud_app(
     sso_config_store: SsoConfigStore | None = None,
     admin_token: str | None = None,
     license_signing_key_pem: str | None = None,
+    identity_store: IdentityStore | None = None,
+    service_oidc: ServiceOidc | None = None,
+    cloud_url: str | None = None,
+    console_url: str | None = None,
     title: str = "AIR Cloud",
     version: str = "0.1.0",
 ) -> FastAPI:
@@ -157,6 +172,12 @@ def create_air_cloud_app(
     /v1/entitlements/grant``). Explicit kwarg wins; otherwise the
     ``VINDICARA_LICENSE_SIGNING_KEY_PEM`` env var. When neither is set the
     grant route answers 503 (fail-closed) rather than minting unsigned tokens.
+
+    ``service_oidc`` is the identity provider ``POST /v1/auth/exchange`` trusts
+    for self-serve sign-in; defaults to ``AIR_CLOUD_OIDC_*``. ``identity_store``
+    binds identities to workspaces (DynamoDB when ``AIR_CLOUD_IDENTITIES_TABLE``
+    is set). ``cloud_url`` / ``console_url`` are echoed to clients so the Keys
+    screen and the CLI print the right addresses.
     """
     ddb_stores = None
     if capsule_store is None and workspace_store is None and api_key_store is None:
@@ -176,10 +197,15 @@ def create_air_cloud_app(
         app.state.capsule_store = ddb_stores[0]
         app.state.cloud_workspaces = ddb_stores[1]
         app.state.cloud_api_keys = ddb_stores[2]
+        app.state.cloud_identities = identity_store or ddb_stores[3]
     else:
         app.state.capsule_store = capsule_store or InMemoryCapsuleStore()
         app.state.cloud_workspaces = workspace_store or InMemoryWorkspaceStore()
         app.state.cloud_api_keys = api_key_store or InMemoryApiKeyStore()
+        app.state.cloud_identities = identity_store or InMemoryIdentityStore()
+    app.state.service_oidc = service_oidc if service_oidc is not None else service_oidc_from_env()
+    app.state.cloud_url = cloud_url or os.environ.get("AIR_CLOUD_PUBLIC_URL", "https://cloud.vindicara.io")
+    app.state.console_url = console_url or os.environ.get("AIR_CLOUD_CONSOLE_URL", "https://vindicara.io/flightdeck")
 
     # First-run lead capture store (public /v1/identity/register). Wired only
     # when the table env var is set; without it the route no-ops (returns 200
@@ -198,7 +224,7 @@ def create_air_cloud_app(
     _seed_sso_from_env(sso_store)
     app.state.cloud_sso_configs = sso_store
     app.state.capsule_event_bus = CapsuleEventBus()
-    app.state.cloud_admin_token = admin_token if admin_token is not None else os.environ.get("AIR_CLOUD_ADMIN_TOKEN")
+    app.state.cloud_admin_token = _resolve_admin_token(admin_token)
     app.state.license_signing_key_pem = (
         license_signing_key_pem if license_signing_key_pem is not None else os.environ.get("VINDICARA_LICENSE_SIGNING_KEY_PEM")
     )
@@ -207,7 +233,7 @@ def create_air_cloud_app(
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
-        allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+        allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
         allow_headers=["*"],
     )
 
@@ -223,6 +249,7 @@ def create_air_cloud_app(
     app.include_router(compliance.router)
     app.include_router(analytics.router)
     app.include_router(entitlements.router)
+    app.include_router(auth.router)
 
     @app.get("/health")
     async def _health() -> dict[str, str]:
