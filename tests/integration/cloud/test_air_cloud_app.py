@@ -167,7 +167,12 @@ async def test_bulk_ingest_accepts_chain_in_one_post(
         content=body,
     )
     assert response.status_code == 200
-    assert response.json() == {"workspace_id": "acme", "stored": 2}
+    payload = response.json()
+    assert payload["workspace_id"] == "acme"
+    assert payload["stored"] == 2
+    # Ingest also reports the run the batch landed in (cloud/runs.py). Asserting
+    # the whole dict broke when run_ids was added; assert the contract instead.
+    assert len(payload["run_ids"]) == 1
     assert ctx["capsule_store"].count("acme") == 2
 
 

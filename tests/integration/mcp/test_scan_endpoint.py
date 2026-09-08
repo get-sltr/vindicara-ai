@@ -57,7 +57,9 @@ async def test_scan_dry_run(app) -> None:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post(
             "/v1/mcp/scan",
-            json={"server_url": "https://mcp.test", "mode": "live", "dry_run": True},
+            # Must be in _ALLOWED_MCP_HOSTS (scans.py); the endpoint rejects any
+            # other host as SSRF before it reaches the scanner.
+            json={"server_url": "https://mcp.example.com", "mode": "live", "dry_run": True},
             headers={"X-Vindicara-Key": "vnd_test"},
         )
     assert response.status_code == 200

@@ -4,6 +4,10 @@ import os
 
 os.environ.setdefault("VINDICARA_JWT_SECRET", "test-jwt-secret-do-not-use-in-production-0123456789abcdef")
 os.environ.setdefault("VINDICARA_STAGE", "test")
+# session_token.py requires this at call time. Several test modules set it
+# themselves, which left the cloud SSO tests passing only when one of those
+# happened to import first; setting it here makes any subset runnable.
+os.environ.setdefault("VINDICARA_SESSION_SECRET", "test_secret_for_unit_tests_only_0000")
 
 import uuid
 

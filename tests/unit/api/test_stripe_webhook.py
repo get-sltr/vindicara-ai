@@ -35,6 +35,7 @@ _SIGNING_KEY_PEM = _generate_signing_key_pem()
 
 def _checkout_event(email: str = "buyer@example.com") -> dict[str, object]:
     return {
+        "id": "evt_test_checkout",
         "type": "checkout.session.completed",
         "data": {
             "object": {
@@ -50,6 +51,7 @@ def _invoice_event(
     billing_reason: str = "subscription_cycle",
 ) -> dict[str, object]:
     return {
+        "id": "evt_test_invoice",
         "type": "invoice.paid",
         "data": {
             "object": {
@@ -127,7 +129,7 @@ async def test_unknown_event_returns_200(app_with_cloud: object) -> None:
     """Unknown event types are acknowledged (200) so Stripe stops retrying."""
     with patch(
         "stripe.Webhook.construct_event",
-        return_value={"type": "customer.created", "data": {}},
+        return_value={"id": "evt_test_unknown", "type": "customer.created", "data": {}},
     ):
         async with AsyncClient(
             transport=ASGITransport(app=app_with_cloud),  # type: ignore[arg-type]
@@ -143,8 +145,16 @@ async def test_unknown_event_returns_200(app_with_cloud: object) -> None:
 
 
 @pytest.mark.asyncio
-async def test_checkout_fulfilled_with_workspace(app_with_cloud: object) -> None:
-    """checkout.session.completed mints license, provisions workspace, sends email."""
+async def test_checkout_fulfilled_mints_and_emails_license(app_with_cloud: object) -> None:
+    """checkout.session.completed mints a license and emails it. No workspace.
+
+    Fulfillment deliberately stops at the license token. Workspaces and owner
+    keys are created by ``provision_identity`` from ``POST /v1/auth/exchange``,
+    keyed on the verified Auth0 ``(issuer, sub)``. A webhook only has an email,
+    so a workspace created here could never be linked to the buyer's identity:
+    their later ``air login`` would mint a second workspace and strand the paid
+    one. The empty-store assertion below is the regression guard for that.
+    """
     event = _checkout_event()
     with (
         patch("stripe.Webhook.construct_event", return_value=event),
@@ -167,18 +177,15 @@ async def test_checkout_fulfilled_with_workspace(app_with_cloud: object) -> None
     assert resp.status_code == 200
     assert resp.json()["status"] == "fulfilled"
 
-    # Email was sent with API key included
+    # The license email carries the signed token and the wheel link.
     mock_send.assert_called_once()
     call_params = mock_send.call_args[0][0]
     assert call_params["to"] == ["buyer@example.com"]
-    # Body should mention API key (workspace was provisioned)
-    assert "air cloud login" in call_params["text"].lower()
+    assert "license" in call_params["text"].lower()
 
-    # Workspace was actually created in the store
+    # Fulfillment provisions no tenancy; auth exchange owns that.
     ws_store: InMemoryWorkspaceStore = app_with_cloud.state.cloud_workspaces  # type: ignore[union-attr]
-    workspaces = ws_store.list()
-    assert len(workspaces) == 1
-    assert workspaces[0].owner_email == "buyer@example.com"
+    assert ws_store.list() == []
 
 
 @pytest.mark.asyncio
@@ -205,7 +212,7 @@ async def test_checkout_without_cloud_stores(app_without_cloud: object) -> None:
 
     assert resp.status_code == 200
     assert resp.json()["status"] == "fulfilled"
-    # Email sent without API key
+    # Same email either way: fulfillment never depends on the cloud stores.
     call_params = mock_send.call_args[0][0]
     assert "air cloud login" not in call_params["text"].lower()
 

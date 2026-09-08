@@ -1,6 +1,7 @@
 """Tests for evidence collector."""
 
 import time
+from datetime import UTC, datetime
 
 from vindicara.audit.logger import AuditEvent
 from vindicara.compliance.collector import EvidenceCollector
@@ -48,10 +49,17 @@ class TestEvidenceCollector:
 
     def test_collect_with_period_filter(self) -> None:
         collector = EvidenceCollector()
+        now = time.time()
         old_event = AuditEvent(event_type=AUDIT_EVENT_GUARD, timestamp=0.0)
-        new_event = AuditEvent(event_type=AUDIT_EVENT_GUARD, timestamp=time.time())
+        new_event = AuditEvent(event_type=AUDIT_EVENT_GUARD, timestamp=now)
         collector.record(old_event)
         collector.record(new_event)
 
-        evidence = collector.collect(system_id="test", period="2026-Q2")
+        # Derive the quarter from the event itself. Hardcoding one made this
+        # pass only while the wall clock sat inside it, so it started failing
+        # the moment real time left that quarter.
+        stamp = datetime.fromtimestamp(now, tz=UTC)
+        period = f"{stamp.year}-Q{(stamp.month - 1) // 3 + 1}"
+
+        evidence = collector.collect(system_id="test", period=period)
         assert len(evidence[EvidenceType.GUARD_EVALUATION]) == 1

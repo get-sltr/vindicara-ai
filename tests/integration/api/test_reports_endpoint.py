@@ -3,6 +3,8 @@
 import pytest
 from httpx import ASGITransport, AsyncClient
 
+from vindicara.compliance.frameworks import FRAMEWORKS
+
 
 @pytest.mark.asyncio
 async def test_list_frameworks(app) -> None:
@@ -13,8 +15,10 @@ async def test_list_frameworks(app) -> None:
         )
     assert response.status_code == 200
     data = response.json()
-    assert len(data) == 3
+    # Frameworks are data (compliance/frameworks.py); the registry is the source
+    # of truth. Asserting a literal count broke as soon as HIPAA was registered.
     ids = {f["framework_id"] for f in data}
+    assert ids == {fw.value for fw in FRAMEWORKS}
     assert "eu-ai-act-article-72" in ids
     assert "nist-ai-rmf" in ids
     assert "soc2-ai" in ids
