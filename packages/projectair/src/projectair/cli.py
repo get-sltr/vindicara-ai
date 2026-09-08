@@ -1325,7 +1325,7 @@ def upgrade() -> None:
     typer.secho("Project AIR tiers", fg=typer.colors.BRIGHT_WHITE, bold=True)
     typer.echo("")
     typer.echo("  Free          $0          everything local: demo, trace, watch, explain, incident, health, 16 detectors")
-    typer.echo("  Pro           $25/mo      hosted FlightDeck, anchoring, evidence packs, reports")
+    typer.echo("  Pro           $30/mo      hosted FlightDeck, anchoring, evidence packs, reports")
     typer.echo("  Team          $599/mo     1-year retention for your whole team (SOC 2 window)")
     typer.echo("  Enterprise    Talk to us  6-year retention, self-hosted, SSO/RBAC, BAA")
     typer.echo("")

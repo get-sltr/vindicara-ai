@@ -2,11 +2,11 @@
   import { goto } from '$app/navigation';
   import AppShell from '$components/AppShell.svelte';
 
-  // Stripe Payment Link for Pro ($25/mo, single seat; the Stripe price behind
-  // this link must be the $25 one). Fires
+  // Stripe Payment Link for Pro (plink_1UDKBQC4TNI7tWa0tOP8dFoq, "AIR Pro
+  // Individual", $30/mo single seat; verified live 2026-09-08). Fires
   // checkout.session.completed, which the deployed license webhook turns into a
   // signed Pro license token + fulfillment email. See docs/pro-tier-spec.md.
-  const PRO_CHECKOUT = 'https://buy.stripe.com/dRm4gy7fk7IwbfO1eT1RC06';
+  const PRO_CHECKOUT = 'https://buy.stripe.com/fZu9ASgPU0g483C7Dh1RC07';
   // Team ($599/mo base; seats + action overage metered as Stripe subscription
   // items). Resolves to price_1TUfSD… -> tier "team" in the license webhook.
   const TEAM_CHECKOUT = 'https://buy.stripe.com/4gMdR8dDI9QEgA88Hl1RC02';
@@ -38,7 +38,7 @@
 
     <div class="tier feat">
       <div class="tn">Pro</div><div class="tl">individual · self-serve</div>
-      <div class="price">$25<span>/mo</span></div>
+      <div class="price">$30<span>/mo</span></div>
       <div class="appm"><span class="p on">Audit</span><span class="p on">Prove</span><span class="p">Protect</span><span class="p">Monitor</span></div>
       <ul>
         <li>25,000 signed actions / mo · then $1.50 / 1k</li>

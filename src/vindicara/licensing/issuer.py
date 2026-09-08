@@ -95,11 +95,19 @@ class LicensePlan:
     features: tuple[str, ...]
 
 
-# Price ID → plan mapping. The Price IDs are public (they appear in Stripe
-# Checkout URLs); the secret material is the signing key, not these.
+# Price ID → plan mapping. The Price IDs are not secret (the secret material is
+# the signing key, not these), but they are also not discoverable from a Payment
+# Link: the buy.stripe.com page ships only the plink_... id and the display
+# amount. Read a Price ID off the price in the Stripe Dashboard.
 _PRICE_TO_PLAN: dict[str, LicensePlan] = {
-    # Pro AIR price ID. Priced $25/mo from 2026-09-07 (docs/pro-tier-spec.md);
-    # if a new Stripe price is created for the change, add its ID here too.
+    # Current Pro AIR price: $30/mo from 2026-09-08 (docs/pro-tier-spec.md),
+    # behind Payment Link plink_1UDKBQC4TNI7tWa0tOP8dFoq on the pricing page.
+    "price_1UDKAkC4TNI7tWa0ZDYeUM29": LicensePlan(
+        tier="individual", duration_days=33, features=_INDIVIDUAL_FEATURES
+    ),
+    # Retired 2026-09-08: the $25/mo Pro price (live 2026-09-07 to 2026-09-08).
+    # Retired prices stay mapped because renewal invoices carry the Price ID the
+    # subscriber originally bought at; removing one hard-fails their reissue.
     "price_1TbIB2C4TNI7tWa0226pj2SS": LicensePlan(
         tier="individual", duration_days=33, features=_INDIVIDUAL_FEATURES
     ),
