@@ -1214,7 +1214,35 @@ def login() -> None:
     )
 
     typer.secho(f"Logged in as {email}", fg=typer.colors.GREEN, bold=True)
-    typer.echo("Next: `air grant` pulls your workspace entitlements from the console (needs AIRSDK_CLOUD_API_KEY).")
+    _claim_workspace(token)
+
+
+def _claim_workspace(access_token: str) -> None:
+    """Trade the identity token for this person's workspace and, on first sign-in, its key."""
+    from projectair.cloud_login import CloudLoginError, exchange_device_token, store_cloud_login
+    from projectair.cloud_target import resolve_cloud_target
+    from projectair.config import _config_path
+
+    target = resolve_cloud_target()
+    try:
+        login = exchange_device_token(target.url, access_token)
+    except CloudLoginError as exc:
+        typer.secho(
+            f"No workspace was issued: {exc}\n"
+            "  Sign-in worked, but AIR Cloud did not accept the token. Check that the Auth0 API "
+            "https://api.vindicara.io exists and this client is authorized for it, then run `air login` again.",
+            fg=typer.colors.RED, err=True,
+        )
+        raise typer.Exit(code=1) from exc
+    store_cloud_login(login)
+    verb = "Created" if login.created else "Workspace"
+    typer.secho(f"{verb}: {login.workspace_name} ({login.workspace_id}), {login.tier} tier, role {login.role}", fg=typer.colors.GREEN)
+    if login.api_key is not None:
+        typer.echo(f"  API key (shown once, saved to {_config_path()}): {login.api_key}")
+        typer.echo("  In your agent's shell:  export AIRSDK_CLOUD_API_KEY=" + login.api_key)
+    else:
+        typer.echo("  API key: the one saved earlier; issue another in Flightdeck under Keys if you need it.")
+    typer.echo(f"  Console: {login.console_url or target.console_url}/keys")
 
 
 @app.command()
@@ -1248,6 +1276,12 @@ def whoami() -> None:
 
     email = session.get("email", "unknown")
     typer.secho(f"Logged in as {email}", fg=typer.colors.GREEN)
+    from projectair.config import get_config
+
+    workspace_id = get_config("cloud", "workspace_id")
+    if workspace_id:
+        typer.echo(f"  workspace: {get_config('cloud', 'workspace_name') or workspace_id} ({workspace_id})")
+        typer.echo(f"  key saved: {'yes' if get_config('cloud', 'api_key') else 'no'}")
 
 
 @app.command()

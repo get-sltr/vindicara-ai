@@ -16,7 +16,8 @@ from typing import TypedDict
 
 import typer
 
-_DEFAULT_CLOUD_URL = "https://cloud.vindicara.io"
+from projectair.cloud_target import resolve_cloud_target
+
 _TIMEOUT_SECONDS = 10
 
 
@@ -40,11 +41,10 @@ def register(app: typer.Typer) -> None:
 
 def grant_cmd(
     api_key: str | None = typer.Option(
-        None, "--api-key", envvar="AIRSDK_CLOUD_API_KEY",
-        help="Workspace API key (air_...). Issued in the Flightdeck console under Keys.",
+        None, "--api-key", help="Workspace API key (else AIRSDK_CLOUD_API_KEY, else the key saved by air login).",
     ),
     url: str | None = typer.Option(
-        None, "--url", envvar="AIRSDK_CLOUD_URL", help=f"AIR Cloud endpoint (default: {_DEFAULT_CLOUD_URL}).",
+        None, "--url", help="AIR Cloud endpoint (else AIRSDK_CLOUD_URL, else the URL saved by air login).",
     ),
 ) -> None:
     """Pull this workspace's entitlement grant from the console and install it.
@@ -53,16 +53,16 @@ def grant_cmd(
     only records which workspace you are on. Paid grants unlock the tier's
     features in projectair-pro. Grants last 30 days; run again to renew.
     """
-    if not api_key:
+    target = resolve_cloud_target(api_key, url)
+    if not target.api_key:
         typer.secho(
-            "A workspace API key is required. Pass --api-key or set AIRSDK_CLOUD_API_KEY.\n"
-            "Issue one in the console: https://vindicara.io/dashboard (Keys).",
+            "No workspace API key. Run `air login` (saves one), pass --api-key, or set AIRSDK_CLOUD_API_KEY.\n"
+            "Keys are also issued in Flightdeck under Keys: https://vindicara.io/flightdeck/keys",
             fg=typer.colors.RED, err=True,
         )
         raise typer.Exit(code=2)
-    base = (url or _DEFAULT_CLOUD_URL).rstrip("/")
     try:
-        grant = fetch_grant(base, api_key)
+        grant = fetch_grant(target.url, target.api_key)
     except GrantError as exc:
         typer.secho(f"Grant failed: {exc}", fg=typer.colors.RED, err=True)
         raise typer.Exit(code=1) from exc

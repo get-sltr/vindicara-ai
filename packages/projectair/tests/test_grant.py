@@ -44,11 +44,12 @@ def _fake_pro(monkeypatch: pytest.MonkeyPatch, installed: list[str]) -> None:
     monkeypatch.setitem(sys.modules, "airsdk_pro.license", fake_license)
 
 
-def test_grant_requires_an_api_key(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_grant_requires_an_api_key(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "cfg"))
     monkeypatch.delenv("AIRSDK_CLOUD_API_KEY", raising=False)
     result = CliRunner().invoke(app, ["grant"])
     assert result.exit_code == 2
-    assert "AIRSDK_CLOUD_API_KEY" in result.output
+    assert "air login" in result.output
 
 
 def test_grant_installs_the_console_token_verbatim(monkeypatch: pytest.MonkeyPatch) -> None:

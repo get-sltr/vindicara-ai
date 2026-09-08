@@ -85,7 +85,11 @@ def _write_toml(data: dict[str, Any]) -> None:
             escaped = str(value).replace("\\", "\\\\").replace('"', '\\"')
             lines.append(f'{key} = "{escaped}"')
         lines.append("")
-    path.write_text("\n".join(lines), encoding="utf-8")
+    # The file may hold the workspace API key saved by `air login`; keep it private.
+    fd = os.open(str(path), os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as fh:
+        fh.write("\n".join(lines))
+    os.chmod(path, 0o600)
 
 
 def get_config(section: str, key: str) -> str | None:
