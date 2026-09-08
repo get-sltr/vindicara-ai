@@ -478,7 +478,9 @@ air anchor <chain>        Force-emit an anchor record covering the unanchored ta
 air explain <chain>       Causal explanation: --step <id> | --finding <detector_id>
 air incident <chain>      Incident timeline: what executed, under whose authority, where evidence is missing (beta)
 air health <chain|dir>    Evidence health: eight checks, exit non-zero on failure (beta)
+air login                 Sign in; get your workspace and API key (shown once), saved for push and grant
 air grant                 Pull this workspace's entitlement grant from the console (all tiers)
+air push <chain>          Mirror a chain file to AIR Cloud and print its Flightdeck run link
 air approve               Layer 3 step-up approval: --token | --device | --authorize-url
 air report article72      Generate EU AI Act Article 72 post-market monitoring template
 air report security-review  Answer an enterprise security review from the agent's own chain (beta)
