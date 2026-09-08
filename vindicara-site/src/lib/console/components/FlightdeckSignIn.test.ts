@@ -8,7 +8,7 @@ describe('FlightdeckSignIn', () => {
 	it('uses the configured Auth0 social connections', () => {
 		expect(source).toContain("beginAuth0Login('google-oauth2')");
 		expect(source).toContain("beginAuth0Login('github')");
-		expect(source).toContain('class="rim-glow"');
+		expect(source).toContain('beginAuth0Login()');
 	});
 
 	it('keeps two cards and no terminal in the trust rail', () => {

@@ -29,14 +29,15 @@
   </section>
   <aside class="right" aria-label="Project AIR trust details">
     <p class="label">What Flightdeck adds to your agent operations</p>
-    <article><h2><i class="ok">✓</i>Signed local evidence</h2><p>AIR records signed Intent Capsules where your agents run, so your evidence chain stays under your control.</p></article>
-    <article><h2><i class="alert">↗</i>Findings you can inspect</h2><p>Investigate <strong>10 OWASP Agentic, 3 OWASP LLM, and 3 AIR-native</strong> detector signals in one place.</p></article>
+    <article><h2><i class="ok">✓</i>Signed local evidence</h2><p><span class="air">AIR</span> records signed Intent Capsules where your agents run, so your evidence chain stays under your control.</p></article>
+    <article><h2><i class="alert">↗</i>Findings you can inspect</h2><p>Investigate <strong>10 OWASP Agentic, 3 OWASP LLM, and 3 <span class="air">AIR</span>-native</strong> detector signals in one place.</p></article>
     <div class="badges"><span><i></i>BLAKE3 + signatures</span><span><i></i>Auth0 PKCE</span><span><i></i>16 detectors</span></div>
     <div class="sectors"><span>Developers</span><span>Security teams</span><span>Regulated systems</span></div>
   </aside>
 </div>
 
 <style>
+  .air { color: var(--air, #e63946); font-weight: 700; }
   :global(html), :global(body) { margin:0; background:#070710; }
   :global(button), :global(a) { font:inherit; }
   :global(button:focus-visible), :global(a:focus-visible) { outline:3px solid #fff; outline-offset:3px; }
