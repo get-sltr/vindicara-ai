@@ -34,9 +34,14 @@
     }
   });
 
-  // Full-bleed pages that bring their own nav (no Rail): the Overview landing
-  // and the transient Auth0 callback/logout pages.
-  const bareShellPaths = ['/flightdeck', '/flightdeck/'];
+  // Full-bleed pages that bring their own nav (no Rail): the transient Auth0
+  // callback/logout pages and sign-in.
+  //
+  // /flightdeck used to be listed here as "the Overview landing", but the route
+  // renders Inbox, which has no nav of its own. That made the landing screen a
+  // dead end: no way to reach Keys, Runs, or anything else without editing the
+  // URL. It now gets the standard shell like every other screen.
+  const bareShellPaths: string[] = [];
   let overviewShell = $derived(
     bareShellPaths.includes($page.url.pathname) || $page.url.pathname.startsWith('/flightdeck/auth/') || $page.url.pathname.startsWith('/flightdeck/sign-in/')
   );
