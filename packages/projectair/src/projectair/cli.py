@@ -1080,10 +1080,11 @@ def version() -> None:
 
 def _pro_unavailable_message() -> str:
     return (
-        "Pro features require the projectair-pro package.\n\n"
+        "Pro features require the projectair-pro package and a paid grant.\n\n"
         "  pip install projectair-pro\n"
-        "  air install-license --license <token>\n\n"
-        "Buy a license at https://vindicara.io/pricing"
+        "  air grant                                (pull your workspace grant from the console)\n"
+        "  air install-license --license <token>    (or a token you were handed)\n\n"
+        "Buy at https://vindicara.io/pricing"
     )
 
 
@@ -1285,14 +1286,14 @@ def status() -> None:
 @app.command()
 def upgrade() -> None:
     """Print the upgrade URL and what each tier unlocks."""
-    typer.secho("Project AIR tiers (retention-metered)", fg=typer.colors.BRIGHT_WHITE, bold=True)
+    typer.secho("Project AIR tiers", fg=typer.colors.BRIGHT_WHITE, bold=True)
     typer.echo("")
-    typer.echo("  Free          $0          air demo + air trace (16 detectors, printed)")
+    typer.echo("  Free          $0          everything local: demo, trace, watch, explain, incident, health, 16 detectors")
     typer.echo("  Pro           $25/mo      hosted FlightDeck, anchoring, evidence packs, reports")
     typer.echo("  Team          $599/mo     1-year retention for your whole team (SOC 2 window)")
     typer.echo("  Enterprise    Talk to us  6-year retention, self-hosted, SSO/RBAC, BAA")
     typer.echo("")
-    typer.echo("How long you keep the record is the only lever that moves price.")
+    typer.echo("Everything on your machine is free and open source; the hosted product and the packs are paid.")
     typer.echo("https://vindicara.io/pricing")
 
 
