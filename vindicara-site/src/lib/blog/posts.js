@@ -9,13 +9,6 @@ export const posts = [
     date: '2026-07-01'
   },
   {
-    title: 'Introducing Axiisium',
-    description: "Vindicara's healthcare initiative: multimodal AI for acute myeloid leukemia that fuses pathology, flow, cytogenetics, molecular, and clinical data, with every decision a signed, audit-ready record.",
-    tag: 'Initiative',
-    href: '/blog/introducing-axiisium',
-    date: '2026-06-26'
-  },
-  {
     title: 'An NVIDIA-backed second opinion, signed',
     description: 'How NemoGuard NIM classifier verdicts become signed detector findings in the AIR evidence chain.',
     tag: 'Engineering',

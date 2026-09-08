@@ -23,7 +23,6 @@
   <div class="bar">
     <a class="logo" href="/home"><img src="/plane.svg" alt="" class="logo-img" /><span class="wordmark"><span class="proj">project</span> <span class="airw">AIR</span><span class="tm">™</span></span></a>
     <nav>
-      <a class="nav-item lead" href="https://axiisium.com">Axiisium</a>
       <button class="nav-item" class:on={openMenu==='solutions'} onclick={(e)=>{ e.stopPropagation(); toggleMenu('solutions'); }}>Solutions <span class="car">▾</span></button>
       <button class="nav-item" class:on={openMenu==='products'} onclick={(e)=>{ e.stopPropagation(); toggleMenu('products'); }}>Products <span class="car">▾</span></button>
       <button class="nav-item" class:on={openMenu==='company'} onclick={(e)=>{ e.stopPropagation(); toggleMenu('company'); }}>Company <span class="car">▾</span></button>
@@ -86,7 +85,6 @@
         </div>
       </a>
       <div class="prod-grid">
-        <a class="pcard ax" href="https://axiisium.com"><div class="pc-h">Axiisium</div><div class="pc-d">The Project AIR trust layer, proving out live on AML diagnosis.</div><div class="pc-l">See the flagship →</div></a>
         <a class="pcard" href="/audit"><div class="pc-h">Audit</div><div class="pc-d">The record you take into your audit.</div><div class="pc-l">Learn more →</div></a>
         <a class="pcard" href="/prove"><div class="pc-h">Prove</div><div class="pc-d">Signed, anchored, independently verifiable.</div><div class="pc-l">Learn more →</div></a>
         <a class="pcard" href="/protect"><div class="pc-h">Protect</div><div class="pc-d">Halt agents before harm, not after.</div><div class="pc-l">Learn more →</div></a>
@@ -105,7 +103,6 @@
       <div class="col">
         <h4>Company</h4>
         <a class="mi" href="/about"><span class="ic"></span><span><span class="mt">About</span><span class="md">Why we build the record</span></span></a>
-        <a class="mi" href="https://axiisium.com"><span class="ic"></span><span><span class="mt">Axiisium</span><span class="md">Our healthcare AI flagship</span></span></a>
         <a class="mi" href="/contact"><span class="ic"></span><span><span class="mt">Contact</span><span class="md">Talk to us</span></span></a>
         <a class="mi" href="/policy"><span class="ic"></span><span><span class="mt">Policy</span><span class="md">Evidence-based agent governance</span></span></a>
       </div>
@@ -123,7 +120,6 @@
       </div>
       <div class="col hl">
         <h4>Highlights</h4>
-        <a class="hcard feat" href="https://axiisium.com"><div class="ht">Axiisium</div><div class="hd">Our healthcare flagship: multimodal AI for blood cancer, built to be provable.</div></a>
         <a class="hcard" href="https://github.com/vindicara-inc/projectair" target="_blank" rel="noopener"><div class="ht">Open source on PyPI</div><div class="hd">Apache-2.0-licensed. Install projectair and verify every line.</div></a>
       </div>
     </div>
@@ -153,8 +149,6 @@
   .nav-item:hover,.nav-item.on{color:#fff;background:rgba(255,255,255,.07)}
   .nav-item .car{font-size:10px;color:var(--faint);transition:transform .15s}
   .nav-item.on .car{transform:rotate(180deg);color:var(--air2)}
-  .nav-item.lead{color:var(--ax2);font-weight:700;text-decoration:none}
-  .nav-item.lead:hover{background:var(--axbg);color:var(--ax2)}
   .right{display:flex;align-items:center;gap:8px}
   .ghost{color:var(--white);font-size:14px;text-decoration:none;padding:9px 12px;font-weight:500;border-radius:8px;background:none;border:0;font-family:inherit;cursor:pointer}
   .ghost:hover{color:#fff;background:rgba(255,255,255,.07)}
@@ -181,7 +175,6 @@
   .hl h4{color:var(--air2)}
   .hcard{display:block;text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:15px;margin-bottom:11px;background:var(--raise)}
   .hcard:hover{border-color:var(--air)}
-  .hcard.feat{background:linear-gradient(180deg,var(--airbg),var(--raise));border-color:rgba(230,57,70,.5)}
   .hcard .ht{font-size:15px;font-weight:700;color:var(--white)}
   .hcard .hd{font-size:12px;color:var(--soft);margin-top:4px;line-height:1.45}
   .mega-rich{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:300px 1fr;gap:18px;padding:22px 28px 28px}
@@ -197,9 +190,6 @@
   .pc-h{color:#fff;font-weight:700;font-size:15px}
   .pc-d{color:var(--soft);font-size:12.5px;margin-top:5px;line-height:1.42;flex:1}
   .pc-l{color:var(--air2);font-size:12px;font-weight:600;margin-top:12px}
-  .pcard.ax{border-color:rgba(244,123,32,.35)}
-  .pcard.ax:hover{border-color:var(--ax)}
-  .pcard.ax .pc-l{color:var(--ax2)}
   @media(max-width:880px){ .mega-in{grid-template-columns:1fr 1fr} .prod-grid{grid-template-columns:1fr 1fr} }
   /* nav / .right are hidden by industry.css at <=900; the burger (no global rule
      competes for it) is shown here at the same breakpoint so they swap in lockstep. */

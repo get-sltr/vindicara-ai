@@ -159,7 +159,6 @@
 
   <nav class="skip">
     <a href="/home">Project <span class="airx">AIR</span> →</a>
-    <a href="https://axiisium.com"><span class="axix">AXIISIUM</span> →</a>
   </nav>
 
   <div class="wordmark">
@@ -173,7 +172,7 @@
     <p>Vindicara builds the accountability layer for AI agents. Our product, Project AIR, produces signed, tamper-evident, and independently verifiable records of what an AI agent did and who authorized it, so every automated action traces back to a named human.</p>
     <p>Project AIR spans detection (surfacing what went wrong), verification (proving the record is real), explanation (showing why an action happened), containment (halting an agent and binding the action to a human approval), and cross-agent trust (preserving the chain of custody when one agent delegates to another). It ships as an open-source SDK and command-line tool on PyPI, alongside hosted and enterprise tiers.</p>
     <p>Teams adopt Vindicara three ways: by industry, such as healthcare; by use case, such as audit readiness; and by compliance framework, such as SOC 2. Vindicara runs Project AIR on its own production infrastructure and publishes a verifiable record of its own operations.</p>
-    <p>Read more on our <a href="/about">About</a> page, explore the product on the <a href="/home">Project AIR</a> page, see <a href="/pricing">pricing</a>, or view our flagship medical AI at <a href="https://axiisium.com">Axiisium</a>.</p>
+    <p>Read more on our <a href="/about">About</a> page, explore the product on the <a href="/home">Project AIR</a> page, or see <a href="/pricing">pricing</a>.</p>
   </section>
 
   {#if !entered}
@@ -234,7 +233,6 @@
   .skip a{font-family:ui-monospace, Menlo, Consolas, monospace;font-size:14px;letter-spacing:.04em;color:#F7FAFF;text-decoration:none;border-bottom:1px solid transparent;opacity:.9}
   .skip a:hover{opacity:1;border-bottom-color:#cdd8ec}
   .airx{color:#ff5763;font-weight:700}
-  .axix{color:#F47B20;font-weight:700}
 
   .wordmark{position:absolute;top:11vh;left:0;right:0;z-index:4;text-align:center;pointer-events:none}
   .wordmark h1{margin:0;font-family:'Spectral',serif;font-weight:600;font-size:clamp(40px,9vw,118px);letter-spacing:.14em;line-height:.9;color:#F7FAFF;text-indent:.14em;text-shadow:0 4px 60px rgba(0,0,0,.6)}

@@ -78,6 +78,14 @@ export async function handle({ event, resolve }) {
   // Axiisium now has its own product site (axiisium.com). The old vindicara.io
   // /axiisium pages are stale; send the whole tree there with a permanent redirect
   // so there is one canonical, polished destination.
+  // The /blog/introducing-axiisium post was removed with the rest of the
+  // Axiisium content; it was indexed, so forward it rather than 404.
+  if (event.url.pathname === '/blog/introducing-axiisium') {
+    return new Response(null, {
+      status: 301,
+      headers: { location: 'https://axiisium.com' }
+    });
+  }
   if (event.url.pathname === '/axiisium' || event.url.pathname.startsWith('/axiisium/')) {
     return new Response(null, {
       status: 301,
