@@ -28,7 +28,7 @@ dependencies = [
     # Mirror projectair's core cryptography floor so pip can resolve both together.
     # The license gate only needs Ed25519; ML-DSA-65 (cryptography>=48) is opt-in
     # via the [pqc] extra, identical to projectair's split.
-    "cryptography>=42.0.0,<47.0",
+    "cryptography>=42.0.0,<51.0",
 ]
 
 [project.optional-dependencies]
@@ -48,7 +48,7 @@ s3 = [
 # Post-quantum signing (ML-DSA-65 / FIPS 204). Mirrors projectair[pqc]; needed
 # only when the deployment signs chains with ML-DSA rather than the default Ed25519.
 pqc = [
-    "cryptography>=48.0.0,<49.0",
+    "cryptography>=48.0.0,<51.0",
 ]
 # HL7 v2 / FHIR clinical sidecar. Optional heavy dependency; when absent the
 # top-level `airsdk_pro` import degrades gracefully (the sidecar names are None)
