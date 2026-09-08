@@ -30,7 +30,7 @@ subscription.
 
 4. OPEN-SOURCE COMPONENT
 This Software depends on the projectair Python package, which is
-distributed under the MIT License. The MIT-licensed projectair package
+distributed under the Apache License 2.0. The Apache-2.0-licensed projectair package
 remains freely available for any use under its own terms. This commercial
 license applies only to projectair-pro.
 

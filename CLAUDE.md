@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Project AIR by Vindicara: forensic accountability SDK for AI agents. MIT CLI (`air`) + library (`airsdk`) on PyPI as `projectair`; paid tiers are the hosted product and the Pro package (open core). Layered architecture: detection (0), external trust anchor (1), causal reasoning (2), containment (3), cross-agent trust (4), structural verification + data governance (5, Pro).
+Project AIR by Vindicara: forensic accountability SDK for AI agents. Apache-2.0 CLI (`air`) + library (`airsdk`) on PyPI as `projectair` (MIT through 1.3.1); paid tiers are the hosted product and the Pro package (open core). Layered architecture: detection (0), external trust anchor (1), causal reasoning (2), containment (3), cross-agent trust (4), structural verification + data governance (5, Pro).
 
 Routine code edits only need this file. Product decisions, external copy, and subsystem design: read `docs/SPEC.md`, `docs/ARCHITECTURE.md`, `docs/STANDARDS.md`, `docs/DETECTORS.md` (see **Detailed docs** at the bottom).
 
@@ -17,7 +17,7 @@ Rule: "Project AIR" on hero pages, pitch decks, whitepapers, legal, press, inves
 
 ## Current state (verified 2026-09-06)
 
-- `projectair` **1.3.1** on PyPI (2026-07-23); working tree is **1.4.0** (unreleased). The license is **MIT and stays MIT**: 1.4.0 is the first release under the tiered open-core model (free MIT core on your machine; paid hosted tiers, see `packages/projectair/LICENSING.md`). A BSL 1.1 move was drafted and rejected on 2026-09-07; do not propose license changes. Python 3.10+, PyPI classifier Production/Stable. Full lineage in `packages/projectair/CHANGELOG.md`; milestones: 0.3.0 (10/10 OWASP Agentic), 0.4.0 (Layer 1), 0.5.0 (Layer 2), 0.6.0 (Layer 3), 0.7.0 (Layer 4 Wave 1), 0.8.0 (ML-DSA-65), 0.9.0 (NVIDIA NeMo/NemoGuard), 1.0.0 (Structural Verification + Data Governance), 1.1.0 (`air watch`, GPU attestation, key custody, delegation, Layer 4 Wave 2), 1.2.0 (`[anchoring]` extra), 1.3.0 (pressure-test hardening: `meta_signed`, fail-closed handoff verify, provenance capture, PHI `ReferenceVault`, ALCOA+, Part 11 e-signatures, `[pqc]` extra), 1.3.1 (first-run capture repointed to `cloud.vindicara.io`; free tier stripped to `air demo` + `air trace`), 1.4.0 (live alerts, `air watch` free, security-review pack, `air incident`, `air health`, Pro $25).
+- `projectair` **1.3.1** on PyPI (2026-07-23); working tree is **1.4.0** (unreleased). The license is **Apache License 2.0 from 1.4.0** (MIT through 1.3.1; the user chose Apache 2.0 on 2026-09-07 so the whole repo is under one license); 1.4.0 is the first release under the tiered open-core model (free open-source core on your machine; paid hosted tiers, see `packages/projectair/LICENSING.md`). A BSL 1.1 move was drafted and rejected the same day; do not propose license changes. Python 3.10+, PyPI classifier Production/Stable. Full lineage in `packages/projectair/CHANGELOG.md`; milestones: 0.3.0 (10/10 OWASP Agentic), 0.4.0 (Layer 1), 0.5.0 (Layer 2), 0.6.0 (Layer 3), 0.7.0 (Layer 4 Wave 1), 0.8.0 (ML-DSA-65), 0.9.0 (NVIDIA NeMo/NemoGuard), 1.0.0 (Structural Verification + Data Governance), 1.1.0 (`air watch`, GPU attestation, key custody, delegation, Layer 4 Wave 2), 1.2.0 (`[anchoring]` extra), 1.3.0 (pressure-test hardening: `meta_signed`, fail-closed handoff verify, provenance capture, PHI `ReferenceVault`, ALCOA+, Part 11 e-signatures, `[pqc]` extra), 1.3.1 (first-run capture repointed to `cloud.vindicara.io`; free tier stripped to `air demo` + `air trace`), 1.4.0 (live alerts, `air watch` free, security-review pack, `air incident`, `air health`, Pro $25).
 - `projectair-pro` **0.8.0** (`airsdk_pro`, commercial, not on PyPI; requires `projectair>=1.3.0,<2.0`, Python 3.12+). License = locally verified Ed25519-signed token at `~/.airsdk/license.json`; no phone-home at check time. The token is a **console grant**: `GET /v1/entitlements/grant` on AIR Cloud mints it from the workspace's `tier` (free / pro / team / enterprise, 30-day lifetime) and `air grant` installs it; every tier gets one, and a free grant unlocks nothing (`LicenseToken.is_paid`, `is_pro_active()`, `@requires_pro`, and the CLI gate all require a paid tier). Emailed Stripe tokens still install via `air install-license`. Feature strings come only from `airsdk.features` (single source of truth shared by the issuer in `vindicara.licensing`, the `@requires_pro` gate in `airsdk_pro.gate`, and the console).
 - `vindicara` engine **0.3.0** in-repo (Apache-2.0; 0.2.0 is the last confirmed PyPI release, 0.1.0 yanked). Positioned as "server-side engine behind AIR Cloud."
 - AgDR schema **v0.7** (`AGDR_VERSION` in `airsdk/types.py`). Records set `meta_signed=True`: the signature covers step_id / timestamp / kind / signature_algorithm plus prev_hash + content_hash. Legacy records without `meta_signed` verify over prev_hash + content_hash unchanged.
@@ -39,7 +39,7 @@ Rule: "Project AIR" on hero pages, pitch decks, whitepapers, legal, press, inves
 
 ## Repo map
 
-- `packages/projectair/` -- the product. MIT `air` CLI (`src/projectair/`) + `airsdk` library (`src/airsdk/`). Own `pyproject.toml`, tests, scripts, CHANGELOG.
+- `packages/projectair/` -- the product. Apache-2.0 `air` CLI (`src/projectair/`) + `airsdk` library (`src/airsdk/`). Own `pyproject.toml`, tests, scripts, CHANGELOG.
 - `packages/projectair-pro/` -- `airsdk_pro`: license gate, AIR Cloud client, SIEM emitters, alerts, HL7, governance, premium detectors, NIST AI RMF + SOC2-AI reports, `serve.py` (self-hosted server entry). Not on PyPI.
 - `packages/air-dashboard/` -- AIR Cloud dashboard (SvelteKit 2, Svelte 5, Tailwind 4, Three.js, Vitest, static adapter, bundle budget).
 - `vindicara-site/` -- the deployed product site AND the Flightdeck console (`src/lib/console/`, Auth0 PKCE, live `/v1/*` API). SvelteKit 2 + Svelte 5 + Tailwind 4, adapter-node. Its `Dockerfile` is both the vindicara.io image and the self-hostable Flightdeck artifact.
@@ -52,7 +52,7 @@ Rule: "Project AIR" on hero pages, pitch decks, whitepapers, legal, press, inves
 - Root strays: `bedrock_chat.py` (Gradio Bedrock chat), `air-demo-out/`, `air-demo-registry.yaml`, `PRESSURE_TEST_2026-06-22.md` + `FIXES_APPLIED_2026-06-22.md` (audit trail), `AGENTS.md` (Codex mirror of an older CLAUDE.md; stale).
 - When the user says "the dashboard," confirm which: `packages/air-dashboard`, Flightdeck (`vindicara-site` `/dashboard`), or legacy `src/vindicara/dashboard/`.
 
-Pitch the split as **open core on a Snyk-style funnel, the Langfuse / LangSmith model: MIT CLI + SDK free on your own machine, hosted FlightDeck and evidence packs from $25/month, Team and Enterprise for shared retention and self-hosting**.
+Pitch the split as **open core on a Snyk-style funnel, the Langfuse / LangSmith model: Apache-2.0 CLI + SDK free on your own machine, hosted FlightDeck and evidence packs from $25/month, Team and Enterprise for shared retention and self-hosting**.
 
 ## Commands
 

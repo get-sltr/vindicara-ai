@@ -173,7 +173,7 @@ Project AIR's cryptographic chain prevents **in-file** tampering. It does **not*
 - **Authentication**: each record carries the signer's public key. Any party can verify the signature offline.
 - **Chain linkage**: each record is cryptographically bound to its predecessor. Records cannot be reordered or silently deleted without detection.
 - **Forensic report**: `forensic-report.json` is an auditor-readable artifact that includes verification status, detected findings, and record count.
-- **Open-source verifier**: `air trace` and `airsdk.verify_chain` are MIT-licensed. No dependency on Project AIR infrastructure.
+- **Open-source verifier**: `air trace` and `airsdk.verify_chain` are Apache-2.0-licensed. No dependency on Project AIR infrastructure.
 
 ### What operators must provide
 
@@ -238,7 +238,7 @@ No pre-image attack, collision attack, or signature forgery is known against Ed2
 >
 > 7. The attached records have been verified using the ``air trace`` command. The verification output is attached as **Exhibit A** to this certification. The chain verified with status **"ok"** for **[N]** records.
 >
-> 8. The cryptographic primitives used are industry-standard, open, and independently reproducible. Ed25519 is specified in RFC 8032. BLAKE3 is specified in the BLAKE3 reference specification. The Project AIR verifier source code is MIT-licensed and available at https://github.com/vindicara-inc/projectair.
+> 8. The cryptographic primitives used are industry-standard, open, and independently reproducible. Ed25519 is specified in RFC 8032. BLAKE3 is specified in the BLAKE3 reference specification. The Project AIR verifier source code is Apache-2.0-licensed and available at https://github.com/vindicara-inc/projectair.
 >
 > I declare under penalty of perjury under the laws of **[Jurisdiction]** that the foregoing is true and correct.
 >
@@ -273,6 +273,6 @@ Admissibility by Design means the architecture does not stand in your way. Every
 
 ---
 
-*Project AIR is maintained by Vindicara. The ``projectair`` package is MIT-licensed. Source code at https://github.com/vindicara-inc/projectair. For questions about this document, contact eng@vindicara.io.*
+*Project AIR is maintained by Vindicara. The ``projectair`` package is Apache-2.0-licensed. Source code at https://github.com/vindicara-inc/projectair. For questions about this document, contact eng@vindicara.io.*
 
 *Last reviewed: [date]. This document will be updated as rules evolve; subscribe at vindicara.io for notifications.*

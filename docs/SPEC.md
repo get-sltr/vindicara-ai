@@ -75,7 +75,7 @@ We are NOT a gateway. We are NOT an observability tool. We are the policy enforc
 Previous drafts enumerated five separate pillars (SDK, MCP scanner, Agent IAM, Compliance, Drift Detection). Post-AIR-pivot those are no longer separate product lines; they are detector surfaces and library features that all ship in the OSS `projectair` package. The business is now three tiers stacked on the same technical substrate.
 
 **Pillar 1: Project AIR OSS (land)**
-`pip install projectair`. MIT. The `air` CLI and `airsdk` Python library. 10 OWASP Agentic ASI detectors (ASI01–ASI10), 3 OWASP LLM Top 10 detectors, 1 AIR-native chain-integrity check, signed Intent Capsule chain, agent registry for Zero-Trust enforcement, Article 72 Markdown template generator. Lives in developer workflows, gets embedded in agent code, produces signed forensic records. Every install is a hook for the expand motion.
+`pip install projectair`. Apache 2.0. The `air` CLI and `airsdk` Python library. 10 OWASP Agentic ASI detectors (ASI01–ASI10), 3 OWASP LLM Top 10 detectors, 1 AIR-native chain-integrity check, signed Intent Capsule chain, agent registry for Zero-Trust enforcement, Article 72 Markdown template generator. Lives in developer workflows, gets embedded in agent code, produces signed forensic records. Every install is a hook for the expand motion.
 
 **Pillar 2: AIR Cloud (Team tier, $1,499/mo, expand)**
 Hosted ingestion, incident dashboard, SIEM export, alerting, cross-trace correlation, multi-user agent registry management. Built for security and platform teams that have agents in production and need a managed incident-response surface rather than running `air trace` by hand. The upgrade path once OSS is in the daily workflow.
@@ -89,7 +89,7 @@ Three tiers. The bottom-of-funnel developer-only tiers from earlier drafts ($49/
 
 | Tier | Price | What You Get |
 |------|-------|-------------|
-| **Open Source** | Free, MIT, forever | `air` CLI + `airsdk` Python SDK. 10 OWASP Agentic ASI detectors + 3 OWASP LLM categories + 1 AIR-native chain-integrity check. LangChain / OpenAI / Anthropic instrumentation. Signed Intent Capsule chain (BLAKE3 + Ed25519, AgDR format). JSON / PDF / SIEM-CEF forensic export. Agent registry (YAML/JSON) for ASI03/ASI10 Zero-Trust enforcement. Article 72 Markdown template generator. Community support. |
+| **Open Source** | Free, Apache 2.0, forever | `air` CLI + `airsdk` Python SDK. 10 OWASP Agentic ASI detectors + 3 OWASP LLM categories + 1 AIR-native chain-integrity check. LangChain / OpenAI / Anthropic instrumentation. Signed Intent Capsule chain (BLAKE3 + Ed25519, AgDR format). JSON / PDF / SIEM-CEF forensic export. Agent registry (YAML/JSON) for ASI03/ASI10 Zero-Trust enforcement. Article 72 Markdown template generator. Community support. |
 | **Team (AIR Cloud)** | $1,499/mo | Everything in Open Source. Hosted incident dashboard, up to 25 agents. SIEM export (Datadog, Splunk, Sumo, Sentinel). Incident workflows + alerting (Slack, email, PagerDuty, webhook). Shared agent registry. Cloud retention and cross-trace correlation. Email and Slack support. |
 | **Enterprise** | $50K–$250K ACV | Everything in Team. SSO / SAML / RBAC. Branded, regulator-ready PDF evidence (EU AI Act Article 72, SB 53, SOC 2, NIST AI RMF). Multi-system compliance aggregation. Insurance carrier integrations. On-prem / VPC / air-gapped deployment. Dedicated IR contact, SLA, BAA. Unlimited agents and records. |
 

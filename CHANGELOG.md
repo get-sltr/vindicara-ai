@@ -2,7 +2,7 @@
 
 All notable changes to `vindicara` (the engine substrate) are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
-The MIT-licensed developer SDK ships as `projectair` and has its own changelog at `packages/projectair/CHANGELOG.md`.
+The Apache-2.0-licensed developer SDK ships as `projectair` and has its own changelog at `packages/projectair/CHANGELOG.md`.
 
 ## [0.3.0] - 2026-05-08
 

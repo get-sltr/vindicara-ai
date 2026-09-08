@@ -24,7 +24,7 @@ network, no phone-home.
 
 ## Build
 
-Build from the repo root (the image needs all three packages: the MIT SDK, the
+Build from the repo root (the image needs all three packages: the Apache-2.0 SDK, the
 engine, and the commercial gate):
 
 ```bash

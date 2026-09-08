@@ -69,7 +69,7 @@ _ENTERPRISE_FEATURES: tuple[str, ...] = (
     F.HL7_FHIR,
 )
 
-#: Free tier grants nothing: everything that runs locally is MIT and ungated,
+#: Free tier grants nothing: everything that runs locally is open source and ungated,
 #: so the grant exists only to say "this workspace is on the free tier".
 _FREE_FEATURES: tuple[str, ...] = ()
 

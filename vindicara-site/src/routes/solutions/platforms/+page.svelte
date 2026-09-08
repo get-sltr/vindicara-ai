@@ -90,7 +90,7 @@
       <div class="mr rv"><div class="demand">Give every customer their own evidence?</div><div class="answer"><span class="layer">Multi-tenant</span>Per-tenant signed chains, cryptographically isolated, one customer never sees another.</div></div>
       <div class="mr rv"><div class="demand">Prove not just what, but why?</div><div class="answer"><span class="layer">Causal</span>Causal graph plus counterfactual replay — intent observability, not just execution.</div></div>
       <div class="mr rv"><div class="demand">Map one record to whatever framework they cite?</div><div class="answer"><span class="layer">Report</span>One AgDR record → SOC 2 · ISO 42001 · EU AI Act · NIST evidence.</div></div>
-      <div class="mr rv"><div class="demand">Ship it as your own feature?</div><div class="answer"><span class="layer">Embed</span>The MIT <code>airsdk</code> under your brand; "powered by AIR" is optional.</div></div>
+      <div class="mr rv"><div class="demand">Ship it as your own feature?</div><div class="answer"><span class="layer">Embed</span>The Apache-2.0 <code>airsdk</code> under your brand; "powered by AIR" is optional.</div></div>
       <div class="mr rv"><div class="demand">Survive agent-to-agent handoffs?</div><div class="answer"><span class="layer">Handoff</span>Cross-agent chain of custody — the AgDR Handoff Protocol carries proof across delegations.</div></div>
     </div>
   </section>
@@ -142,7 +142,7 @@
         <a class="pb" href="/contact">Talk to us</a>
       </div>
     </div>
-    <p class="payline">The OSS <span class="air">AIR</span> SDK is on PyPI today, MIT-licensed: start embedding in an afternoon, then turn on multi-tenant chains, replay and framework reports when your customers ask.</p>
+    <p class="payline">The OSS <span class="air">AIR</span> SDK is on PyPI today, Apache-2.0-licensed: start embedding in an afternoon, then turn on multi-tenant chains, replay and framework reports when your customers ask.</p>
   </section>
 
   <!-- close -->

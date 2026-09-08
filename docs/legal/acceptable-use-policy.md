@@ -118,7 +118,7 @@ The following categories of use are expressly acceptable under this AUP, assumin
 - Evaluating detector coverage against your own adversarial test suites.
 - Conducting authorized security research in accordance with applicable law, including but not limited to research you publish responsibly (see the Security Disclosure Policy).
 - Integrating Project AIR™ output into your own SIEM, alerting, incident-response, or compliance pipeline.
-- Using the OSS Software for educational, research, journalism, or non-commercial purposes in accordance with the MIT License.
+- Using the OSS Software for educational, research, journalism, or non-commercial purposes in accordance with the Apache License 2.0.
 - Contributing to the Project AIR™ open-source codebase in accordance with the applicable contribution terms.
 
 ## 5. Reporting Abuse

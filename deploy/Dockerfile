@@ -23,7 +23,7 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /app
 
-# Source for all three packages: the MIT SDK (projectair), the Apache engine
+# Source for all three packages: the Apache-2.0 SDK (projectair), the Apache engine
 # that owns vindicara.cloud (vindicara), and the commercial gate (projectair-pro).
 COPY pyproject.toml README.md ./
 COPY src/ ./src/

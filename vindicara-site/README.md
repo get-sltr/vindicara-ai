@@ -46,7 +46,7 @@ src/
 ## What is real vs placeholder (so nobody overstates it)
 
 - **Blog** links three posts that are live on vindicara.io today; new entries get added to the index.
-- **Press** states only verifiable facts (Delaware C-Corp, April 2026, MIT OSS, NVIDIA Inception). The releases block is a labeled template. No coverage is invented.
+- **Press** states only verifiable facts (Delaware C-Corp, April 2026, Apache 2.0 OSS, NVIDIA Inception). The releases block is a labeled template. No coverage is invented.
 - **Terms** is a structural template with standard headings, clearly marked: it needs a lawyer before publishing.
 - **Contact** form validates and confirms in-page; wire it to a real form endpoint or email service (`submit()` in `contact/+page.svelte`).
 - Carrier and SIEM names are integrations/targets, not announced partnerships.

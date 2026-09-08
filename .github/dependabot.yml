@@ -26,7 +26,7 @@ updates:
           - patch
 
   # ---------- pip ----------
-  # public MIT package on PyPI (highest priority)
+  # public Apache-2.0 package on PyPI (highest priority)
   - package-ecosystem: pip
     directory: "/packages/projectair"
     schedule:

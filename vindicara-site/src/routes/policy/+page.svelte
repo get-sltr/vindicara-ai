@@ -48,7 +48,7 @@
     },
     {
       n: 'Open source and independent verification',
-      d: 'Trust should not be a prerequisite for accountability. The core of Project AIR is MIT-licensed and public on PyPI. We dogfood it: every request to this site is recorded with the same library we ship and anchored to a log anyone can inspect, with zero Vindicara infrastructure in the path.'
+      d: 'Trust should not be a prerequisite for accountability. The core of Project AIR is Apache-2.0-licensed and public on PyPI. We dogfood it: every request to this site is recorded with the same library we ship and anchored to a log anyone can inspect, with zero Vindicara infrastructure in the path.'
     },
     {
       n: 'Honest disclosure',
@@ -83,7 +83,7 @@
     <h2>Philosophy &amp; approach</h2>
     <p>We expect AI agents to run a growing share of the work that matters, and to make consequential decisions without a human watching each step. That is the premise of the technology, and it is not going away. The open question is not whether agents will act on their own. It is whether anyone will be able to prove what they did when it counts.</p>
     <p>Accountability cannot be retrofitted. A log written after the fact, by the same system that may have failed, is not evidence. It can be incomplete, it can be edited, and it asks a regulator or a court to simply trust the operator. We take the opposite position: the record has to be created at the moment of action, signed in the process that took it, anchored to a public transparency log, and bound to the human who authorized it. Then it is evidence anyone can check without trusting us.</p>
-    <p>This is why Project AIR ships as open source under the MIT license. Accountability infrastructure that asks you to trust a black box reproduces the problem it claims to solve. The CLI, the SDK, and the record format are public, and any chain can be verified with no Vindicara infrastructure in the path.</p>
+    <p>This is why Project AIR ships as open source under the Apache License 2.0. Accountability infrastructure that asks you to trust a black box reproduces the problem it claims to solve. The CLI, the SDK, and the record format are public, and any chain can be verified with no Vindicara infrastructure in the path.</p>
     <p>We also believe the industry should not write these rules alone. Standards bodies, regulators, and the courts set the bar that makes evidence portable and comparable across vendors. Our work is to make sure that bar is technically achievable today, and grounded in how agents actually behave rather than how anyone wishes they did.</p>
 
     <h2>Our policy priorities</h2>

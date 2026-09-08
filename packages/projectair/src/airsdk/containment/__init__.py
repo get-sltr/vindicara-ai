@@ -19,7 +19,7 @@ The package ships:
 
 The hosted approval router (challenge dispatch, tenant management,
 audit reports) lives in the commercial ``projectair-pro`` tier. The
-MIT package is the primitive every tier builds on; an OSS user with
+Apache-2.0 package is the primitive every tier builds on; an OSS user with
 their own Auth0 tenant can wire all of this up directly.
 """
 from __future__ import annotations

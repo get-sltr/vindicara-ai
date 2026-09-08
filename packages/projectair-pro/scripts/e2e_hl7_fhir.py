@@ -1,7 +1,7 @@
 """E2E demo: HL7v2 clinical evidence sidecar.
 
 Demonstrates the full HL7v2 pipeline without requiring a Pro license:
-  - parse_hl7v2, map_to_fhir, project_for_chain, RedactionPolicy are MIT-tier
+  - parse_hl7v2, map_to_fhir, project_for_chain, RedactionPolicy are OSS-tier
   - instrument_hl7 and ClinicalSidecar are Pro-gated (not used here)
 
 Usage:

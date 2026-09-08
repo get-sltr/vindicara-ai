@@ -19,7 +19,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square" alt="Python 3.10+">
-  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT">
+  <img src="https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square" alt="Apache 2.0">
   <img src="https://img.shields.io/pypi/v/projectair?style=flat-square&color=blue" alt="PyPI">
 </p>
 
@@ -86,7 +86,7 @@ Total: **16 detectors** (10 + 3 + 3) running over every chain, mapped to public 
 
 This is a monorepo.
 
-- **[`packages/projectair/`](packages/projectair/)**: the MIT-licensed `projectair` package on PyPI. Ships the `air` CLI and the `airsdk` Python library. This is the public product.
+- **[`packages/projectair/`](packages/projectair/)**: the Apache-2.0-licensed `projectair` package on PyPI. Ships the `air` CLI and the `airsdk` Python library. This is the public product.
 - **[`vindicara-site/`](vindicara-site/)**: the SvelteKit source for [vindicara.io](https://vindicara.io) and the Flightdeck console.
 - **`src/vindicara/`**: the Apache-2.0 engine substrate (policy evaluator, MCP scanner, agent IAM, drift monitor, compliance collector, ops chain). Powers AIR Cloud.
 - **[`packages/air-dashboard/`](packages/air-dashboard/)**: the AIR Cloud dashboard (SvelteKit + Three.js).
@@ -119,5 +119,5 @@ air attest                Hardware root of trust: NVIDIA NRAS attestation (exper
 
 ## License
 
-- `packages/projectair/` and the `projectair` PyPI distribution: **MIT**. See [`packages/projectair/LICENSE`](packages/projectair/LICENSE).
+- `packages/projectair/` and the `projectair` PyPI distribution: **Apache License 2.0** from 1.4.0 (MIT through 1.3.1). See [`packages/projectair/LICENSE`](packages/projectair/LICENSE).
 - `src/vindicara/` (engine substrate): **Apache-2.0**.

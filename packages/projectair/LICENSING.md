@@ -1,8 +1,10 @@
 # Licensing and tiers
 
 `projectair` (the `air` CLI and the `airsdk` library) is published under the
-[MIT License](LICENSE). It always has been, and 1.4.0 does not change that. Read it,
-build it, run it in production, verify records with it, fork it.
+[Apache License 2.0](LICENSE) from 1.4.0; versions through 1.3.1 remain MIT on PyPI.
+Apache 2.0 is as permissive as MIT and adds an explicit patent grant, and it is the
+license the Vindicara engine already uses, so the whole repository is under one license.
+Read it, build it, run it in production, verify records with it, fork it.
 
 What Vindicara sells is the hosted product and the artifacts around the record, the
 same open-core split Langfuse and LangSmith use:

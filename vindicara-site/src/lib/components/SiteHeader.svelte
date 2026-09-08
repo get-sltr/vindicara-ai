@@ -113,7 +113,7 @@
         <h4>Resources</h4>
         <a class="mi" href="/blog"><span class="ic"></span><span><span class="mt">Blog</span><span class="md">Writing on agent accountability</span></span></a>
         <a class="mi" href="/press"><span class="ic"></span><span><span class="mt">Press</span><span class="md">News &amp; coverage</span></span></a>
-        <a class="mi" href="https://github.com/vindicara-inc/projectair" target="_blank" rel="noopener"><span class="ic"></span><span><span class="mt">Docs &amp; GitHub</span><span class="md">MIT, read every line</span></span></a>
+        <a class="mi" href="https://github.com/vindicara-inc/projectair" target="_blank" rel="noopener"><span class="ic"></span><span><span class="mt">Docs &amp; GitHub</span><span class="md">Apache 2.0, read every line</span></span></a>
       </div>
       <div class="col">
         <h4>Community</h4>
@@ -124,7 +124,7 @@
       <div class="col hl">
         <h4>Highlights</h4>
         <a class="hcard feat" href="https://axiisium.com"><div class="ht">Axiisium</div><div class="hd">Our healthcare flagship: multimodal AI for blood cancer, built to be provable.</div></a>
-        <a class="hcard" href="https://github.com/vindicara-inc/projectair" target="_blank" rel="noopener"><div class="ht">Open source on PyPI</div><div class="hd">MIT-licensed. Install projectair and verify every line.</div></a>
+        <a class="hcard" href="https://github.com/vindicara-inc/projectair" target="_blank" rel="noopener"><div class="ht">Open source on PyPI</div><div class="hd">Apache-2.0-licensed. Install projectair and verify every line.</div></a>
       </div>
     </div>
   </div>

@@ -53,7 +53,7 @@
       <a class="btn-red" href="/get-started">Start free</a>
       <a class="bookd" href="/contact">Book a demo →</a>
     </div>
-    <div class="trustline">Open source · MIT · no credit card · verify it yourself</div>
+    <div class="trustline">Open source · Apache 2.0 · no credit card · verify it yourself</div>
     <div class="statchips">
       <div class="sc"><b>212</b> agents live</div>
       <div class="sc"><b>Ed25519</b> signed</div>
@@ -116,7 +116,7 @@
 </div>
 
 <div class="trust">
-  <span>OWASP Agentic</span><span>EU AI Act Art. 72</span><span>NIST AI RMF</span><span>FRE 902(13)–(14)</span><span>MIT open source</span>
+  <span>OWASP Agentic</span><span>EU AI Act Art. 72</span><span>NIST AI RMF</span><span>FRE 902(13)–(14)</span><span>Apache 2.0 open source</span>
 </div>
 </div>
 

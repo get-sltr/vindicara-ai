@@ -56,7 +56,7 @@
 <AppShell active="get-started" title="get started" scroll={true} dots={false}>
   <LiveMap />
   {#if installs}
-    <p class="gs-installs" style="text-align:center;font-family:var(--mono,ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);font-size:12px;letter-spacing:.05em;color:#9aa6bd;margin:0 0 14px;opacity:.9">{installs.toLocaleString()} installs in the last 30 days · MIT · on PyPI</p>
+    <p class="gs-installs" style="text-align:center;font-family:var(--mono,ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);font-size:12px;letter-spacing:.05em;color:#9aa6bd;margin:0 0 14px;opacity:.9">{installs.toLocaleString()} installs in the last 30 days · Apache 2.0 · on PyPI</p>
   {/if}
   <div class="gs">
     <header class="ghead reveal">

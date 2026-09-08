@@ -68,7 +68,7 @@
     <section class="blk">
       <div class="eyebrow">Built on standards</div>
       <h2>Open core. Independently verifiable.</h2>
-      <p class="lead bd">The SDK, CLI, signed evidence chain, and all 16 detectors are open source under MIT. The forensic record works offline by default and exports to any downstream system or auditor.</p>
+      <p class="lead bd">The SDK, CLI, signed evidence chain, and all 16 detectors are open source under the Apache License 2.0. The forensic record works offline by default and exports to any downstream system or auditor.</p>
       <div class="trust">
         <span>OWASP Top 10 for Agentic</span>
         <span>EU AI Act Article 72</span>
@@ -76,7 +76,7 @@
         <span>SOC 2</span>
         <span>HL7 / FHIR R4</span>
         <span>Sigstore Rekor</span>
-        <span>MIT open source</span>
+        <span>Apache 2.0 open source</span>
         <span>NVIDIA Inception</span>
       </div>
     </section>

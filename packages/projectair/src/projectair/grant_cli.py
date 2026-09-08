@@ -4,7 +4,7 @@ The workspace's tier in AIR Cloud is the authority for what is gated, on
 every tier including free. ``air grant`` asks the console for the signed
 grant that tier earns and installs it where ``airsdk_pro`` already looks
 (``~/.airsdk/license.json``). Nothing local is gated: the whole package
-runs free and MIT without a grant. The grant only unlocks the paid tier's
+runs free and open source without a grant. The grant only unlocks the paid tier's
 features in ``projectair-pro``.
 """
 from __future__ import annotations

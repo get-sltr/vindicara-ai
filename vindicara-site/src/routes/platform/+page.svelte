@@ -19,8 +19,8 @@
     </div>
 
     <div class="surfaces">
-      <div class="surf"><div class="sl"><span class="nm">air</span><span class="lic">MIT · OSS</span></div><p>The CLI. Ingest any agent trace, run the 16 detectors, output a signed forensic timeline. Free to download today.</p></div>
-      <div class="surf"><div class="sl"><span class="nm">airsdk</span><span class="lic">MIT · OSS</span></div><p>Drop-in instrumentation for LangChain, OpenAI, Anthropic, LlamaIndex, Gemini, and Google ADK. Signs every action at the moment it happens.</p></div>
+      <div class="surf"><div class="sl"><span class="nm">air</span><span class="lic">Apache 2.0 · OSS</span></div><p>The CLI. Ingest any agent trace, run the 16 detectors, output a signed forensic timeline. Free to download today.</p></div>
+      <div class="surf"><div class="sl"><span class="nm">airsdk</span><span class="lic">Apache 2.0 · OSS</span></div><p>Drop-in instrumentation for LangChain, OpenAI, Anthropic, LlamaIndex, Gemini, and Google ADK. Signs every action at the moment it happens.</p></div>
       <div class="surf"><div class="sl"><span class="nm">FlightDeck</span></div><p>The hosted console. The deterministic floor enforced live, human-identity binding, and evidence packs. Where security, legal, and compliance work.</p></div>
     </div>
   </div>

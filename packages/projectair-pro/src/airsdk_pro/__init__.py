@@ -1,4 +1,4 @@
-"""Project AIR Pro: licensed commercial features on top of MIT-licensed projectair.
+"""Project AIR Pro: licensed commercial features on top of Apache-2.0-licensed projectair.
 
 Pro adds AIR Cloud client integration, premium reports (NIST AI RMF, SOC2-AI),
 and premium detector additions to the open-source ``projectair`` SDK. All Pro

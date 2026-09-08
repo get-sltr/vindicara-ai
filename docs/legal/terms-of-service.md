@@ -41,7 +41,7 @@ version: "1.0"
 
 ## 3. Description of the Services
 
-3.1 **OSS Software.** The `projectair` Python package, including the `air` command-line interface and the `airsdk` Python library, is published on PyPI and GitHub under the terms of the **MIT License** (see the `LICENSE` file in the repository). Your use of the OSS Software is governed primarily by the MIT License. These Terms apply to the extent they do not conflict with the MIT License, and in the event of any conflict with respect to use of the OSS Software, the MIT License controls.
+3.1 **OSS Software.** The `projectair` Python package, including the `air` command-line interface and the `airsdk` Python library, is published on PyPI and GitHub under the terms of the **Apache License 2.0** (see the `LICENSE` file in the repository). Your use of the OSS Software is governed primarily by the Apache License 2.0. These Terms apply to the extent they do not conflict with the Apache License 2.0, and in the event of any conflict with respect to use of the OSS Software, the Apache License 2.0 controls.
 
 3.2 **Team Tier (AIR Cloud).** A hosted, subscription-based service that provides incident dashboards, SIEM export integrations, alerting, shared agent-registry management, cloud retention, and cross-trace correlation. Access to the Team Tier is governed by these Terms and any applicable Order Form.
 
@@ -67,9 +67,9 @@ version: "1.0"
 
 (e) Interfere with, disrupt, or attempt to gain unauthorized access to the Services, other users' accounts, or the underlying systems, networks, or infrastructure;
 
-(f) Use the Services to develop, test, deploy, or operate any product or service that competes directly with the Services (this restriction does not apply to use of the OSS Software, which is governed solely by the MIT License);
+(f) Use the Services to develop, test, deploy, or operate any product or service that competes directly with the Services (this restriction does not apply to use of the OSS Software, which is governed solely by the Apache License 2.0);
 
-(g) Resell, sublicense, or commercially exploit access to the Services without Vindicara's prior written consent, except as permitted for the OSS Software under the MIT License;
+(g) Resell, sublicense, or commercially exploit access to the Services without Vindicara's prior written consent, except as permitted for the OSS Software under the Apache License 2.0;
 
 (h) Use the Services to process data in violation of any applicable data-protection law, including by uploading Personal Data you are not authorized to process;
 
@@ -93,7 +93,7 @@ version: "1.0"
 
 ## 6. License Grants
 
-6.1 **OSS Software.** Your license to the OSS Software is the **MIT License** included in the `projectair` distribution. Nothing in these Terms restricts your rights under the MIT License with respect to the OSS Software. In the event of any conflict between these Terms and the MIT License as applied to the OSS Software, the MIT License controls.
+6.1 **OSS Software.** Your license to the OSS Software is the **Apache License 2.0** included in the `projectair` distribution. Nothing in these Terms restricts your rights under the Apache License 2.0 with respect to the OSS Software. In the event of any conflict between these Terms and the Apache License 2.0 as applied to the OSS Software, the Apache License 2.0 controls.
 
 6.2 **Team Tier License (Proprietary, Hosted).** Subject to your compliance with these Terms and payment of any applicable fees, Vindicara grants you a limited, non-exclusive, non-transferable, non-sublicensable license during your subscription term to access and use the Team Tier solely for your internal business purposes. This license does not grant you any right to copy, modify, distribute, or reverse-engineer the Team Tier software or infrastructure.
 
@@ -105,9 +105,9 @@ version: "1.0"
 
 ## 7. Intellectual Property Rights
 
-7.1 **Vindicara's Rights.** As between the parties, Vindicara owns and retains all right, title, and interest in and to the Services, the Site, the Documentation, all underlying software, algorithms, detector logic, detection patterns, cryptographic schemes, the AgDR-format-compatible Intent Capsule implementation, the `air` CLI, the `airsdk` library, the Project AIR™ name, the Vindicara name, all logos, designs, trade dress, and all Intellectual Property Rights therein. Except as expressly licensed in these Terms or in the MIT License for the OSS Software, no rights are granted to you.
+7.1 **Vindicara's Rights.** As between the parties, Vindicara owns and retains all right, title, and interest in and to the Services, the Site, the Documentation, all underlying software, algorithms, detector logic, detection patterns, cryptographic schemes, the AgDR-format-compatible Intent Capsule implementation, the `air` CLI, the `airsdk` library, the Project AIR™ name, the Vindicara name, all logos, designs, trade dress, and all Intellectual Property Rights therein. Except as expressly licensed in these Terms or in the Apache License 2.0 for the OSS Software, no rights are granted to you.
 
-7.2 **Third-Party Rights.** The Services incorporate certain third-party open-source software, including cryptography libraries (such as `cryptography`, `blake3`, `pydantic`, `typer`, `PyYAML`, and `langchain-core`). Each third-party library is governed by its own open-source license, which is available in the respective project's repository. Your use of the OSS Software is subject to compliance with these third-party licenses as well as the MIT License for Project AIR™.
+7.2 **Third-Party Rights.** The Services incorporate certain third-party open-source software, including cryptography libraries (such as `cryptography`, `blake3`, `pydantic`, `typer`, `PyYAML`, and `langchain-core`). Each third-party library is governed by its own open-source license, which is available in the respective project's repository. Your use of the OSS Software is subject to compliance with these third-party licenses as well as the Apache License 2.0 for Project AIR™.
 
 7.3 **No Implied Licenses.** Nothing in these Terms is to be construed as granting, by implication, estoppel, or otherwise, any license or right under any Intellectual Property Rights of Vindicara except as expressly set forth.
 
@@ -183,7 +183,7 @@ version: "1.0"
 
 (e) Vindicara decides, in its reasonable discretion, to discontinue the Services in whole or in part, with reasonable advance notice to you.
 
-13.4 **Effect of Termination.** Upon termination, (a) all licenses granted to you terminate immediately (except as expressly provided in the MIT License for the OSS Software, which remains in effect for previously distributed copies); (b) you must cease using the Services; (c) you must delete any Vindicara-proprietary materials in your possession, except as required to operate records already produced by the OSS Software; (d) Section 8.5 (Deletion) applies to Customer Data. The following sections survive termination: 2, 4.2, 4.3, 6.4, 6.5, 7, 8 (with respect to obligations that survive), 9, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24.
+13.4 **Effect of Termination.** Upon termination, (a) all licenses granted to you terminate immediately (except as expressly provided in the Apache License 2.0 for the OSS Software, which remains in effect for previously distributed copies); (b) you must cease using the Services; (c) you must delete any Vindicara-proprietary materials in your possession, except as required to operate records already produced by the OSS Software; (d) Section 8.5 (Deletion) applies to Customer Data. The following sections survive termination: 2, 4.2, 4.3, 6.4, 6.5, 7, 8 (with respect to obligations that survive), 9, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24.
 
 ## 14. Disclaimers and Limitations on Warranties
 
@@ -211,7 +211,7 @@ version: "1.0"
 
 15.1 **Exclusion of Damages.** TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT WILL VINDICARA OR ITS AFFILIATES, OFFICERS, DIRECTORS, EMPLOYEES, AGENTS, OR LICENSORS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, PUNITIVE, EXEMPLARY, OR AGGRAVATED DAMAGES, OR FOR ANY LOSS OF PROFITS, REVENUE, BUSINESS OPPORTUNITY, GOODWILL, DATA, OR ANTICIPATED SAVINGS, ARISING FROM OR RELATED TO THESE TERMS OR THE SERVICES, REGARDLESS OF THE THEORY OF LIABILITY (CONTRACT, TORT, NEGLIGENCE, STRICT LIABILITY, OR OTHERWISE) AND REGARDLESS OF WHETHER VINDICARA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 
-15.2 **Cap on Direct Damages.** TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, VINDICARA'S AGGREGATE LIABILITY TO YOU FOR ALL CLAIMS ARISING OUT OF OR RELATED TO THESE TERMS OR THE SERVICES, WHETHER IN CONTRACT, TORT, OR OTHERWISE, WILL NOT EXCEED THE GREATER OF (A) THE AMOUNT YOU PAID TO VINDICARA FOR THE APPLICABLE SERVICE IN THE TWELVE (12) MONTHS IMMEDIATELY PRECEDING THE EVENT GIVING RISE TO THE CLAIM, OR (B) ONE HUNDRED U.S. DOLLARS (USD $100). FOR USERS OF THE OSS SOFTWARE WHO ARE NOT ALSO PAID CUSTOMERS, THIS AGGREGATE CAP IS USD $100, CONSISTENT WITH THE WARRANTY AND LIABILITY DISCLAIMERS OF THE MIT LICENSE.
+15.2 **Cap on Direct Damages.** TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, VINDICARA'S AGGREGATE LIABILITY TO YOU FOR ALL CLAIMS ARISING OUT OF OR RELATED TO THESE TERMS OR THE SERVICES, WHETHER IN CONTRACT, TORT, OR OTHERWISE, WILL NOT EXCEED THE GREATER OF (A) THE AMOUNT YOU PAID TO VINDICARA FOR THE APPLICABLE SERVICE IN THE TWELVE (12) MONTHS IMMEDIATELY PRECEDING THE EVENT GIVING RISE TO THE CLAIM, OR (B) ONE HUNDRED U.S. DOLLARS (USD $100). FOR USERS OF THE OSS SOFTWARE WHO ARE NOT ALSO PAID CUSTOMERS, THIS AGGREGATE CAP IS USD $100, CONSISTENT WITH THE WARRANTY AND LIABILITY DISCLAIMERS OF THE APACHE LICENSE 2.0.
 
 15.3 **Essential Purpose.** The limitations in this Section 15 apply even if any limited remedy fails of its essential purpose.
 

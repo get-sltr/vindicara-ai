@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "projectair-pro"
 version = "0.8.0"
-description = "Project AIR Pro: licensed commercial features (AIR Cloud client, premium detectors, premium reports) on top of the MIT-licensed projectair package."
+description = "Project AIR Pro: licensed commercial features (AIR Cloud client, premium detectors, premium reports) on top of the Apache-2.0-licensed projectair package."
 readme = "README.md"
 license = "LicenseRef-Vindicara-Commercial"
 requires-python = ">=3.12"

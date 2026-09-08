@@ -27,7 +27,7 @@ dependencies = [
     "structlog>=24.1.0,<26.0",
     # Substrate consumes the OSS schema (AgDRRecord, verify_record) for cloud
     # ingestion. Single source of truth for the wire format; license-compatible
-    # (MIT into Apache-2.0). Keep the pin in lockstep with the OSS surface AIR
+    # (Apache-2.0 both sides). Keep the pin in lockstep with the OSS surface AIR
     # Cloud commits to receiving from.
     "projectair>=1.2.0,<2.0",
 ]

@@ -1,6 +1,6 @@
 # projectair-pro
 
-Commercial extension on top of the MIT-licensed [`projectair`](https://pypi.org/project/projectair/).
+Commercial extension on top of the Apache-2.0-licensed [`projectair`](https://pypi.org/project/projectair/).
 
 This package adds licensed Pro features to the open-source AIR forensic SDK:
 
@@ -26,4 +26,4 @@ The free OSS detectors and exports continue to work without a license. Pro featu
 
 ## License (this package)
 
-Source-available, commercial use requires a paid Vindicara subscription. See [LICENSE](LICENSE) for the full text. The OSS `projectair` package this depends on remains MIT-licensed and unchanged.
+Source-available, commercial use requires a paid Vindicara subscription. See [LICENSE](LICENSE) for the full text. The OSS `projectair` package this depends on remains Apache-2.0-licensed and unchanged.

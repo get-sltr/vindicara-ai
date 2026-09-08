@@ -17,7 +17,7 @@
     <h2>Company facts</h2>
     <ul>
       <li>Vindicara is a Delaware C-Corp founded in April 2026, building Project AIR, evidence-grade infrastructure for AI agents.</li>
-      <li>Project AIR is open source under the MIT license: github.com/vindicara-inc/projectair, installable with pip install projectair.</li>
+      <li>Project AIR is open source under the Apache License 2.0: github.com/vindicara-inc/projectair, installable with pip install projectair.</li>
       <li>Vindicara is a member of the NVIDIA Inception program.</li>
     </ul>
 

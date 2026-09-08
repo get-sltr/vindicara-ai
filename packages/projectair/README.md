@@ -518,7 +518,7 @@ curl https://vindicara-ops-chain-public-399827112476.s3.us-west-2.amazonaws.com/
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+Apache License 2.0 from 1.4.0 (versions through 1.3.1 remain MIT on PyPI). See [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 ## Contributing
 
