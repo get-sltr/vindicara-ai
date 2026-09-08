@@ -74,7 +74,7 @@ anchoring = [
 # authorization path. Only needed for airsdk.delegation.webauthn and the
 # reference ceremony server; the Auth0 passkey fast path needs nothing new.
 webauthn = [
-    "webauthn>=2.0.0,<3.0",
+    "webauthn>=2.0.0,<4.0",
 ]
 # Post-quantum signing (ML-DSA-65 / FIPS 204) needs OpenSSL 3.5, shipped in
 # cryptography>=48. Opt in with: pip install 'projectair[pqc]'. Without it the
