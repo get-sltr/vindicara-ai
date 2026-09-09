@@ -37,6 +37,13 @@ cdk.out/
 # Environment variables
 .env
 .env.*
+
+# Credentials that belong in $HOME, never in the repo. .pypirc holds a live
+# PyPI token in plaintext; committing one hands over release rights to the
+# package. Listed here so a stray copy in the working tree cannot be added.
+.pypirc
+*.pem
+!packages/projectair/tests/**/*.pem
 lambda_package/
 .superpowers/
 
